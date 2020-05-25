@@ -2,7 +2,10 @@ package impatient_exercises
 
 import impatient_exercises.Chapter1._
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.collection.mutable.ArrayBuffer
+import scala.concurrent.{Await, Future}
+import scala.concurrent.duration._
 
 object Main extends App {
 
@@ -114,4 +117,15 @@ object Main extends App {
   println("-- the string is zipped element by element giving a sequence of tuples with " +
     "corresponding elements, this is useful if wanting to compare characters by position")
 
+  println("Chapter 17 - Futures")
+  println("""1. Consider the expression
+            |
+            |for (n1 <- Future { Thread.sleep(1000) ; 2 } n2 <- Future { Thread.sleep(1000); 40 })
+            |         println(n1 + n2)
+            |
+            |
+            |How is the expression translated to map and flatMap calls? Are the two futures executed concurrently or one after the other? In which thread does the call to println occur? """.stripMargin)
+  Chapter17.flatMapFuture
+  println("""2. Write a function doInOrder that, given two functions f: T => Future[U] and g: U => Future[V], produces a function T => Future[U] that, for a given t, eventually yields g(f(t)).""")
+  println(Chapter17.doInOrder(3))
 }

@@ -6,7 +6,7 @@ import java.util.Calendar._
 
 import scala.collection.JavaConverters.propertiesAsScalaMap
 
-object Chapter4 {
+object Chapter04 {
 
  def priceChange(items: Map[String,Double], change: Double): Map[String,Double] = {
    for((k, v) <- items) yield( k -> v*change)

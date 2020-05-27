@@ -2,7 +2,7 @@ package impatient_exercises
 
 import scala.math._
 
-object Chapter2 {
+object Chapter02 {
 
   def signum(x: Int) = if(x > 0) 1 else if(x < 0) -1 else 0
 

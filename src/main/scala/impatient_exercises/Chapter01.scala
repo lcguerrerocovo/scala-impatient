@@ -5,7 +5,7 @@ import scala.util.Random
 
 
 
-object Chapter1 {
+object Chapter01 {
 
   def floatingPointDiff = 3 - pow(sqrt(3),2)
 

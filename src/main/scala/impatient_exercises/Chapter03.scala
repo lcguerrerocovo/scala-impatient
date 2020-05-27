@@ -4,7 +4,7 @@ import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 import scala.jdk.CollectionConverters._
 
-object Chapter3 {
+object Chapter03 {
 
   def randomArray(n: Int): Array[Int] = {
     val array = ArrayBuffer[Int]()

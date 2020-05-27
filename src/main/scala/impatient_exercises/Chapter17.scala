@@ -30,4 +30,18 @@ object Chapter17 {
     val fun = Chapter17.doInOrder(f,g) _
     Await.result(fun(x),5.seconds)
   }
+
+  def doInSequence[T](funs: Seq[T => Future[T]])(t: T): Future[T] = funs match {
+    case f :: Nil => f(t)
+    case f :: tail => f(t).flatMap(x => doInSequence(tail)(x))
+  }
+
+  def doInSequence(x: Int, times: Int): Int = {
+    def f: Int => Future[Int] = { x: Int =>
+      Future[Int] { Thread.sleep(1000) ; x * 10 }
+    }
+
+    val fun: Int => Future[Int] = Chapter17.doInSequence(Seq.fill(times)(f)) _
+    Await.result(fun(x),(1.seconds * times) + 1.seconds)
+  }
 }

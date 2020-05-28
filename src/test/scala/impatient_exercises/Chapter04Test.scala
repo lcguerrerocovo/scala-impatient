@@ -3,8 +3,6 @@ package impatient_exercises
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-import scala.collection.mutable
-
 class Chapter04Test extends AnyFlatSpec with Matchers {
 
   behavior of "wordCount mutable and immutable maps"

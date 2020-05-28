@@ -1,12 +1,8 @@
 package impatient_exercises
 
-import java.io.{ByteArrayInputStream, StringReader}
-import java.nio.charset.StandardCharsets
-
-import org.scalatest.flatspec.{AnyFlatSpec, AsyncFlatSpec}
+import java.io.StringReader
+import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatest.matchers.should.Matchers
-
-import scala.concurrent.Await
 
 class Chapter17Test extends AsyncFlatSpec with Matchers {
 
@@ -29,4 +25,12 @@ class Chapter17Test extends AsyncFlatSpec with Matchers {
         }
       }
     }
+
+  behavior of "number of primes"
+
+  it should "compute number of primes between 1 and n" in {
+    Chapter17.countPrimes(100000) map { x =>
+      assert(x == 9592)
+    }
+  }
 }

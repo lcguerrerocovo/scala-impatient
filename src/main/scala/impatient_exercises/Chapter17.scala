@@ -3,6 +3,7 @@ package impatient_exercises
 import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
+import scala.math.BigInt
 import scala.util.Success
 
 object Chapter17 {
@@ -81,5 +82,21 @@ object Chapter17 {
         if (!y) repeat(action, until) else Future { x }
       }
     }
+  }
+
+  def countPrimes(n: Int): Future[Int] = {
+    val partition = n / Runtime.getRuntime.availableProcessors
+    Future.sequence {
+      (1 to n)
+        .map(x => (x, x / partition))
+        .groupBy(_._2)
+        .values
+        .toList
+        .map { x =>
+          Future {
+            x.count(y => BigInt(y._1).isProbablePrime(10))
+          }
+        }
+    }.map(_.reduce(_ + _))
   }
 }

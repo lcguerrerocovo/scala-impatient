@@ -137,4 +137,6 @@ object Main extends App {
   println("""6. Write a method
             |Future[T] repeat(action: => T, until: T => Boolean)
             |that asynchronously repeats the action until it produces a value that is accepted by the until predicate, which should also run asynchronously. Test with a function that reads a password from the console, and a function that simulates a validity check by sleeping for a second and then checking that the password is "secret". Hint: Use recursion.""".stripMargin)
+  println(Await.result(Chapter17.repeat[String](scala.io.StdIn.readLine(), _ == "secret"),
+    30.seconds))
 }

@@ -3,6 +3,7 @@ package impatient_exercises
 import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
+import scala.util.Success
 
 object Chapter17 {
 
@@ -70,5 +71,15 @@ object Chapter17 {
     def parts = Seq(1*1,2*2,3*4)
     def futures: Seq[Future[Int]] = parts.map(p => Future { p })
     Await.result(eventuallyDoSequence(futures), 1.seconds)
+  }
+
+  def repeat[T](action: => T, until: T => Boolean): Future[T] = {
+    def eventuallyAction = Future { action }
+    def eventuallyUntil(x: T) = Future { Thread.sleep(1000); until(x) }
+    eventuallyAction.flatMap{ x =>
+      eventuallyUntil(x).flatMap { y =>
+        if (!y) repeat(action, until) else Future { x }
+      }
+    }
   }
 }

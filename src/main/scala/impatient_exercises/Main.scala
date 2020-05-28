@@ -130,4 +130,11 @@ object Main extends App {
   println(Chapter17.doInOrder(3))
   println("""3. Repeat the preceding exercise for any sequence of functions of type T => Future[T].""")
   println(Chapter17.doInSequence(3,5))
+  println("""Write a function doTogether that, given two functions f: T => Future[U] and g: U => Future[V], produces a function T => Future[(U, V)], running the two computations in parallel and, for a given t, eventually yielding (f(t), g(t)).""")
+  println(Chapter17.doTogether(3))
+  println("""5. Write a function that receives a sequence of futures and returns a future that eventually yields a sequence of all results.""")
+  println(Chapter17.eventuallyDoSequence)
+  println("""6. Write a method
+            |Future[T] repeat(action: => T, until: T => Boolean)
+            |that asynchronously repeats the action until it produces a value that is accepted by the until predicate, which should also run asynchronously. Test with a function that reads a password from the console, and a function that simulates a validity check by sleeping for a second and then checking that the password is "secret". Hint: Use recursion.""".stripMargin)
 }

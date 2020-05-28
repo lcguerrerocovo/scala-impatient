@@ -28,7 +28,7 @@ object Chapter17 {
     }
 
     val fun = Chapter17.doInOrder(f,g) _
-    Await.result(fun(x),5.seconds)
+    Await.result(fun(x),3.seconds)
   }
 
   def doInSequence[T](funs: Seq[T => Future[T]])(t: T): Future[T] = funs match {
@@ -43,5 +43,32 @@ object Chapter17 {
 
     val fun: Int => Future[Int] = Chapter17.doInSequence(Seq.fill(times)(f)) _
     Await.result(fun(x),(1.seconds * times) + 1.seconds)
+  }
+
+  def doTogether[T,U,V](f: T => Future[U], g: T => Future[V])(t: T): Future[(U,V)] = {
+    f(t) zip g(t)
+  }
+
+  def doTogether(x: Int): (Double,String) ={
+    def f: Int => Future[Double] = { x: Int =>
+      Future[Double] { Thread.sleep(1000) ; x.toDouble/10 }
+    }
+
+    def g: Int => Future[String] = { x: Int =>
+      Future[String] { Thread.sleep(1000) ; x.toString }
+    }
+
+    val fun = Chapter17.doTogether(f,g) _
+    Await.result(fun(x),2.seconds)
+  }
+
+  def eventuallyDoSequence[T](seq: Seq[Future[T]]) : Future[Seq[T]] = {
+    Future.sequence(seq)
+  }
+
+  def eventuallyDoSequence: Seq[Int] = {
+    def parts = Seq(1*1,2*2,3*4)
+    def futures: Seq[Future[Int]] = parts.map(p => Future { p })
+    Await.result(eventuallyDoSequence(futures), 1.seconds)
   }
 }

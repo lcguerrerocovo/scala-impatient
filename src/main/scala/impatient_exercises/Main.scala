@@ -138,4 +138,6 @@ object Main extends App {
             |Future[T] repeat(action: => T, until: T => Boolean)
             |that asynchronously repeats the action until it produces a value that is accepted by the until predicate, which should also run asynchronously. Test with a function that reads a password from the console, and a function that simulates a validity check by sleeping for a second and then checking that the password is "secret". Hint: Use recursion.""".stripMargin)
   println("7. Write a program that counts the prime numbers between 1 and n, as reported by BigInt.isProbablePrime. Divide the interval into p parts, where p is the number of available processors. Count the primes in each part in concurrent futures and combine the results.")
+  println("8. Write a program that asks the user for a URL, reads the web page at that URL, and displays all the hyperlinks. Use a separate Future for each of these three steps.")
+  //Await.result(Chapter17.getLinks("http://en.wikipedia.org/"),10.seconds)
 }

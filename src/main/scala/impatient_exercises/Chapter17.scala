@@ -1,5 +1,9 @@
 package impatient_exercises
 
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
+import org.jsoup.select.Elements
+
 import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
@@ -98,5 +102,23 @@ object Chapter17 {
           }
         }
     }.map(_.reduce(_ + _))
+  }
+
+  def getDoc(s: String): Document = {
+    Jsoup.connect(s).get()
+  }
+
+  def getLinks(f: String => Document = getDoc) = {
+    def readStIn = Future { scala.io.StdIn.readLine() }
+    def readHtml(url: String) = Future { f(url) }
+    def printLinks(doc: Document) = Future {
+      doc.select("a[href]")
+        .forEach(el => println(el.attr("abs:href")))
+    }
+    readStIn.flatMap(url =>
+      readHtml(url).flatMap(doc =>
+        printLinks(doc)
+      )
+    )
   }
 }

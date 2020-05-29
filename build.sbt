@@ -9,6 +9,8 @@ lazy val root = (project in file("."))
   .settings(
     name := "scala-impatient",
     libraryDependencies += scalaTest % Test ,
+    libraryDependencies += "org.scalamock" %% "scalamock" % "4.4.0" % Test,
+    libraryDependencies += "org.jsoup" % "jsoup" % "1.12.1",
     libraryDependencies += {
       val version = scalaBinaryVersion.value match {
         case "2.10" => "1.0.3"

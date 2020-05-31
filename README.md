@@ -2,8 +2,8 @@
 
   [Scala for the impatient](https://horstmann.com/scala/)
   
-  - Chapter 1 **The basics**: [solutions]()
-  - Chapter 2 **Controls structures and functions**: [solutions]() - [tests]()
-  - Chapter 3 **Working with arrays**: [solutions]()
-  - Chapter 4 **Maps and Tuples**: [solutions]() - [tests]()
-  - Chapter 17 **Futures**: [solutions]() - [tests]()
+  - Chapter 1 **The basics**: [solutions](src/main/scala/impatient_exercises/Chapter01.scala)
+  - Chapter 2 **Controls structures and functions**: [solutions](src/main/scala/impatient_exercises/Chapter02.scala) - [tests](src/test/scala/impatient_exercises/Chapter02Test.scala)
+  - Chapter 3 **Working with arrays**: [solutions](src/main/scala/impatient_exercises/Chapter03.scala)
+  - Chapter 4 **Maps and Tuples**: [solutions](src/main/scala/impatient_exercises/Chapter04.scala) - [tests](src/test/scala/impatient_exercises/Chapter04Test.scala)
+  - Chapter 17 **Futures**: [solutions](src/main/scala/impatient_exercises/Chapter17.scala) - [tests](src/test/scala/impatient_exercises/Chapter17Test.scala)

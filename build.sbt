@@ -8,6 +8,8 @@ ThisBuild / organizationName := "impatient_exercises"
 lazy val root = (project in file("."))
   .settings(
     name := "scala-impatient",
+    Test / fork := true,
+    parallelExecution in Test := false,
     libraryDependencies += scalaTest % Test ,
     libraryDependencies += "org.scalamock" %% "scalamock" % "4.4.0" % Test,
     libraryDependencies += "org.jsoup" % "jsoup" % "1.12.1",

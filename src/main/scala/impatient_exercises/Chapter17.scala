@@ -2,13 +2,12 @@ package impatient_exercises
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.jsoup.select.Elements
 
 import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.math.BigInt
-import scala.util.Success
+import scala.jdk.CollectionConverters._
 
 object Chapter17 {
 
@@ -104,20 +103,44 @@ object Chapter17 {
     }.map(_.reduce(_ + _))
   }
 
-  def getDoc(s: String): Document = {
+  def getDoc(s: String): Future[Document] = Future {
     Jsoup.connect(s).get()
   }
 
-  def getLinks(f: String => Document = getDoc) = {
-    def readStIn = Future { scala.io.StdIn.readLine() }
-    def readHtml(url: String) = Future { f(url) }
-    def printLinks(doc: Document) = Future {
-      doc.select("a[href]")
-        .forEach(el => println(el.attr("abs:href")))
+  def getHeader(s: String, header: String = "Server"): Future[String] = Future {
+    Jsoup
+      .connect(s)
+      .execute().header(header)
+  }
+
+  def readLinks(doc: Document): List[String] = {
+    doc.select("a[href]")
+      .asScala
+      .map(el => el.attr("abs:href")).toList
+  }
+
+  def printLinks(doc: Document) = Future {
+    readLinks(doc).mkString("")
+  }
+
+  def getLinkServerHeader(f: (String,String) => Future[String] = getHeader)(doc: Document)
+  : Future[String] = {
+    Future.traverse(readLinks(doc).filterNot(_.isEmpty).take(25)) { x: String =>
+      f(x,"Server")
+    }.map {
+      _.groupBy(key => key).map {
+        case (k, v) =>
+          f"server: ${k}, count: ${v.size}"
+      }.mkString("\n")
     }
-    readStIn.flatMap(url =>
-      readHtml(url).flatMap(doc =>
-        printLinks(doc)
+  }
+
+  def getLinks(f: String => Future[Document] = getDoc)
+              (g: Document => Future[String] = printLinks) = {
+    def readInput = Future { scala.io.StdIn.readLine() }
+    readInput.flatMap ( url =>
+      f(url).flatMap(
+          doc =>g(doc)
       )
     )
   }

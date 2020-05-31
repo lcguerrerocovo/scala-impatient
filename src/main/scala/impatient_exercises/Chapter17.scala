@@ -11,6 +11,19 @@ import scala.jdk.CollectionConverters._
 
 object Chapter17 {
 
+  /**
+   * ===A function that provides a solution to Chapter 17 exercise 1  ===
+   * 1. Consider the expression
+   *
+   * for (n1 <- Future { Thread.sleep(1000) ; 2 } n2 <- Future { Thread.sleep(1000); 40 })
+   * println(n1 + n2)
+   *
+   * {{{
+   *    scala> Chapter17.flatMapFuture
+   * }}}
+   *
+   * How is the expression translated to map and flatMap calls? Are the two futures executed concurrently or one after the other? In which thread does the call to println occur?
+   */
   def flatMapFuture = {
     val future1 = Future { Thread.sleep(1000) ; 2 }
     val future2 = Future { Thread.sleep(1000) ; 40 }
@@ -23,6 +36,17 @@ object Chapter17 {
     f(t).flatMap(x => g(x))
   }
 
+  /**
+   * ===A function that provides a solution to Chapter 17 exercise 2  ===
+   * 2. Write a function doInOrder that, given two functions f: T => Future[U] and g: U => Future[V]
+   *    produces a function T => Future[U] that, for a given t, eventually yields g(f(t))
+   * {{{
+   *    scala> Chapter17.doInOrder(3)
+   * }}}
+   *
+   * @param x
+   * @return
+   */
   def doInOrder(x: Int): String = {
     def f: Int => Future[Double] = { x: Int =>
       Future[Double] { Thread.sleep(1000) ; x.toDouble/10 }
@@ -41,6 +65,17 @@ object Chapter17 {
     case f :: tail => f(t).flatMap(x => doInSequence(tail)(x))
   }
 
+  /**
+   * ===A function that provides a solution to Chapter 17 exercise 3  ===
+   * 3. Repeat the preceding exercise for any sequence of functions of type T => Future[T].""")
+   * {{{
+   *    scala> Chapter17.doInSequence(3,5))
+   * }}}
+   *
+   * @param x
+   * @param times
+   * @return
+   */
   def doInSequence(x: Int, times: Int): Int = {
     def f: Int => Future[Int] = { x: Int =>
       Future[Int] { Thread.sleep(1000) ; x * 10 }
@@ -54,6 +89,17 @@ object Chapter17 {
     f(t) zip g(t)
   }
 
+  /**
+   * ===A function that provides a solution to Chapter 17 exercise 4  ===
+   * 4. Write a function doTogether that, given two functions f: T => Future[U] and g: U =>
+   * Future[V], produces a function T => Future[(U, V)], running the two computations in parallel and, for a given t, eventually yielding (f(t), g(t)).""")
+   * {{{
+   *    scala> println(Chapter17.doTogether(3))
+   * }}}
+   *
+   * @param x
+   * @return
+   */
   def doTogether(x: Int): (Double,String) ={
     def f: Int => Future[Double] = { x: Int =>
       Future[Double] { Thread.sleep(1000) ; x.toDouble/10 }
@@ -67,16 +113,43 @@ object Chapter17 {
     Await.result(fun(x),2.seconds)
   }
 
+
   def eventuallyDoSequence[T](seq: Seq[Future[T]]) : Future[Seq[T]] = {
     Future.sequence(seq)
   }
 
+  /**
+   * ===A function that provides a solution to Chapter 17 exercise 5  ===
+   * 5. Write a function that receives a sequence of futures and returns a future that
+   * eventually yields a sequence of all results
+   *
+   * {{{
+   *    scala> Chapter17.eventuallyDoSequence
+   * }}}
+   *
+   * @return
+   */
   def eventuallyDoSequence: Seq[Int] = {
     def parts = Seq(1*1,2*2,3*4)
     def futures: Seq[Future[Int]] = parts.map(p => Future { p })
     Await.result(eventuallyDoSequence(futures), 1.seconds)
   }
 
+  /**
+   * ===A function that provides a solution to Chapter 17 exercise 6  ===
+   *
+   * 6. Write a method
+   * Future[T] repeat(action: => T, until: T => Boolean)
+   * that asynchronously repeats the action until it produces a value that is accepted by the until
+   * predicate, which should also run asynchronously. Test with a function that reads a password
+   * from the console, and a function that simulates a validity check by sleeping for a second
+   * and then checking that the password is "secret". Hint: Use recursion.
+   *
+   * @param action
+   * @param until
+   * @tparam T
+   * @return
+   */
   def repeat[T](action: => T, until: T => Boolean): Future[T] = {
     def eventuallyAction = Future { action }
     def eventuallyUntil(x: T) = Future { Thread.sleep(1000); until(x) }
@@ -87,6 +160,17 @@ object Chapter17 {
     }
   }
 
+  /**
+   * ===A function that provides a solution to Chapter 17 exercise 7  ===
+   *
+   * 7. Write a program that counts the prime numbers between 1 and n, as reported by BigInt
+   * .isProbablePrime.
+   *    Divide the interval into p parts, where p is the number of available processors. Count the
+   *    primes in each part in concurrent futures and combine the results.")
+   *
+   * @param n
+   * @return
+   */
   def countPrimes(n: Int): Future[Int] = {
     val partition = n / Runtime.getRuntime.availableProcessors
     Future.sequence {
@@ -119,8 +203,8 @@ object Chapter17 {
       .map(el => el.attr("abs:href")).toList
   }
 
-  def printLinks(doc: Document) = Future {
-    readLinks(doc).mkString("")
+  def getLinks(doc: Document) = Future {
+    readLinks(doc).mkString("\n")
   }
 
   def getLinkServerHeader(f: (String,String) => Future[String] = getHeader)(doc: Document)
@@ -135,8 +219,33 @@ object Chapter17 {
     }
   }
 
+  /**
+   * ===A function that provides solutions to Chapter 17 exercises 8 & 9===
+   *
+   * 8. Write a program that asks the user for a URL, reads the web page at that URL, and displays all
+   *     the hyperlinks. Use a separate Future for each of these three steps.")
+   *
+   *    {{{
+   *       scala> Await.result(Chapter17.getLinks(Chapter17.getDoc _)(),200.seconds)
+   *    }}}
+   *
+   *
+   * 9. Write a program that asks the user for a URL, reads the web page at that URL,
+   *    finds all the hyperlinks, visits each of them concurrently, and locates the Server HTTP
+   *    header for each of them. Finally, print a table of which servers were found how often. The
+   *    futures that visit each page should return the header.
+   *
+   *    {{{
+   *        scala> Await.result(Chapter17.getLinks(Chapter17.getDoc _)(Chapter17.getLinkServerHeader
+   *               ()),200.seconds)
+   *    }}}
+   *
+   * @param f
+   * @param g
+   * @return
+   */
   def getLinks(f: String => Future[Document] = getDoc)
-              (g: Document => Future[String] = printLinks) = {
+              (g: Document => Future[String] = getLinks): Future[String] = {
     def readInput = Future { scala.io.StdIn.readLine() }
     readInput.flatMap ( url =>
       f(url).flatMap(

@@ -3,11 +3,8 @@ package impatient_exercises
 import java.io.{ByteArrayOutputStream, StringReader}
 
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
 import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatest.matchers.should.Matchers
-import org.scalamock.scalatest.AsyncMockFactory
-import org.scalatest.ParallelTestExecution
 
 import scala.concurrent.Future
 
@@ -49,10 +46,13 @@ class Chapter17Test extends AsyncFlatSpec with Matchers {
     def getDoc(s:String) = Future.successful(doc)
     val inputStr =
       """http://wikipedia.com""".stripMargin
+    val result = """http://www.yahoo.com/
+                    |http://www.yahoo.com/
+                    |""".stripMargin
     val in = new StringReader(inputStr)
     Console.withIn(in) {
-      Chapter17.getLinks(getDoc)() map { e =>
-        assert(e == "http://www.yahoo.com/http://www.yahoo.com/")
+      Chapter17.getLinks(getDoc _)() map { e =>
+        assert(e == result)
       }
     }
   }
@@ -67,9 +67,8 @@ class Chapter17Test extends AsyncFlatSpec with Matchers {
 
     val inputStr = """http://wikipedia.com""".stripMargin
     val in = new StringReader(inputStr)
-    val out = new ByteArrayOutputStream()
     Console.withIn(in) {
-      Chapter17.getLinks(getDoc)(Chapter17.getLinkServerHeader(getHeader)) map { e =>
+      Chapter17.getLinks(getDoc _)(Chapter17.getLinkServerHeader(getHeader)) map { e =>
         assert(e == "server: ATS/8.0.7, count: 2")
       }
     }

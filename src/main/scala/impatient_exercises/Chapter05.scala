@@ -88,4 +88,61 @@ object Chapter05 {
       self.minutesFromMidnight > other.minutesFromMidnight
   }
 
+  /**
+   * ===A class that provides a solution to Chapter 5 exercise 6  ===
+   *
+   * 6. In the Person class of Section 5.1, “Simple Classes and Parameterless Methods,” on page 55,
+   * provide a primary constructor that turns negative ages to 0.
+   */
+  class Person(var age: Int) {
+    if(age < 0) age = 0
+
+    def getAge: Int = age
+
+    def setAge(age: Int): Unit = {
+      this.age = age
+    }
+  }
+
+  /**
+   * ===A class that provides a solution to Chapter 5 exercise 7  ===
+   *
+   * 7. Write a class Person with a primary constructor that accepts a string containing a first
+   * name, a space, and a last name, such as new Person("Fred Smith"). Supply read-only properties
+   * firstName and lastName. Should the primary constructor parameter be a var, a val, or a plain
+   * parameter? Why?
+   */
+  class BetterPerson(fullName: String) {
+    val (firstName, lastName) = fullName.split(" ").take(2) match {
+      case Array(firstName, lastName) => (firstName, lastName)
+      case _ => throw new Exception("fullName must contain first name and last name separated by " +
+        "space")
+    }
+  }
+
+  /**
+   * ===A class that provides a solution to Chapter 5 exercise 8  ===
+   *
+   * 8. Make a class Car with read-only properties for manufacturer, model name, and model year,
+   * and a read-write property for the license plate. Supply four constructors. All require the
+   * manufacturer and model name. Optionally, model year and license plate can also be specified
+   * in the constructor. If not, the model year is set to -1 and the license plate to the empty
+   * string. Which constructor are you choosing as the primary constructor? Why?
+   */
+
+  class Car(val manufacturer: String, val modelName: String, val modelYear: Int, var
+  licensePlate: String) {
+
+    def this(manufacturer: String, modelName: String) {
+      this(manufacturer, modelName, -1, "")
+    }
+
+    def this(manufacturer: String, modelName: String, modelYear: Int) {
+      this(manufacturer, modelName, modelYear, "")
+    }
+
+    def this(manufacturer: String, modelName: String, licensePlate: String) {
+      this(manufacturer, modelName, -1, licensePlate)
+    }
+  }
 }

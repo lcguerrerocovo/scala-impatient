@@ -1,6 +1,7 @@
 package impatient_exercises
 
-import impatient_exercises.Chapter05.{BankAccount, BetterTime, Counter, Time}
+import impatient_exercises.Chapter05.{BankAccount, BetterPerson, BetterTime, Counter, Person,
+  Time, Car}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -64,4 +65,56 @@ class Chapter05Test extends AnyFlatSpec with Matchers {
     time.before(new BetterTime(23, 58)) shouldEqual true
     time.before(new BetterTime(23, 59)) shouldEqual false
   }
+
+  behavior of "Person"
+
+  it should "set age to 0 if negative" in {
+    new Person(-13).getAge shouldEqual 0
+  }
+
+  behavior of "BetterPerson"
+
+  it should "have parse fullName and expose fields for first and last name" in {
+    val bp = new BetterPerson("mister hacker")
+    bp.firstName shouldEqual "mister"
+    bp.lastName shouldEqual "hacker"
+  }
+
+  behavior of "Car"
+
+  it should "have four constructors and initialize fields properly" in {
+    var car = new Car("ferrari", "testarrosa")
+    car.manufacturer shouldEqual "ferrari"
+    car.modelName shouldEqual "testarrosa"
+    car.modelYear shouldEqual -1
+    car.licensePlate shouldEqual ""
+
+    car = new Car("ferrari", "testarrosa", 1999)
+    car.manufacturer shouldEqual "ferrari"
+    car.modelName shouldEqual "testarrosa"
+    car.modelYear shouldEqual 1999
+    car.licensePlate shouldEqual ""
+
+    car = new Car("ferrari", "testarrosa", licensePlate = "VXZ999")
+    car.manufacturer shouldEqual "ferrari"
+    car.modelName shouldEqual "testarrosa"
+    car.modelYear shouldEqual -1
+    car.licensePlate shouldEqual "VXZ999"
+
+    car = new Car("ferrari", "testarrosa", 1999, "VXZ999")
+    car.manufacturer shouldEqual "ferrari"
+    car.modelName shouldEqual "testarrosa"
+    car.modelYear shouldEqual 1999
+    car.licensePlate shouldEqual "VXZ999"
+  }
+
+  it should "have a read write property for license plate" in {
+    val car = new Car("ferrari", "testarrosa", 1999, "VXZ999")
+    car.licensePlate = "VXY987"
+    car.manufacturer shouldEqual "ferrari"
+    car.modelName shouldEqual "testarrosa"
+    car.modelYear shouldEqual 1999
+    car.licensePlate shouldEqual "VXY987"
+  }
+
 }

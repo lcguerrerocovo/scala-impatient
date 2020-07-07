@@ -145,4 +145,18 @@ object Chapter05 {
       this(manufacturer, modelName, -1, licensePlate)
     }
   }
+
+  /**
+   * ===A class that provides a solution to Chapter 5 exercise 10  ===
+   *
+   * 10. Consider the class
+   * class Employee(val name: String, var salary: Double) { def this() { this("John Q. Public", 0.0) }
+   * }
+   * Rewrite it to use explicit fields and a default primary constructor. Which form do you prefer? Why?
+   */
+
+  class Employee() {
+    val name: String = "John Q. Public"
+    var salary: Double = 0.0
+  }
 }

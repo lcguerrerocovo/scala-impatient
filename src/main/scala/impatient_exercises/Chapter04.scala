@@ -4,8 +4,6 @@ import scala.collection.{immutable, mutable}
 import scala.jdk.CollectionConverters._
 import java.util.Calendar._
 
-import scala.collection.JavaConverters.propertiesAsScalaMap
-
 object Chapter04 {
 
  def priceChange(items: Map[String,Double], change: Double): Map[String,Double] = {

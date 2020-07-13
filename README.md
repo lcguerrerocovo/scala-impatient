@@ -8,4 +8,5 @@
   - Chapter 4 **Maps and Tuples**: [solutions](src/main/scala/impatient_exercises/Chapter04.scala) - [tests](src/test/scala/impatient_exercises/Chapter04Test.scala)
   - Chapter 5 **Classes**: [solutions](src/main/scala/impatient_exercises/Chapter05.scala) - [tests](src/test/scala/impatient_exercises/Chapter05Test.scala)
   - Chapter 6 **Objects**: [solutions](src/main/scala/impatient_exercises/Chapter06.scala) - [tests](src/test/scala/impatient_exercises/Chapter06Test.scala)
+  - Chapter 7 **Packages and Imports**: [solutions](src/main/scala/impatient_exercises/Chapter07.scala) - [tests](src/test/scala/impatient_exercises/Chapter07Test.scala)  
   - Chapter 17 **Futures**: [solutions](src/main/scala/impatient_exercises/Chapter17.scala) - [tests](src/test/scala/impatient_exercises/Chapter17Test.scala)

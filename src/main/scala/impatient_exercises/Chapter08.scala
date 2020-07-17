@@ -1,6 +1,7 @@
 package impatient_exercises
 
-import java.awt.Point
+import java.awt.{Rectangle => JRectangle}
+import java.awt.{Point => Jpoint}
 
 import scala.collection.mutable.ListBuffer
 
@@ -178,4 +179,140 @@ object Chapter08 {
    *    corner (0, 0) and a given width, and one that constructs a square with corner (0, 0) and
    *     width 0.
    */
+
+  class Square(cornerPoint: Point, width: Int) extends JRectangle(cornerPoint.x.toInt,
+    cornerPoint.y.toInt, width, width) {
+
+    def this() {
+      this(new Point(0,0),0)
+    }
+
+    def this(width: Int) {
+      this(new Point(0,0),width)
+    }
+  }
+
+}
+
+/**
+ * ===A class that provides a solution to Chapter 8 exercise 8  ===
+ *
+ * 8. Compile the Person and SecretAgent classes in Section 8.6, “Overriding Fields,” on page 95
+ *    and analyze the class files with javap. How many name fields are there? How many name
+ *    getter methods are there? What do they get? (Hint: Use the -c and -private options.)
+ *
+ * > javap -c -private impatient_exercises.Person
+ *
+ * Compiled from "Chapter08.scala"
+ * public class impatient_exercises.Person {
+ * private final java.lang.String name;
+ *
+ * public java.lang.String name();
+ * Code:
+ * 0: aload_0
+ * 1: getfield      #13                 // Field name:Ljava/lang/String;
+ * 4: areturn
+ *
+ * public java.lang.String toString();
+ * Code:
+ * 0: new           #18                 // class java/lang/StringBuilder
+ * 3: dup
+ * 4: ldc           #19                 // int 7
+ * 6: invokespecial #23                 // Method java/lang/StringBuilder."<init>":(I)V
+ * 9: aload_0
+ * 10: invokevirtual #27                 // Method getClass:()Ljava/lang/Class;
+ * 13: invokevirtual #32                 // Method java/lang/Class.getName:()Ljava/lang/String;
+ * 16: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+ * 19: ldc           #38                 // String [name=
+ * 21: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+ * 24: aload_0
+ * 25: invokevirtual #40                 // Method name:()Ljava/lang/String;
+ * 28: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+ * 31: ldc           #42                 // String ]
+ * 33: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+ * 36: invokevirtual #44                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+ * 39: areturn
+ *
+ * public impatient_exercises.Person(java.lang.String);
+ * Code:
+ * 0: aload_0
+ * 1: aload_1
+ * 2: putfield      #13                 // Field name:Ljava/lang/String;
+ * 5: aload_0
+ * 6: invokespecial #48                 // Method java/lang/Object."<init>":()V
+ * 9: return
+ * }
+ *
+ * Compiled from "Chapter08.scala"
+ * public class impatient_exercises.SecretAgent extends impatient_exercises.Person {
+ * private final java.lang.String name;
+ *
+ * > javap -c -private impatient_exercises.SecretAgent
+ *
+ * Compiled from "Chapter08.scala"
+ * public class impatient_exercises.SecretAgent extends impatient_exercises.Person {
+ * private final java.lang.String name;
+ *
+ * private final java.lang.String toString;
+ *
+ * public java.lang.String name();
+ * Code:
+ * 0: aload_0
+ * 1: getfield      #14                 // Field name:Ljava/lang/String;
+ * 4: areturn
+ *
+ * public java.lang.String toString();
+ * Code:
+ * 0: aload_0
+ * 1: getfield      #18                 // Field toString:Ljava/lang/String;
+ * 4: areturn
+ *
+ * public impatient_exercises.SecretAgent(java.lang.String);
+ * Code:
+ * 0: aload_0
+ * 1: aload_1
+ * 2: invokespecial #23                 // Method impatient_exercises/Person."<init>":(Ljava/lang/String;)V
+ * 5: aload_0
+ * 6: ldc           #25                 // String secret
+ * 8: putfield      #14                 // Field name:Ljava/lang/String;
+ * 11: aload_0
+ * 12: ldc           #25                 // String secret
+ * 14: putfield      #18                 // Field toString:Ljava/lang/String;
+ * 17: return
+ * }
+ */
+class Person(val name: String) {
+  override def toString = s"${getClass.getName}[name=$name]"
+}
+
+class SecretAgent(codename: String) extends Person(codename) {
+  override val name = "secret" // Don’t want to reveal name . . .
+  override val toString = "secret" // . . . or class name
+}
+
+/**
+ * ===A class that provides a solution to Chapter 8 exercise 9  ===
+ *
+ * 9. In the Creature class of Section 8.10, “Construction Order and Early Definitions,” on page 98,
+ *    replace val range with a def.
+ *
+ *    What happens when you also use a def in the Ant subclass? Why?
+ *    - the env array gets initialized with the value set in the range def in the subclass
+ *
+ *    What happens when you use a val in the subclass? Why?
+ *    - when the env array is initialized, the value of range val in subclass has not yet been
+ *    initialized so it is set to 0
+ *
+ */
+class Creature {
+  def range: Int = 10
+  val env: Array[Int] = new Array[Int](range)
+}
+
+class Ant extends Creature {
+  override def range = 2
+}
+
+class Ant2 extends Creature {
+  override val range = 2
 }

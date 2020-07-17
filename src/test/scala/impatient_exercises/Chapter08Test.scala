@@ -1,6 +1,6 @@
 package impatient_exercises
 
-import impatient_exercises.Chapter08.{Bundle, CheckingAccount, Circle, Item, LabeledPoint, Line, Point, Rectangle, SavingsAccount, SimpleItem}
+import impatient_exercises.Chapter08.{Bundle, CheckingAccount, Circle, Item, LabeledPoint, Line, Point, Rectangle, SavingsAccount, SimpleItem, Square}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -129,4 +129,44 @@ class Chapter08Test extends AnyFlatSpec with Matchers {
     circle.centerpoint shouldEqual new Point(0,0)
   }
 
+  behavior of "Square"
+
+  it should "create a Square providing a point and a width" in {
+    val square = new Square(new Point(1,1), 2)
+    square.x shouldEqual 1
+    square.y shouldEqual 1
+    square.width shouldEqual 2
+    square.height shouldEqual 2
   }
+
+  it should "create a Square with default corner providing a width" in {
+    val square = new Square(3)
+    square.x shouldEqual 0
+    square.y shouldEqual 0
+    square.width shouldEqual 3
+    square.height shouldEqual 3
+  }
+
+  it should "create a default Square" in {
+    val square = new Square()
+    square.x shouldEqual 0
+    square.y shouldEqual 0
+    square.width shouldEqual 0
+    square.height shouldEqual 0
+  }
+
+  behavior of "Ant"
+
+  it should "override super class range def initializing env array to proper size" in {
+    val ant = new Ant
+    ant.env.length shouldEqual 2
+  }
+
+  behavior of "Ant2"
+
+  it should "at initialization of env array, range val is uninitialized, thus range should be 0 " +
+    "at construction" in {
+    val ant = new Ant2
+    ant.env.length shouldEqual 0
+  }
+}

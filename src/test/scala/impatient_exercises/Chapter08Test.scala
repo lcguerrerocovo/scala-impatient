@@ -3,8 +3,10 @@ package impatient_exercises
 import impatient_exercises.Chapter08.{Bundle, CheckingAccount, Circle, Item, LabeledPoint, Line, Point, Rectangle, SavingsAccount, SimpleItem, Square}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
+import org.scalacheck.Gen
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-class Chapter08Test extends AnyFlatSpec with Matchers {
+class Chapter08Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPropertyChecks {
 
   val Tolerance = 0.001d
 
@@ -168,5 +170,17 @@ class Chapter08Test extends AnyFlatSpec with Matchers {
     "at construction" in {
     val ant = new Ant2
     ant.env.length shouldEqual 0
+  }
+
+  behavior of "Point"
+
+  it should "value class Point should pack x and y int coordinates in a long" in {
+    val anyInt = Gen.choose(Int.MinValue,Int.MaxValue)
+    forAll (anyInt,anyInt) {
+      (x: Int, y: Int) =>
+        val point = Point(x, y)
+        point.x shouldEqual x
+        point.y shouldEqual y
+    }
   }
 }

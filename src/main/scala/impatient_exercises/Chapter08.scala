@@ -1,7 +1,7 @@
 package impatient_exercises
 
 import java.awt.{Rectangle => JRectangle}
-import java.awt.{Point => Jpoint}
+import java.nio.ByteBuffer
 
 import scala.collection.mutable.ListBuffer
 
@@ -315,4 +315,40 @@ class Ant extends Creature {
 
 class Ant2 extends Creature {
   override val range = 2
+}
+
+/**
+ * 10. The file scala/collection/immutable/Stack.scala contains the definition class Stack[A]
+ *     protected (protected val elems: List[A]). Explain the meanings of the protected keywords.
+ *     (Hint: Review the discussion of private constructors in Chapter 5.)
+ *
+ *     The protected keyword makes the constructor accesible to the class and its subclasses, which
+ *     means that the primary constructor in this case is only accesible to the class and its
+ *     subclasses so users must use an auxiliary constructor to construct a Stack object
+ */
+
+/**
+ * ===A class that provides a solution to Chapter 8 exercise 11  ===
+ *
+ * 11. Define a value class Point that packs integer x and y coordinates into a Long (which you
+ *     should make private).
+ *
+ */
+class Point(private val coordinates: Long) extends AnyVal {
+  def x: Int = {
+    val arr = (BigInt(coordinates).toByteArray.reverse padTo(8,0.toByte)).reverse
+    ByteBuffer.wrap(arr.take(4)).getInt
+  }
+  def y: Int = {
+    val arr = (BigInt(coordinates).toByteArray.reverse padTo(8,0.toByte)).reverse
+    ByteBuffer.wrap(arr.drop(4)).getInt
+  }
+}
+
+object Point {
+  def apply(x: Int, y: Int) = {
+    val packedArray = (BigInt(x).toByteArray.reverse padTo(4,0.toByte)).reverse ++
+      (BigInt(y).toByteArray.reverse padTo(4,0.toByte)).reverse
+    new Point(ByteBuffer.wrap(packedArray).getLong)
+  }
 }

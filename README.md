@@ -1,6 +1,6 @@
 # Solutions for Scala for the impatient (2nd edition)
 
-  [Scala for the impatient](https://horstmann.com/scala/)
+  This repo is published to [github pages](https://lcguerrerocovo.github.io/scala-impatient/)
   
   - Chapter 1 **The basics**: [solutions](src/main/scala/impatient_exercises/Chapter01.scala)
   - Chapter 2 **Controls structures and functions**: [solutions](src/main/scala/impatient_exercises/Chapter02.scala) - [tests](src/test/scala/impatient_exercises/Chapter02Test.scala)
@@ -12,3 +12,5 @@
   - Chapter 8 **Inheritance**: [solutions](src/main/scala/impatient_exercises/Chapter08.scala) - [tests](src/test/scala/impatient_exercises/Chapter08Test.scala)
   - Chapter 9 **Files and Regular Expressions**: [solutions](src/main/scala/impatient_exercises/Chapter09.scala) - [tests](src/test/scala/impatient_exercises/Chapter09Test.scala)
   - Chapter 17 **Futures**: [solutions](src/main/scala/impatient_exercises/Chapter17.scala) - [tests](src/test/scala/impatient_exercises/Chapter17Test.scala)
+
+  [Scala for the impatient book](https://horstmann.com/scala/)

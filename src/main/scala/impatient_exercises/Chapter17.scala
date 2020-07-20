@@ -7,7 +7,7 @@ import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.math.BigInt
-import scala.jdk.CollectionConverters._
+import scala.collection.JavaConverters._
 
 object Chapter17 {
 

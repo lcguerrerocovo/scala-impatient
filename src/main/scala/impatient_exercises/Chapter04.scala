@@ -1,8 +1,8 @@
 package impatient_exercises
 
 import scala.collection.{immutable, mutable}
-import scala.jdk.CollectionConverters._
 import java.util.Calendar._
+import scala.collection.JavaConverters._
 
 object Chapter04 {
 

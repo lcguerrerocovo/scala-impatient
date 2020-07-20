@@ -2,7 +2,6 @@ package impatient_exercises
 
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
-import scala.jdk.CollectionConverters._
 
 object Chapter03 {
 

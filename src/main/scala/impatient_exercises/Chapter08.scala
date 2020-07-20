@@ -1,3 +1,5 @@
+// Example: Chapter 8: Inheritance
+
 package impatient_exercises
 
 import java.awt.{Rectangle => JRectangle}
@@ -8,12 +10,8 @@ import scala.collection.mutable.ListBuffer
 
 object Chapter08 {
 
-  /**
-   * ===A class that provides a solution to Chapter 8 exercise 1  ===
-   *
-   * 1. Extend the following BankAccount class to a CheckingAccount class that charges $1 for
-   * every deposit and withdrawal.
-   */
+  // 1.Extend the following BankAccount class to a CheckingAccount class that charges $1 for
+  //   every deposit and withdrawal.
   class BankAccount(initialBalance: Double) {
     private var balance = initialBalance
     def currentBalance = balance
@@ -31,15 +29,10 @@ object Chapter08 {
     }
   }
 
-  /**
-   * ===A class that provides a solution to Chapter 8 exercise 2  ===
-   *
-   * 2. Extend the BankAccount class of the preceding exercise into a class SavingsAccount that
-   *    earns interest every month (when a method earnMonthlyInterest is called) and has three free
-   *    deposits or withdrawals every month. Reset the transaction count in the
-   *    earnMonthlyInterest method.
-   */
-
+  // 2.Extend the BankAccount class of the preceding exercise into a class SavingsAccount that
+  //   earns interest every month (when a method earnMonthlyInterest is called) and has three free
+  //   deposits or withdrawals every month. Reset the transaction count in the
+  //   earnMonthlyInterest method.
   class SavingsAccount(initialBalance: Double) extends BankAccount(initialBalance) {
     val FreeTransactions = 3
     var monthlyFreeTransactionCount = FreeTransactions
@@ -78,16 +71,11 @@ object Chapter08 {
     }
   }
 
-  /**
-   * ===A class that provides a solution to Chapter 8 exercise 4  ===
-   *
-   * 4. Define an abstract class Item with methods price and description. A SimpleItem is an item
-   *    whose price and description are specified in the constructor. Take advantage of the fact
-   *    that a val can override a def. A Bundle is an item that contains other items. Its price is
-   *    the sum of the prices in the bundle. Also provide a mechanism for adding items to the
-   *    bundle and a suitable description method.
-   */
-
+  // 4.Define an abstract class Item with methods price and description. A SimpleItem is an item
+  //   whose price and description are specified in the constructor. Take advantage of the fact
+  //   that a val can override a def. A Bundle is an item that contains other items. Its price is
+  //   the sum of the prices in the bundle. Also provide a mechanism for adding items to the
+  //   bundle and a suitable description method.
   abstract class Item {
     def price: Double
     def description: String
@@ -113,15 +101,10 @@ object Chapter08 {
     }
   }
 
-  /**
-   * ===A class that provides a solution to Chapter 8 exercise 5  ===
-   *
-   * 5. Design a class Point whose x and y coordinate values can be provided in a constructor.
-   *    Provide a subclass LabeledPoint whose constructor takes a label value and x and y
-   *    coordinates, such as
-   *
-   *    new LabeledPoint("Black Thursday", 1929, 230.07)
-   */
+  // 5.Design a class Point whose x and y coordinate values can be provided in a constructor.
+  //   Provide a subclass LabeledPoint whose constructor takes a label value and x and y
+  //   coordinates, such as
+  //   new LabeledPoint("Black Thursday", 1929, 230.07)
 
   class Point(val x: Double, val y: Double) {
 
@@ -135,14 +118,9 @@ object Chapter08 {
   class LabeledPoint(override val x: Double, override val y: Double, val label: String)
     extends Point(x,y)
 
-  /**
-   * ===A class that provides a solution to Chapter 8 exercise 6  ===
-   *
-   * 6. Define an abstract class Shape with an abstract method centerPoint and subclasses Rectangle
-   *    and Circle. Provide appropriate constructors for the subclasses and override the
-   *    centerPoint method in each subclass.
-   */
-
+  // 6.Define an abstract class Shape with an abstract method centerPoint and subclasses Rectangle
+  //   and Circle. Provide appropriate constructors for the subclasses and override the
+  //   centerPoint method in each subclass.
   abstract class Shape {
     def centerpoint: Point
   }
@@ -171,14 +149,10 @@ object Chapter08 {
     override def centerpoint: Point = origin
   }
 
-  /**
-   * ===A class that provides a solution to Chapter 8 exercise 7  ===
-   *
-   * 7. Provide a class Square that extends java.awt.Rectangle and has three constructors: one that
-   *    constructs a square with a given corner point and width, one that constructs a square with
-   *    corner (0, 0) and a given width, and one that constructs a square with corner (0, 0) and
-   *     width 0.
-   */
+  // 7.Provide a class Square that extends java.awt.Rectangle and has three constructors: one that
+  //   constructs a square with a given corner point and width, one that constructs a square with
+  //   corner (0, 0) and a given width, and one that constructs a square with corner (0, 0) and
+  //   width 0.
 
   class Square(cornerPoint: Point, width: Int) extends JRectangle(cornerPoint.x.toInt,
     cornerPoint.y.toInt, width, width) {
@@ -194,13 +168,18 @@ object Chapter08 {
 
 }
 
+// 8.Compile the Person and SecretAgent classes in Section 8.6, “Overriding Fields,” on page 95
+//   and analyze the class files with javap. How many name fields are there? How many name
+//   getter methods are there? What do they get? (Hint: Use the -c and -private options.)
+class Person(val name: String) {
+  override def toString = s"${getClass.getName}[name=$name]"
+}
+
+class SecretAgent(codename: String) extends Person(codename) {
+  override val name = "secret" // Don’t want to reveal name . . .
+  override val toString = "secret" // . . . or class name
+}
 /**
- * ===A class that provides a solution to Chapter 8 exercise 8  ===
- *
- * 8. Compile the Person and SecretAgent classes in Section 8.6, “Overriding Fields,” on page 95
- *    and analyze the class files with javap. How many name fields are there? How many name
- *    getter methods are there? What do they get? (Hint: Use the -c and -private options.)
- *
  * > javap -c -private impatient_exercises.Person
  *
  * Compiled from "Chapter08.scala"
@@ -281,29 +260,18 @@ object Chapter08 {
  * 17: return
  * }
  */
-class Person(val name: String) {
-  override def toString = s"${getClass.getName}[name=$name]"
-}
 
-class SecretAgent(codename: String) extends Person(codename) {
-  override val name = "secret" // Don’t want to reveal name . . .
-  override val toString = "secret" // . . . or class name
-}
-
-/**
- * ===A class that provides a solution to Chapter 8 exercise 9  ===
- *
- * 9. In the Creature class of Section 8.10, “Construction Order and Early Definitions,” on page 98,
- *    replace val range with a def.
- *
- *    What happens when you also use a def in the Ant subclass? Why?
- *    - the env array gets initialized with the value set in the range def in the subclass
- *
- *    What happens when you use a val in the subclass? Why?
- *    - when the env array is initialized, the value of range val in subclass has not yet been
- *    initialized so it is set to 0
- *
- */
+// 9.In the Creature class of Section 8.10, “Construction Order and Early Definitions,” on page 98,
+//   replace val range with a def.
+//
+//   What happens when you also use a def in the Ant subclass? Why?
+//
+//   - The env array gets initialized with the value set in the range def in the subclass
+//
+//   What happens when you use a val in the subclass? Why?
+//
+//   - When the env array is initialized, the value of range val in subclass has not yet been
+//     initialized so it is set to 0
 class Creature {
   def range: Int = 10
   val env: Array[Int] = new Array[Int](range)
@@ -317,23 +285,16 @@ class Ant2 extends Creature {
   override val range = 2
 }
 
-/**
- * 10. The file scala/collection/immutable/Stack.scala contains the definition class Stack[A]
- *     protected (protected val elems: List[A]). Explain the meanings of the protected keywords.
- *     (Hint: Review the discussion of private constructors in Chapter 5.)
- *
- *     The protected keyword makes the constructor accesible to the class and its subclasses, which
- *     means that the primary constructor in this case is only accesible to the class and its
- *     subclasses so users must use an auxiliary constructor to construct a Stack object
- */
+// 10.The file scala/collection/immutable/Stack.scala contains the definition class Stack[A]
+//    protected (protected val elems: List[A]). Explain the meanings of the protected keywords.
+//    (Hint: Review the discussion of private constructors in Chapter 5.)
+//
+//    - The protected keyword makes the constructor accesible to the class and its subclasses, which
+//    means that the primary constructor in this case is only accesible to the class and its
+//    subclasses so users must use an auxiliary constructor to construct a Stack object
 
-/**
- * ===A class that provides a solution to Chapter 8 exercise 11  ===
- *
- * 11. Define a value class Point that packs integer x and y coordinates into a Long (which you
- *     should make private).
- *
- */
+// 11.Define a value class Point that packs integer x and y coordinates into a Long (which you
+//    should make private).
 class Point(private val coordinates: Long) extends AnyVal {
   def x: Int = {
     val arr = (BigInt(coordinates).toByteArray.reverse padTo(8,0.toByte)).reverse

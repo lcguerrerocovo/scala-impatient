@@ -1,4 +1,4 @@
-//Example: Chapter 2: Control structures
+// Example: Chapter 2: Control structures
 
 package impatient_exercises
 

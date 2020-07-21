@@ -54,7 +54,7 @@ class Chapter06Test extends AnyFlatSpec with Matchers {
   behavior of "Point"
 
   it should "allow construction via companion object like so Point(x,y)" in {
-    val point = Point(1.02,2.04)
+    val point = Chapter06.Point(1.02,2.04)
     point.x shouldEqual 1.02
     point.y shouldEqual 2.04
   }

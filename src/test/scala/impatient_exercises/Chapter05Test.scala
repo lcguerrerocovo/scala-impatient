@@ -1,6 +1,6 @@
 package impatient_exercises
 
-import impatient_exercises.Chapter05.{BankAccount, BetterPerson, BetterTime, Car, Counter, Employee, Person, Time}
+import impatient_exercises.Chapter05.{BankAccount, BetterPerson, BetterTime, Car, Counter, Employee2, Time}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -68,7 +68,7 @@ class Chapter05Test extends AnyFlatSpec with Matchers {
   behavior of "Person"
 
   it should "set age to 0 if negative" in {
-    new Person(-13).getAge shouldEqual 0
+    new Chapter05.Person(-13).getAge shouldEqual 0
   }
 
   behavior of "BetterPerson"
@@ -119,7 +119,7 @@ class Chapter05Test extends AnyFlatSpec with Matchers {
   behavior of "Employee"
 
   it should "create a default employee with proper values"in {
-    val employee = new Employee()
+    val employee = new Employee2()
     employee.name shouldEqual "John Q. Public"
     employee.salary shouldEqual 0.0
   }

@@ -1,13 +1,11 @@
+// Example: Chapter 6: Objects
+
 package impatient_exercises
 
 object Chapter06 {
 
-  /**
-   * ===A class that provides a solution to Chapter 6 exercise 1  ===
-   *
-   * 1. Write an object Conversions with methods inchesToCentimeters, gallonsToLiters, and milesToKilometers.
-   */
-
+  // **1.Write an object Conversions with methods inchesToCentimeters, gallonsToLiters, and
+  // milesToKilometers.**
   object Conversions {
     val InchesToCentimeters = 2.54d
     val GallonsToLiters = 3.785d
@@ -26,14 +24,9 @@ object Chapter06 {
     }
   }
 
-  /**
-   * ===A class that provides a solution to Chapter 6 exercise 2  ===
-   *
-   * 2. The preceding problem wasn’t very object-oriented. Provide a general super- class
-   * UnitConversion and define objects InchesToCentimeters, GallonsToLiters, and MilesToKilometers
-   * that extend it.
-   */
-
+  // **2.The preceding problem wasn’t very object-oriented. Provide a general super- class
+  // UnitConversion and define objects InchesToCentimeters, GallonsToLiters, and MilesToKilometers
+  // that extend it.**
   abstract class UnitConversion(val conversionFactor: Double)
 
   object InchesToCentimeters extends UnitConversion(2.54d) {
@@ -48,52 +41,33 @@ object Chapter06 {
     def apply(miles: Double): Double = miles * conversionFactor
   }
 
-  /**
-   * ===solution to Chapter 6 exercise 3  ===
-   *
-   * 3. Define an Origin object that extends java.awt.Point. Why is this not actually a good idea?
-   * (Have a close look at the methods of the Point class.)
-   *
-   * Because origin is static (0,0) by definition and should not be able to be changed, java.awt
-   * .Point provides methods to change x and y coordinates and that would be undesired behavior
-   * for the Origin object
-   */
+  // **3.Define an Origin object that extends java.awt.Point. Why is this not actually a good idea?
+  // (Have a close look at the methods of the Point class.)**
+  //
+  //   - Because origin is static (0,0) by definition and should not be able to be changed, java.awt
+  //   Point provides methods to change x and y coordinates and that would be undesired behavior
+  //   for the Origin object
 
-  /**
-   * ===A class that provides a solution to Chapter 6 exercise 4  ===
-   *
-   * 4. Define a Point class with a companion object so that you can construct Point instances
-   * as Point(3, 4), without using new.
-   */
-
+  // **4.Define a Point class with a companion object so that you can construct Point instances
+  // as Point(3, 4), without using new.**
   object Point {
     def apply(x: Double, y: Double): Point = new Point(x,y)
   }
 
   class Point(val x: Double, val y: Double)
 
-  /**
-   * ===A class that provides a solution to Chapter 6 exercise 5  ===
-   *
-   * 5. Write a Scala application, using the App trait, that prints its command-line arguments in
-   * reverse order, separated by spaces. For example, scala Reverse Hello World should print World
-   * Hello.
-   */
-
+  // **5.Write a Scala application, using the App trait, that prints its command-line arguments in
+  // reverse order, separated by spaces. For example, scala Reverse Hello World should print World
+  // Hello.**
   class Reverse extends App {
     print(args.reverse.mkString(" "))
   }
 
-  /**
-   * ===A class that provides a solution to Chapter 6 exercise 6 and 7  ===
-   *
-   * 6. Write an enumeration describing the four playing card suits so that the toString method
-   * returns proper suit.
-   *
-   * 7. Implement a function that checks whether a card suit value from the preceding exercise
-   * * is red.
-   */
-
+  // **6.Write an enumeration describing the four playing card suits so that the toString method
+  // returns proper suit.**
+  //
+  // **7.Implement a function that checks whether a card suit value from the preceding exercise
+  // is red.**
   object PlayingCards extends Enumeration {
     type PlayingCards = Value
 
@@ -107,14 +81,8 @@ object Chapter06 {
     }
   }
 
-  /**
-   * ===A class that provides a solution to Chapter 6 exercise 8  ===
-   *
-   * 8. Write an enumeration describing the eight corners of the RGB color cube. As IDs, use the
-   * color values (for example, 0xff0000 for Red).
-   *
-   */
-
+  // **8.Write an enumeration describing the eight corners of the RGB color cube. As IDs, use the
+  // color values (for example, 0xff0000 for Red).**
   object ColorCube extends Enumeration {
     type ColorCube = Value
 

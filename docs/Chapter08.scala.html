@@ -277,17 +277,15 @@ hr {
 
 <span class="keyword">import</span> <span class="identifier">java</span>.<span class="identifier">awt</span>.{<span class="identifier">Rectangle</span> => <span class="identifier">JRectangle</span>}
 <span class="keyword">import</span> <span class="identifier">java</span>.<span class="identifier">nio</span>.<span class="identifier">ByteBuffer</span>
-
 <span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">collection</span>.<span class="identifier">mutable</span>.<span class="identifier">ListBuffer</span>
-
 
 <span class="keyword">object</span> <span class="identifier">Chapter08</span> {
 &nbsp;</div>
               </section>
             
               <section class="">
-                <div class="comment "><p>1.Extend the following BankAccount class to a CheckingAccount class that charges $1 for
-every deposit and withdrawal.</p></p></div>
+                <div class="comment "><p><strong>1.Extend the following BankAccount class to a CheckingAccount class that charges $1 for
+every deposit and withdrawal.</strong></p></p></div>
                 <div class="code ">  <span class="keyword">class</span> <span class="identifier">BankAccount</span>(<span class="identifier">initialBalance</span>: <span class="identifier">Double</span>) {
     <span class="keyword">private</span> <span class="keyword">var</span> <span class="identifier">balance</span> = <span class="identifier">initialBalance</span>
     <span class="keyword">def</span> <span class="identifier">currentBalance</span> = <span class="identifier">balance</span>
@@ -308,10 +306,10 @@ every deposit and withdrawal.</p></p></div>
               </section>
             
               <section class="">
-                <div class="comment "><p>2.Extend the BankAccount class of the preceding exercise into a class SavingsAccount that
+                <div class="comment "><p><strong>2.Extend the BankAccount class of the preceding exercise into a class SavingsAccount that
 earns interest every month (when a method earnMonthlyInterest is called) and has three free
 deposits or withdrawals every month. Reset the transaction count in the
-earnMonthlyInterest method.</p></p></div>
+earnMonthlyInterest method.</strong></p></p></div>
                 <div class="code ">  <span class="keyword">class</span> <span class="identifier">SavingsAccount</span>(<span class="identifier">initialBalance</span>: <span class="identifier">Double</span>) <span class="keyword">extends</span> <span class="identifier">BankAccount</span>(<span class="identifier">initialBalance</span>) {
     <span class="keyword">val</span> <span class="identifier">FreeTransactions</span> = <span class="number">3</span>
     <span class="keyword">var</span> <span class="identifier">monthlyFreeTransactionCount</span> = <span class="identifier">FreeTransactions</span>
@@ -353,11 +351,11 @@ earnMonthlyInterest method.</p></p></div>
               </section>
             
               <section class="">
-                <div class="comment "><p>4.Define an abstract class Item with methods price and description. A SimpleItem is an item
+                <div class="comment "><p><strong>4.Define an abstract class Item with methods price and description. A SimpleItem is an item
 whose price and description are specified in the constructor. Take advantage of the fact
 that a val can override a def. A Bundle is an item that contains other items. Its price is
 the sum of the prices in the bundle. Also provide a mechanism for adding items to the
-bundle and a suitable description method.</p></p></div>
+bundle and a suitable description method.</strong></p></p></div>
                 <div class="code ">  <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="identifier">Item</span> {
     <span class="keyword">def</span> <span class="identifier">price</span>: <span class="identifier">Double</span>
     <span class="keyword">def</span> <span class="identifier">description</span>: <span class="identifier">String</span>
@@ -386,12 +384,10 @@ bundle and a suitable description method.</p></p></div>
               </section>
             
               <section class="">
-                <div class="comment "><p>5.Design a class Point whose x and y coordinate values can be provided in a constructor.
+                <div class="comment "><p><strong>5.Design a class Point whose x and y coordinate values can be provided in a constructor.
 Provide a subclass LabeledPoint whose constructor takes a label value and x and y
-coordinates, such as
-new LabeledPoint(&quot;Black Thursday&quot;, 1929, 230.07)</p></p></div>
-                <div class="code ">
-  <span class="keyword">class</span> <span class="identifier">Point</span>(<span class="keyword">val</span> <span class="identifier">x</span>: <span class="identifier">Double</span>, <span class="keyword">val</span> <span class="identifier">y</span>: <span class="identifier">Double</span>) {
+coordinates, such as <code>new LabeledPoint(&quot;Black Thursday&quot;, 1929, 230.07)</code></strong></p></p></div>
+                <div class="code ">  <span class="keyword">class</span> <span class="identifier">Point</span>(<span class="keyword">val</span> <span class="identifier">x</span>: <span class="identifier">Double</span>, <span class="keyword">val</span> <span class="identifier">y</span>: <span class="identifier">Double</span>) {
 
     <span class="keyword">final</span> override <span class="keyword">def</span> <span class="identifier">equals</span>(<span class="identifier">other</span>: <span class="identifier">Any</span>) = {
       <span class="keyword">val</span> <span class="identifier">that</span> = <span class="identifier">other</span>.<span class="identifier">asInstanceOf</span>[<span class="identifier">Point</span>]
@@ -406,9 +402,9 @@ new LabeledPoint(&quot;Black Thursday&quot;, 1929, 230.07)</p></p></div>
               </section>
             
               <section class="">
-                <div class="comment "><p>6.Define an abstract class Shape with an abstract method centerPoint and subclasses Rectangle
+                <div class="comment "><p><strong>6.Define an abstract class Shape with an abstract method centerPoint and subclasses Rectangle
 and Circle. Provide appropriate constructors for the subclasses and override the
-centerPoint method in each subclass.</p></p></div>
+centerPoint method in each subclass.</strong></p></p></div>
                 <div class="code ">  <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="identifier">Shape</span> {
     <span class="keyword">def</span> <span class="identifier">centerpoint</span>: <span class="identifier">Point</span>
   }
@@ -440,12 +436,11 @@ centerPoint method in each subclass.</p></p></div>
               </section>
             
               <section class="">
-                <div class="comment "><p>7.Provide a class Square that extends java.awt.Rectangle and has three constructors: one that
+                <div class="comment "><p><strong>7.Provide a class Square that extends java.awt.Rectangle and has three constructors: one that
 constructs a square with a given corner point and width, one that constructs a square with
 corner (0, 0) and a given width, and one that constructs a square with corner (0, 0) and
-width 0.</p></p></div>
-                <div class="code ">
-  <span class="keyword">class</span> <span class="identifier">Square</span>(<span class="identifier">cornerPoint</span>: <span class="identifier">Point</span>, <span class="identifier">width</span>: <span class="identifier">Int</span>) <span class="keyword">extends</span> <span class="identifier">JRectangle</span>(<span class="identifier">cornerPoint</span>.<span class="identifier">x</span>.<span class="identifier">toInt</span>,
+width 0.</strong></p></p></div>
+                <div class="code ">  <span class="keyword">class</span> <span class="identifier">Square</span>(<span class="identifier">cornerPoint</span>: <span class="identifier">Point</span>, <span class="identifier">width</span>: <span class="identifier">Int</span>) <span class="keyword">extends</span> <span class="identifier">JRectangle</span>(<span class="identifier">cornerPoint</span>.<span class="identifier">x</span>.<span class="identifier">toInt</span>,
     <span class="identifier">cornerPoint</span>.<span class="identifier">y</span>.<span class="identifier">toInt</span>, <span class="identifier">width</span>, <span class="identifier">width</span>) {
 
     <span class="keyword">def</span> this() {
@@ -462,9 +457,9 @@ width 0.</p></p></div>
               </section>
             
               <section class="">
-                <div class="comment "><p>8.Compile the Person and SecretAgent classes in Section 8.6, “Overriding Fields,” on page 95
+                <div class="comment "><p><strong>8.Compile the Person and SecretAgent classes in Section 8.6, “Overriding Fields,” on page 95
 and analyze the class files with javap. How many name fields are there? How many name
-getter methods are there? What do they get? (Hint: Use the -c and -private options.)</p></p></div>
+getter methods are there? What do they get? (Hint: Use the -c and -private options.)</strong></p></p></div>
                 <div class="code "><span class="keyword">class</span> <span class="identifier">Person</span>(<span class="keyword">val</span> <span class="identifier">name</span>: <span class="identifier">String</span>) {
   override <span class="keyword">def</span> <span class="identifier">toString</span> = <span class="number">s</span>"<span class="number">$</span>{<span class="identifier">getClass</span>.<span class="identifier">getName</span>}<span class="number">[name=$</span><span class="identifier">name</span><span class="string">]"</span>
 }
@@ -558,13 +553,13 @@ getter methods are there? What do they get? (Hint: Use the -c and -private optio
               </section>
             
               <section class="">
-                <div class="comment "><p>9.In the Creature class of Section 8.10, “Construction Order and Early Definitions,” on page 98,
-replace val range with a def.</p>
-<p>What happens when you also use a def in the Ant subclass? Why?</p>
+                <div class="comment "><p><strong>9.In the Creature class of Section 8.10, “Construction Order and Early Definitions,” on page 98,
+replace val range with a def.</strong></p>
+<p><strong>What happens when you also use a def in the Ant subclass? Why?</strong></p>
 <ul>
   <li>The env array gets initialized with the value set in the range def in the subclass</li>
 </ul>
-<p>What happens when you use a val in the subclass? Why?</p>
+<p><strong>What happens when you use a val in the subclass? Why?</strong></p>
 <ul>
   <li>When the env array is initialized, the value of range val in subclass has not yet been
   initialized so it is set to 0</li>
@@ -585,20 +580,20 @@ replace val range with a def.</p>
               </section>
             
               <section class="">
-                <div class="comment "><p>10.The file scala/collection/immutable/Stack.scala contains the definition class Stack[A]
+                <div class="comment "><p><strong>10.The file scala/collection/immutable/Stack.scala contains the definition class Stack[A]
 protected (protected val elems: List[A]). Explain the meanings of the protected keywords.
-(Hint: Review the discussion of private constructors in Chapter 5.)</p>
+(Hint: Review the discussion of private constructors in Chapter 5.)</strong></p>
 <ul>
-  <li>The protected keyword makes the constructor accesible to the class and its subclasses, which
-  means that the primary constructor in this case is only accesible to the class and its
+  <li>The protected keyword makes the constructor accessible to the class and its subclasses,
+  which means that the primary constructor in this case is only accessible to the class and its
   subclasses so users must use an auxiliary constructor to construct a Stack object</li>
 </ul></p></div>
                 <div class="code empty">&nbsp;</div>
               </section>
             
               <section class="">
-                <div class="comment "><p>11.Define a value class Point that packs integer x and y coordinates into a Long (which you
-should make private).</p></p></div>
+                <div class="comment "><p><strong>11.Define a value class Point that packs integer x and y coordinates into a Long (which you
+should make private).</strong></p></p></div>
                 <div class="code "><span class="keyword">class</span> <span class="identifier">Point</span>(<span class="keyword">private</span> <span class="keyword">val</span> <span class="identifier">coordinates</span>: <span class="identifier">Long</span>) <span class="keyword">extends</span> <span class="identifier">AnyVal</span> {
   <span class="keyword">def</span> <span class="identifier">x</span>: <span class="identifier">Int</span> = {
     <span class="keyword">val</span> <span class="identifier">arr</span> = (<span class="identifier">BigInt</span>(<span class="identifier">coordinates</span>).<span class="identifier">toByteArray</span>.<span class="identifier">reverse</span> <span class="identifier">padTo</span>(<span class="number">8</span>,<span class="number">0</span>.<span class="identifier">toByte</span>)).<span class="identifier">reverse</span>

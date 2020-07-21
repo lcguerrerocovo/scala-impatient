@@ -266,7 +266,7 @@ hr {
 </style>
           
           <section id="header">
-            <div class="comment"><h1>Chapter 9: **Files and Regular Expressions**</h1></div>
+            <div class="comment"><h1>Chapter 6: Objects</h1></div>
             <div class="code"></div>
           </section>
           
@@ -275,38 +275,119 @@ hr {
                 <div class="code ">
 <span class="keyword">package</span> <span class="identifier">impatient_exercises</span>
 
-<span class="keyword">import</span> <span class="identifier">java</span>.<span class="identifier">io</span>.<span class="identifier">PrintWriter</span>
-<span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">io</span>.<span class="identifier">Source</span>
-
-<span class="keyword">object</span> <span class="identifier">Chapter09</span> {
+<span class="keyword">object</span> <span class="identifier">Chapter06</span> {
 &nbsp;</div>
               </section>
             
               <section class="">
-                <div class="comment "><p><strong>1.Write a Scala code snippet that reverses the lines in a file (making the last line the
-first one, and so on).</strong></p></p></div>
-                <div class="code ">  <span class="keyword">def</span> <span class="identifier">reverseFile</span>(<span class="identifier">path</span>: <span class="identifier">String</span>): <span class="identifier">Unit</span>  = {
-    <span class="keyword">val</span> <span class="identifier">reversedContents</span> = <span class="identifier">Source</span>.<span class="identifier">fromFile</span>(<span class="identifier">path</span>).<span class="identifier">getLines</span>.<span class="identifier">toArray</span>.<span class="identifier">reverse</span>.<span class="identifier">mkString</span>(<span class="string">"\n"</span>)
-    <span class="keyword">new</span> <span class="identifier">PrintWriter</span>(<span class="identifier">path</span>) {
-      <span class="identifier">write</span>(<span class="identifier">reversedContents</span>)
-      <span class="identifier">close</span>()
+                <div class="comment "><p><strong>1.Write an object Conversions with methods inchesToCentimeters, gallonsToLiters, and
+milesToKilometers.</strong></p></p></div>
+                <div class="code ">  <span class="keyword">object</span> <span class="identifier">Conversions</span> {
+    <span class="keyword">val</span> <span class="identifier">InchesToCentimeters</span> = <span class="number">2.54d</span>
+    <span class="keyword">val</span> <span class="identifier">GallonsToLiters</span> = <span class="number">3.785d</span>
+    <span class="keyword">val</span> <span class="identifier">MilesToKilometers</span> = <span class="number">1.609344d</span>
+
+    <span class="keyword">def</span> <span class="identifier">inchesToCentimeters</span>(<span class="identifier">inches</span>: <span class="identifier">Double</span>): <span class="identifier">Double</span> = {
+      <span class="identifier">inches</span> <span class="identifier">*</span> <span class="identifier">InchesToCentimeters</span>
+    }
+
+    <span class="keyword">def</span> <span class="identifier">gallonsToLiters</span>(<span class="identifier">gallons</span>: <span class="identifier">Double</span>): <span class="identifier">Double</span> = {
+      <span class="identifier">gallons</span> <span class="identifier">*</span> <span class="identifier">GallonsToLiters</span>
+    }
+
+    <span class="keyword">def</span> <span class="identifier">milesToKilometers</span>(<span class="identifier">miles</span>: <span class="identifier">Double</span>): <span class="identifier">Double</span> = {
+      <span class="identifier">miles</span> <span class="identifier">*</span> <span class="identifier">MilesToKilometers</span>
     }
   }
 &nbsp;</div>
               </section>
             
               <section class="">
-                <div class="comment "><p><strong>2.Write a Scala program that reads a file with tabs, replaces each tab with spaces so that
-tab stops are at n-column boundaries, and writes the result to the same file.</strong></p></p></div>
-                <div class="code ">  <span class="keyword">def</span> <span class="identifier">tabsToSpaces</span>(<span class="identifier">path</span>: <span class="identifier">String</span>, <span class="identifier">spaces</span>: <span class="identifier">Int</span>): <span class="identifier">Unit</span>  = {
-    <span class="keyword">val</span> <span class="identifier">contents</span> = <span class="identifier">Source</span>.<span class="identifier">fromFile</span>(<span class="identifier">path</span>)
-      .<span class="identifier">mkString</span>
-      .<span class="identifier">replaceAll</span>(<span class="string">"\t"</span>, (<span class="string">" "</span> <span class="identifier">*</span> <span class="identifier">spaces</span>))
+                <div class="comment "><p><strong>2.The preceding problem wasn’t very object-oriented. Provide a general super- class
+UnitConversion and define objects InchesToCentimeters, GallonsToLiters, and MilesToKilometers
+that extend it.</strong></p></p></div>
+                <div class="code ">  <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="identifier">UnitConversion</span>(<span class="keyword">val</span> <span class="identifier">conversionFactor</span>: <span class="identifier">Double</span>)
 
-    <span class="keyword">new</span> <span class="identifier">PrintWriter</span>(<span class="identifier">path</span>) {
-      <span class="identifier">write</span>(<span class="identifier">contents</span>)
-      <span class="identifier">close</span>()
+  <span class="keyword">object</span> <span class="identifier">InchesToCentimeters</span> <span class="keyword">extends</span> <span class="identifier">UnitConversion</span>(<span class="number">2.54d</span>) {
+    <span class="keyword">def</span> <span class="identifier">apply</span>(<span class="identifier">inches</span>: <span class="identifier">Double</span>): <span class="identifier">Double</span> = <span class="identifier">inches</span> <span class="identifier">*</span> <span class="identifier">conversionFactor</span>
+  }
+
+  <span class="keyword">object</span> <span class="identifier">GallonsToLiters</span> <span class="keyword">extends</span> <span class="identifier">UnitConversion</span>(<span class="number">3.785d</span>) {
+    <span class="keyword">def</span> <span class="identifier">apply</span>(<span class="identifier">gallons</span>: <span class="identifier">Double</span>): <span class="identifier">Double</span> = <span class="identifier">gallons</span> <span class="identifier">*</span> <span class="identifier">conversionFactor</span>
+  }
+
+  <span class="keyword">object</span> <span class="identifier">MilesToKilometers</span> <span class="keyword">extends</span> <span class="identifier">UnitConversion</span>(<span class="number">1.609344d</span>) {
+    <span class="keyword">def</span> <span class="identifier">apply</span>(<span class="identifier">miles</span>: <span class="identifier">Double</span>): <span class="identifier">Double</span> = <span class="identifier">miles</span> <span class="identifier">*</span> <span class="identifier">conversionFactor</span>
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>3.Define an Origin object that extends java.awt.Point. Why is this not actually a good idea?
+(Have a close look at the methods of the Point class.)</strong></p>
+<ul>
+  <li>Because origin is static (0,0) by definition and should not be able to be changed, java.awt
+  Point provides methods to change x and y coordinates and that would be undesired behavior
+  for the Origin object</li>
+</ul></p></div>
+                <div class="code empty">&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>4.Define a Point class with a companion object so that you can construct Point instances
+as Point(3, 4), without using new.</strong></p></p></div>
+                <div class="code ">  <span class="keyword">object</span> <span class="identifier">Point</span> {
+    <span class="keyword">def</span> <span class="identifier">apply</span>(<span class="identifier">x</span>: <span class="identifier">Double</span>, <span class="identifier">y</span>: <span class="identifier">Double</span>): <span class="identifier">Point</span> = <span class="keyword">new</span> <span class="identifier">Point</span>(<span class="identifier">x</span>,<span class="identifier">y</span>)
+  }
+
+  <span class="keyword">class</span> <span class="identifier">Point</span>(<span class="keyword">val</span> <span class="identifier">x</span>: <span class="identifier">Double</span>, <span class="keyword">val</span> <span class="identifier">y</span>: <span class="identifier">Double</span>)
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>5.Write a Scala application, using the App trait, that prints its command-line arguments in
+reverse order, separated by spaces. For example, scala Reverse Hello World should print World
+Hello.</strong></p></p></div>
+                <div class="code ">  <span class="keyword">class</span> <span class="identifier">Reverse</span> <span class="keyword">extends</span> <span class="identifier">App</span> {
+    <span class="identifier">print</span>(<span class="identifier">args</span>.<span class="identifier">reverse</span>.<span class="identifier">mkString</span>(<span class="string">" "</span>))
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>6.Write an enumeration describing the four playing card suits so that the toString method
+returns proper suit.</strong></p>
+<p><strong>7.Implement a function that checks whether a card suit value from the preceding exercise
+is red.</strong></p></p></div>
+                <div class="code ">  <span class="keyword">object</span> <span class="identifier">PlayingCards</span> <span class="keyword">extends</span> <span class="identifier">Enumeration</span> {
+    type <span class="identifier">PlayingCards</span> = <span class="identifier">Value</span>
+
+    <span class="keyword">val</span> <span class="identifier">Hearts</span> = <span class="identifier">Value</span>(<span class="string">"\u2665"</span>)
+    <span class="keyword">val</span> <span class="identifier">Clubs</span> = <span class="identifier">Value</span>(<span class="string">"\u2663"</span>)
+    <span class="keyword">val</span> <span class="identifier">Diamonds</span> = <span class="identifier">Value</span>(<span class="string">"\u2666"</span>)
+    <span class="keyword">val</span> <span class="identifier">Spades</span> = <span class="identifier">Value</span>(<span class="string">"\u2660"</span>)
+
+    <span class="keyword">def</span> <span class="identifier">isRed</span>(<span class="identifier">suit</span>: <span class="identifier">PlayingCards</span>.<span class="identifier">PlayingCards</span>) = {
+      <span class="identifier">suit</span> <span class="identifier">==</span> <span class="identifier">Hearts</span> <span class="identifier">||</span> <span class="identifier">suit</span> <span class="identifier">==</span> <span class="identifier">Diamonds</span>
     }
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>8.Write an enumeration describing the eight corners of the RGB color cube. As IDs, use the
+color values (for example, 0xff0000 for Red).</strong></p></p></div>
+                <div class="code ">  <span class="keyword">object</span> <span class="identifier">ColorCube</span> <span class="keyword">extends</span> <span class="identifier">Enumeration</span> {
+    type <span class="identifier">ColorCube</span> = <span class="identifier">Value</span>
+
+    <span class="keyword">val</span> <span class="identifier">Black</span> = <span class="identifier">Value</span>(<span class="number">0x000000</span>,<span class="string">"Black"</span>)
+    <span class="keyword">val</span> <span class="identifier">Blue</span> = <span class="identifier">Value</span>(<span class="number">0x0000ff</span>,<span class="string">"Blue"</span>)
+    <span class="keyword">val</span> <span class="identifier">Red</span> = <span class="identifier">Value</span>(<span class="number">0xff0000</span>,<span class="string">"Red"</span>)
+    <span class="keyword">val</span> <span class="identifier">Magenta</span> = <span class="identifier">Value</span>(<span class="number">0xff00ff</span>,<span class="string">"Magenta"</span>)
+    <span class="keyword">val</span> <span class="identifier">Green</span> = <span class="identifier">Value</span>(<span class="number">0x00ff00</span>,<span class="string">"Green"</span>)
+    <span class="keyword">val</span> <span class="identifier">Cyan</span> = <span class="identifier">Value</span>(<span class="number">0x00ffff</span>,<span class="string">"Cyan"</span>)
+    <span class="keyword">val</span> <span class="identifier">Yellow</span> = <span class="identifier">Value</span>(<span class="number">0xffff00</span>,<span class="string">"Yellow"</span>)
+    <span class="keyword">val</span> <span class="identifier">White</span> = <span class="identifier">Value</span>(<span class="number">0xffffff</span>,<span class="string">"White"</span>)
   }
 }&nbsp;</div>
               </section>

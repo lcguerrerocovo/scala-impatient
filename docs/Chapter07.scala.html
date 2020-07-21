@@ -266,7 +266,7 @@ hr {
 </style>
           
           <section id="header">
-            <div class="comment"><h1>Chapter 9: **Files and Regular Expressions**</h1></div>
+            <div class="comment"><h1>Chapter 7: Packages and Imports</h1></div>
             <div class="code"></div>
           </section>
           
@@ -274,40 +274,130 @@ hr {
                 <div class="comment empty"></p></div>
                 <div class="code ">
 <span class="keyword">package</span> <span class="identifier">impatient_exercises</span>
-
-<span class="keyword">import</span> <span class="identifier">java</span>.<span class="identifier">io</span>.<span class="identifier">PrintWriter</span>
-<span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">io</span>.<span class="identifier">Source</span>
-
-<span class="keyword">object</span> <span class="identifier">Chapter09</span> {
 &nbsp;</div>
               </section>
             
               <section class="">
-                <div class="comment "><p><strong>1.Write a Scala code snippet that reverses the lines in a file (making the last line the
-first one, and so on).</strong></p></p></div>
-                <div class="code ">  <span class="keyword">def</span> <span class="identifier">reverseFile</span>(<span class="identifier">path</span>: <span class="identifier">String</span>): <span class="identifier">Unit</span>  = {
-    <span class="keyword">val</span> <span class="identifier">reversedContents</span> = <span class="identifier">Source</span>.<span class="identifier">fromFile</span>(<span class="identifier">path</span>).<span class="identifier">getLines</span>.<span class="identifier">toArray</span>.<span class="identifier">reverse</span>.<span class="identifier">mkString</span>(<span class="string">"\n"</span>)
-    <span class="keyword">new</span> <span class="identifier">PrintWriter</span>(<span class="identifier">path</span>) {
-      <span class="identifier">write</span>(<span class="identifier">reversedContents</span>)
-      <span class="identifier">close</span>()
+                <div class="comment "><p><strong>1.Write an example program to demonstrate that:</strong></p></p></div>
+                <div class="code ">/**
+ * package com.horstmann.impatient
+ */&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>is not the same as:</strong></p></p></div>
+                <div class="code ">/**
+ * package com
+ * package horstmann
+ * package impatient
+ */
+<span class="keyword">package</span> <span class="identifier">com</span> {
+  <span class="keyword">object</span> <span class="identifier">Person</span> {
+    <span class="keyword">val</span> <span class="identifier">name</span> = <span class="string">"Fredrick"</span>
+  }
+  <span class="keyword">package</span> <span class="identifier">horstmann</span> {
+    <span class="keyword">object</span> <span class="identifier">Book</span> {
+      <span class="keyword">val</span> <span class="identifier">name</span> = <span class="string">"Thus Spoke Zarathustra"</span>
     }
   }
+}
 &nbsp;</div>
               </section>
             
               <section class="">
-                <div class="comment "><p><strong>2.Write a Scala program that reads a file with tabs, replaces each tab with spaces so that
-tab stops are at n-column boundaries, and writes the result to the same file.</strong></p></p></div>
-                <div class="code ">  <span class="keyword">def</span> <span class="identifier">tabsToSpaces</span>(<span class="identifier">path</span>: <span class="identifier">String</span>, <span class="identifier">spaces</span>: <span class="identifier">Int</span>): <span class="identifier">Unit</span>  = {
-    <span class="keyword">val</span> <span class="identifier">contents</span> = <span class="identifier">Source</span>.<span class="identifier">fromFile</span>(<span class="identifier">path</span>)
-      .<span class="identifier">mkString</span>
-      .<span class="identifier">replaceAll</span>(<span class="string">"\t"</span>, (<span class="string">" "</span> <span class="identifier">*</span> <span class="identifier">spaces</span>))
-
-    <span class="keyword">new</span> <span class="identifier">PrintWriter</span>(<span class="identifier">path</span>) {
-      <span class="identifier">write</span>(<span class="identifier">contents</span>)
-      <span class="identifier">close</span>()
+                <div class="comment "><p>the following form is same as top of file:</p></p></div>
+                <div class="code ">/**
+ * package com
+ * package horstmann
+ * package impatient
+ */
+<span class="keyword">package</span> <span class="identifier">com</span> {
+  <span class="keyword">package</span> <span class="identifier">horstmann</span> {
+    <span class="keyword">package</span> <span class="identifier">impatient</span> {
+      <span class="keyword">class</span> <span class="identifier">Publication</span> {&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><code>com</code> and <code>com.horstmann</code> are accesible here because of nesting in packages</p></p></div>
+                <div class="code ">        <span class="keyword">val</span> <span class="identifier">entry</span> = <span class="string">"author:"</span> <span class="identifier">+</span> <span class="identifier">Person</span>.<span class="identifier">name</span> <span class="identifier">+</span> <span class="string">"/publication:"</span> <span class="identifier">+</span> <span class="identifier">Book</span>.<span class="identifier">name</span>
+      }
     }
   }
+}
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p>the following form is same as top of file:</p></p></div>
+                <div class="code ">/**
+ * package com.horstmann.impatient
+ */
+<span class="keyword">package</span> <span class="identifier">com</span>.<span class="identifier">hosrtmann</span>.<span class="identifier">impatient</span> {
+  <span class="keyword">class</span> <span class="identifier">Publication2</span> {&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><code>com</code> and <code>com.horstmann</code> are not accesible here so following statement would not compile
+<code>val entry = &quot;author:&quot; + Person.name + &quot;/publication:&quot; + Book.name</code></p></p></div>
+                <div class="code ">  }
+}
+
+<span class="keyword">object</span> <span class="identifier">Chapter07</span> {
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>3.Write a package random with functions nextInt(): Int, nextDouble(): Double, and
+setSeed(seed: Int): Unit. To generate random numbers, use the linear congruential generator
+<code>next = (previous × a + b) mod 2^n</code>
+where a = 1664525, b = 1013904223, n = 32, and the initial value of previous seed</strong></p></p></div>
+                <div class="code ">  <span class="keyword">class</span> <span class="identifier">Random</span>&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p>see: <a href="https://github.com/lcguerrerocovo/scala-impatient/blob/master/src/main/scala/impatient_exercises/random/package.scala">impatient_exercises.random</a></p></p></div>
+                <div class="code empty">&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>4.Why do you think the Scala language designers provided the package object syntax instead of
+simply letting you add functions and variables to a package?</strong></p>
+<ul>
+  <li>For interoperability with Java, the JVM has the limitation of not allowing definitions of
+  functions of variables in packages so scala packages do not allow for that as well</li>
+</ul></p></div>
+                <div class="code empty">&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>5.What is the meaning of private[com] def giveRaise(rate: Double)? Is it useful?</strong></p>
+<ul>
+  <li>It makes the giveRaise method accesible from all com.* packages, it does not seem useful
+  since the com package is used as standard naming notation for most scala programs and
+  would lead to programs with similarly named methods not compiling unless developers
+  carefully import the right method</li>
+</ul></p></div>
+                <div class="code empty">&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>6.Write a program that copies all elements from a Java hash map into a Scala
+hash map. Use imports to rename both classes.</strong></p></p></div>
+                <div class="code ">  <span class="keyword">object</span> <span class="identifier">MapConverter</span> {
+    <span class="keyword">import</span> <span class="identifier">java</span>.<span class="identifier">util</span>.{<span class="identifier">HashMap</span> => <span class="identifier">JavaHashMap</span>}
+    <span class="keyword">import</span> <span class="identifier">collection</span>.<span class="identifier">mutable</span>.{<span class="identifier">HashMap</span> => <span class="identifier">ScalaHashMap</span>}
+
+    <span class="keyword">def</span> <span class="identifier">copy</span>[<span class="identifier">K</span>,<span class="identifier">V</span>](<span class="identifier">map</span>: <span class="identifier">JavaHashMap</span>[<span class="identifier">K</span>,<span class="identifier">V</span>]): <span class="identifier">ScalaHashMap</span>[<span class="identifier">K</span>,<span class="identifier">V</span>] = {
+      <span class="keyword">val</span> <span class="identifier">entrySet</span> = <span class="identifier">map</span>.<span class="identifier">entrySet</span>().<span class="identifier">iterator</span>()
+      <span class="keyword">val</span> <span class="identifier">scalaMap</span> = <span class="identifier">ScalaHashMap</span>[<span class="identifier">K</span>,<span class="identifier">V</span>]()
+      <span class="keyword">while</span>(<span class="identifier">entrySet</span>.<span class="identifier">hasNext</span>()) {
+        <span class="keyword">val</span> <span class="identifier">kv</span> = <span class="identifier">entrySet</span>.<span class="identifier">next</span>()
+        <span class="identifier">scalaMap</span> <span class="identifier">+=</span> (<span class="identifier">kv</span>.<span class="identifier">getKey</span> <span class="identifier">-></span> <span class="identifier">kv</span>.<span class="identifier">getValue</span>)
+      }
+      <span class="identifier">scalaMap</span>
+    }
+  }
+
 }&nbsp;</div>
               </section>
             

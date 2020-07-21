@@ -106,7 +106,7 @@ class Chapter08Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
   it should "provide a Point with x y coordinates and a label" in {
     val labeledPoint = new LabeledPoint(1929, 230.07, "Black Thursday")
     labeledPoint.isInstanceOf[LabeledPoint] shouldEqual true
-    labeledPoint.isInstanceOf[Point] shouldEqual true
+    labeledPoint.isInstanceOf[Chapter08.Point] shouldEqual true
     labeledPoint.getClass shouldEqual classOf[LabeledPoint]
 
     labeledPoint.x shouldEqual 1929
@@ -117,24 +117,24 @@ class Chapter08Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
   behavior of "Rectangle"
 
   it should "compute centerpoint" in {
-    val left = new Line(new Point(1,4), new Point(3,2))
-    val right = new Line(new Point(4,6), new Point(6,4))
+    val left = new Line(new Chapter08.Point(1,4), new Chapter08.Point(3,2))
+    val right = new Line(new Chapter08.Point(4,6), new Chapter08.Point(6,4))
 
     val rectangle = new Rectangle(left, right)
-    rectangle.centerpoint shouldEqual new Point(3,4)
+    rectangle.centerpoint shouldEqual new Chapter08.Point(3,4)
   }
 
   behavior of "Circle"
 
   it should "compute centerpoint" in {
-    val circle = new Circle(new Point(0,0), 2)
-    circle.centerpoint shouldEqual new Point(0,0)
+    val circle = new Circle(new Chapter08.Point(0,0), 2)
+    circle.centerpoint shouldEqual new Chapter08.Point(0,0)
   }
 
   behavior of "Square"
 
   it should "create a Square providing a point and a width" in {
-    val square = new Square(new Point(1,1), 2)
+    val square = new Square(new Chapter08.Point(1,1), 2)
     square.x shouldEqual 1
     square.y shouldEqual 1
     square.width shouldEqual 2

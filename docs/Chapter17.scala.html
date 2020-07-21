@@ -266,7 +266,7 @@ hr {
 </style>
           
           <section id="header">
-            <div class="comment"><h1>Chapter 9: Files and Regular Expressions</h1></div>
+            <div class="comment"><h1>Chapter 17: Futures</h1></div>
             <div class="code"></div>
           </section>
           
@@ -275,38 +275,221 @@ hr {
                 <div class="code ">
 <span class="keyword">package</span> <span class="identifier">impatient_exercises</span>
 
-<span class="keyword">import</span> <span class="identifier">java</span>.<span class="identifier">io</span>.<span class="identifier">PrintWriter</span>
-<span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">io</span>.<span class="identifier">Source</span>
+<span class="keyword">import</span> <span class="identifier">org</span>.<span class="identifier">jsoup</span>.<span class="identifier">Jsoup</span>
+<span class="keyword">import</span> <span class="identifier">org</span>.<span class="identifier">jsoup</span>.<span class="identifier">nodes</span>.<span class="identifier">Document</span>
 
-<span class="keyword">object</span> <span class="identifier">Chapter09</span> {
+<span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">concurrent</span>.{<span class="identifier">Await</span>, <span class="identifier">Future</span>}
+<span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">concurrent</span>.<span class="identifier">ExecutionContext</span>.<span class="identifier">Implicits</span>.<span class="identifier">global</span>
+<span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">concurrent</span>.<span class="identifier">duration</span>._
+<span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">math</span>.<span class="identifier">BigInt</span>
+<span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">collection</span>.<span class="identifier">JavaConverters</span>._
+
+<span class="keyword">object</span> <span class="identifier">Chapter17</span> {
 &nbsp;</div>
               </section>
             
               <section class="">
-                <div class="comment "><p><strong>1.Write a Scala code snippet that reverses the lines in a file (making the last line the
-first one, and so on).</strong></p></p></div>
-                <div class="code ">  <span class="keyword">def</span> <span class="identifier">reverseFile</span>(<span class="identifier">path</span>: <span class="identifier">String</span>): <span class="identifier">Unit</span>  = {
-    <span class="keyword">val</span> <span class="identifier">reversedContents</span> = <span class="identifier">Source</span>.<span class="identifier">fromFile</span>(<span class="identifier">path</span>).<span class="identifier">getLines</span>.<span class="identifier">toArray</span>.<span class="identifier">reverse</span>.<span class="identifier">mkString</span>(<span class="string">"\n"</span>)
-    <span class="keyword">new</span> <span class="identifier">PrintWriter</span>(<span class="identifier">path</span>) {
-      <span class="identifier">write</span>(<span class="identifier">reversedContents</span>)
-      <span class="identifier">close</span>()
+                <div class="comment "><p><strong>1.Consider the expression</strong></p></p></div>
+                <div class="code ">  <span class="keyword">for</span> (
+    <span class="identifier">n1</span> &lt;- <span class="identifier">Future</span> { <span class="identifier">Thread</span>.<span class="identifier">sleep</span>(<span class="number">1000</span>) ; <span class="number">2</span> };
+    <span class="identifier">n2</span> &lt;- <span class="identifier">Future</span> { <span class="identifier">Thread</span>.<span class="identifier">sleep</span>(<span class="number">1000</span>); <span class="number">40</span> }
+  ) <span class="identifier">println</span>(<span class="identifier">n1</span> <span class="identifier">+</span> <span class="identifier">n2</span>)&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>How is the expression translated to map and flatMap calls? Are the two futures executed
+concurrently or one after the other? In which thread does the call to println occur?</strong>
+<code>scala&gt; Chapter17.flatMapFuture</code></p></p></div>
+                <div class="code ">  <span class="keyword">def</span> <span class="identifier">flatMapFuture</span> = {
+    <span class="keyword">val</span> <span class="identifier">future1</span> = <span class="identifier">Future</span> { <span class="identifier">Thread</span>.<span class="identifier">sleep</span>(<span class="number">1000</span>) ; <span class="number">2</span> }
+    <span class="keyword">val</span> <span class="identifier">future2</span> = <span class="identifier">Future</span> { <span class="identifier">Thread</span>.<span class="identifier">sleep</span>(<span class="number">1000</span>) ; <span class="number">40</span> }
+
+    <span class="keyword">val</span> <span class="identifier">result</span>: <span class="identifier">Int</span> = <span class="identifier">Await</span>.<span class="identifier">result</span>(<span class="identifier">future1</span>.<span class="identifier">flatMap</span>(<span class="identifier">x</span> => <span class="identifier">future2</span>.<span class="identifier">map</span>(<span class="identifier">y</span> => <span class="identifier">x</span> <span class="identifier">+</span> <span class="identifier">y</span>)), <span class="number">1</span>.<span class="identifier">seconds</span>)
+    <span class="identifier">println</span>(<span class="identifier">result</span>)
+  }
+
+  <span class="keyword">def</span> <span class="identifier">doInOrder</span>[<span class="identifier">U</span>,<span class="identifier">T</span>,<span class="identifier">V</span>](<span class="identifier">f</span>: <span class="identifier">T</span> => <span class="identifier">Future</span>[<span class="identifier">U</span>], <span class="identifier">g</span>: <span class="identifier">U</span> => <span class="identifier">Future</span>[<span class="identifier">V</span>])(<span class="identifier">t</span>: <span class="identifier">T</span>): <span class="identifier">Future</span>[<span class="identifier">V</span>] = {
+    <span class="identifier">f</span>(<span class="identifier">t</span>).<span class="identifier">flatMap</span>(<span class="identifier">x</span> => <span class="identifier">g</span>(<span class="identifier">x</span>))
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p>2.Write a function doInOrder that, given two functions f: T =&gt; Future[U] and g: U =&gt; Future[V]
+produces a function T =&gt; Future[U] that, for a given t, eventually yields g(f(t))
+<code>scala&gt; Chapter17.doInOrder(3)</code></p></p></div>
+                <div class="code ">  <span class="keyword">def</span> <span class="identifier">doInOrder</span>(<span class="identifier">x</span>: <span class="identifier">Int</span>): <span class="identifier">String</span> = {
+    <span class="keyword">def</span> <span class="identifier">f</span>: <span class="identifier">Int</span> => <span class="identifier">Future</span>[<span class="identifier">Double</span>] = { <span class="identifier">x</span>: <span class="identifier">Int</span> =>
+      <span class="identifier">Future</span>[<span class="identifier">Double</span>] { <span class="identifier">Thread</span>.<span class="identifier">sleep</span>(<span class="number">1000</span>) ; <span class="identifier">x</span>.<span class="identifier">toDouble</span><span class="identifier">/</span><span class="number">10</span> }
+    }
+
+    <span class="keyword">def</span> <span class="identifier">g</span>: <span class="identifier">Double</span> => <span class="identifier">Future</span>[<span class="identifier">String</span>] = { <span class="identifier">y</span>: <span class="identifier">Double</span> =>
+      <span class="identifier">Future</span>[<span class="identifier">String</span>] { <span class="identifier">Thread</span>.<span class="identifier">sleep</span>(<span class="number">1000</span>) ; <span class="identifier">y</span>.<span class="identifier">toString</span> }
+    }
+
+    <span class="keyword">val</span> <span class="identifier">fun</span> = <span class="identifier">Chapter17</span>.<span class="identifier">doInOrder</span>(<span class="identifier">f</span>,<span class="identifier">g</span>) _
+    <span class="identifier">Await</span>.<span class="identifier">result</span>(<span class="identifier">fun</span>(<span class="identifier">x</span>),<span class="number">3</span>.<span class="identifier">seconds</span>)
+  }
+
+  <span class="keyword">def</span> <span class="identifier">doInSequence</span>[<span class="identifier">T</span>](<span class="identifier">funs</span>: <span class="identifier">Seq</span>[<span class="identifier">T</span> => <span class="identifier">Future</span>[<span class="identifier">T</span>]])(<span class="identifier">t</span>: <span class="identifier">T</span>): <span class="identifier">Future</span>[<span class="identifier">T</span>] = <span class="identifier">funs</span> <span class="keyword">match</span> {
+    <span class="keyword">case</span> <span class="identifier">f</span> <span class="identifier">::</span> <span class="identifier">Nil</span> => <span class="identifier">f</span>(<span class="identifier">t</span>)
+    <span class="keyword">case</span> <span class="identifier">f</span> <span class="identifier">::</span> <span class="identifier">tail</span> => <span class="identifier">f</span>(<span class="identifier">t</span>).<span class="identifier">flatMap</span>(<span class="identifier">x</span> => <span class="identifier">doInSequence</span>(<span class="identifier">tail</span>)(<span class="identifier">x</span>))
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><ol class="arabic">
+  <li>Repeat the preceding exercise for any sequence of functions of type T =&gt; Future[T].&quot;&quot;&quot;)
+  <code>scala&gt; Chapter17.doInSequence(3,5))</code></li>
+</ol></p></div>
+                <div class="code ">  <span class="keyword">def</span> <span class="identifier">doInSequence</span>(<span class="identifier">x</span>: <span class="identifier">Int</span>, <span class="identifier">times</span>: <span class="identifier">Int</span>): <span class="identifier">Int</span> = {
+    <span class="keyword">def</span> <span class="identifier">f</span>: <span class="identifier">Int</span> => <span class="identifier">Future</span>[<span class="identifier">Int</span>] = { <span class="identifier">x</span>: <span class="identifier">Int</span> =>
+      <span class="identifier">Future</span>[<span class="identifier">Int</span>] { <span class="identifier">Thread</span>.<span class="identifier">sleep</span>(<span class="number">1000</span>) ; <span class="identifier">x</span> <span class="identifier">*</span> <span class="number">10</span> }
+    }
+
+    <span class="keyword">val</span> <span class="identifier">fun</span>: <span class="identifier">Int</span> => <span class="identifier">Future</span>[<span class="identifier">Int</span>] = <span class="identifier">Chapter17</span>.<span class="identifier">doInSequence</span>(<span class="identifier">Seq</span>.<span class="identifier">fill</span>(<span class="identifier">times</span>)(<span class="identifier">f</span>)) _
+    <span class="identifier">Await</span>.<span class="identifier">result</span>(<span class="identifier">fun</span>(<span class="identifier">x</span>),(<span class="number">1</span>.<span class="identifier">seconds</span> <span class="identifier">*</span> <span class="identifier">times</span>) <span class="identifier">+</span> <span class="number">1</span>.<span class="identifier">seconds</span>)
+  }
+
+  <span class="keyword">def</span> <span class="identifier">doTogether</span>[<span class="identifier">T</span>,<span class="identifier">U</span>,<span class="identifier">V</span>](<span class="identifier">f</span>: <span class="identifier">T</span> => <span class="identifier">Future</span>[<span class="identifier">U</span>], <span class="identifier">g</span>: <span class="identifier">T</span> => <span class="identifier">Future</span>[<span class="identifier">V</span>])(<span class="identifier">t</span>: <span class="identifier">T</span>): <span class="identifier">Future</span>[(<span class="identifier">U</span>,<span class="identifier">V</span>)] = {
+    <span class="identifier">f</span>(<span class="identifier">t</span>) <span class="identifier">zip</span> <span class="identifier">g</span>(<span class="identifier">t</span>)
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>4.Write a function doTogether that, given two functions f: T =&gt; Future[U] and g: U =&gt;
+Future[V], produces a function T =&gt; Future[(U, V)], running the two computations in parallel
+and, for a given t, eventually yielding (f(t), g(t)).&quot;&quot;&quot;)</strong>
+<code>scala&gt; println(Chapter17.doTogether(3))</code></p></p></div>
+                <div class="code ">  <span class="keyword">def</span> <span class="identifier">doTogether</span>(<span class="identifier">x</span>: <span class="identifier">Int</span>): (<span class="identifier">Double</span>,<span class="identifier">String</span>) ={
+    <span class="keyword">def</span> <span class="identifier">f</span>: <span class="identifier">Int</span> => <span class="identifier">Future</span>[<span class="identifier">Double</span>] = { <span class="identifier">x</span>: <span class="identifier">Int</span> =>
+      <span class="identifier">Future</span>[<span class="identifier">Double</span>] { <span class="identifier">Thread</span>.<span class="identifier">sleep</span>(<span class="number">1000</span>) ; <span class="identifier">x</span>.<span class="identifier">toDouble</span><span class="identifier">/</span><span class="number">10</span> }
+    }
+
+    <span class="keyword">def</span> <span class="identifier">g</span>: <span class="identifier">Int</span> => <span class="identifier">Future</span>[<span class="identifier">String</span>] = { <span class="identifier">x</span>: <span class="identifier">Int</span> =>
+      <span class="identifier">Future</span>[<span class="identifier">String</span>] { <span class="identifier">Thread</span>.<span class="identifier">sleep</span>(<span class="number">1000</span>) ; <span class="identifier">x</span>.<span class="identifier">toString</span> }
+    }
+
+    <span class="keyword">val</span> <span class="identifier">fun</span> = <span class="identifier">Chapter17</span>.<span class="identifier">doTogether</span>(<span class="identifier">f</span>,<span class="identifier">g</span>) _
+    <span class="identifier">Await</span>.<span class="identifier">result</span>(<span class="identifier">fun</span>(<span class="identifier">x</span>),<span class="number">2</span>.<span class="identifier">seconds</span>)
+  }
+
+
+  <span class="keyword">def</span> <span class="identifier">eventuallyDoSequence</span>[<span class="identifier">T</span>](<span class="identifier">seq</span>: <span class="identifier">Seq</span>[<span class="identifier">Future</span>[<span class="identifier">T</span>]]) : <span class="identifier">Future</span>[<span class="identifier">Seq</span>[<span class="identifier">T</span>]] = {
+    <span class="identifier">Future</span>.<span class="identifier">sequence</span>(<span class="identifier">seq</span>)
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>5.Write a function that receives a sequence of futures and returns a future that
+eventually yields a sequence of all results</strong>
+<code>scala&gt; Chapter17.eventuallyDoSequence</code></p></p></div>
+                <div class="code ">  <span class="keyword">def</span> <span class="identifier">eventuallyDoSequence</span>: <span class="identifier">Seq</span>[<span class="identifier">Int</span>] = {
+    <span class="keyword">def</span> <span class="identifier">parts</span> = <span class="identifier">Seq</span>(<span class="number">1</span><span class="identifier">*</span><span class="number">1</span>,<span class="number">2</span><span class="identifier">*</span><span class="number">2</span>,<span class="number">3</span><span class="identifier">*</span><span class="number">4</span>)
+    <span class="keyword">def</span> <span class="identifier">futures</span>: <span class="identifier">Seq</span>[<span class="identifier">Future</span>[<span class="identifier">Int</span>]] = <span class="identifier">parts</span>.<span class="identifier">map</span>(<span class="identifier">p</span> => <span class="identifier">Future</span> { <span class="identifier">p</span> })
+    <span class="identifier">Await</span>.<span class="identifier">result</span>(<span class="identifier">eventuallyDoSequence</span>(<span class="identifier">futures</span>), <span class="number">1</span>.<span class="identifier">seconds</span>)
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p>6.Write a method Future[T] repeat(action: =&gt; T, until: T =&gt; Boolean)
+that asynchronously repeats the action until it produces a value that is accepted by the until
+predicate, which should also run asynchronously. Test with a function that reads a password
+from the console, and a function that simulates a validity check by sleeping for a second
+and then checking that the password is &quot;secret&quot;. Hint: Use recursion.</p></p></div>
+                <div class="code ">  <span class="keyword">def</span> <span class="identifier">repeat</span>[<span class="identifier">T</span>](<span class="identifier">action</span>: => <span class="identifier">T</span>, <span class="identifier">until</span>: <span class="identifier">T</span> => <span class="identifier">Boolean</span>): <span class="identifier">Future</span>[<span class="identifier">T</span>] = {
+    <span class="keyword">def</span> <span class="identifier">eventuallyAction</span> = <span class="identifier">Future</span> { <span class="identifier">action</span> }
+    <span class="keyword">def</span> <span class="identifier">eventuallyUntil</span>(<span class="identifier">x</span>: <span class="identifier">T</span>) = <span class="identifier">Future</span> { <span class="identifier">Thread</span>.<span class="identifier">sleep</span>(<span class="number">1000</span>); <span class="identifier">until</span>(<span class="identifier">x</span>) }
+    <span class="identifier">eventuallyAction</span>.<span class="identifier">flatMap</span>{ <span class="identifier">x</span> =>
+      <span class="identifier">eventuallyUntil</span>(<span class="identifier">x</span>).<span class="identifier">flatMap</span> { <span class="identifier">y</span> =>
+        <span class="keyword">if</span> (<span class="identifier">!</span><span class="identifier">y</span>) <span class="identifier">repeat</span>(<span class="identifier">action</span>, <span class="identifier">until</span>) <span class="keyword">else</span> <span class="identifier">Future</span> { <span class="identifier">x</span> }
+      }
     }
   }
 &nbsp;</div>
               </section>
             
               <section class="">
-                <div class="comment "><p><strong>2.Write a Scala program that reads a file with tabs, replaces each tab with spaces so that
-tab stops are at n-column boundaries, and writes the result to the same file.</strong></p></p></div>
-                <div class="code ">  <span class="keyword">def</span> <span class="identifier">tabsToSpaces</span>(<span class="identifier">path</span>: <span class="identifier">String</span>, <span class="identifier">spaces</span>: <span class="identifier">Int</span>): <span class="identifier">Unit</span>  = {
-    <span class="keyword">val</span> <span class="identifier">contents</span> = <span class="identifier">Source</span>.<span class="identifier">fromFile</span>(<span class="identifier">path</span>)
-      .<span class="identifier">mkString</span>
-      .<span class="identifier">replaceAll</span>(<span class="string">"\t"</span>, (<span class="string">" "</span> <span class="identifier">*</span> <span class="identifier">spaces</span>))
+                <div class="comment "><p><strong>7.Write a program that counts the prime numbers between 1 and n, as reported by BigInt
+.isProbablePrime.</strong></p>
+<p><strong>Divide the interval into p parts, where p is the number of available processors. Count the
+primes in each part in concurrent futures and combine the results.&quot;)</strong></p></p></div>
+                <div class="code ">  <span class="keyword">def</span> <span class="identifier">countPrimes</span>(<span class="identifier">n</span>: <span class="identifier">Int</span>): <span class="identifier">Future</span>[<span class="identifier">Int</span>] = {
+    <span class="keyword">val</span> <span class="identifier">partition</span> = <span class="identifier">n</span> <span class="identifier">/</span> <span class="identifier">Runtime</span>.<span class="identifier">getRuntime</span>.<span class="identifier">availableProcessors</span>
+    <span class="identifier">Future</span>.<span class="identifier">sequence</span> {
+      (<span class="number">1</span> <span class="identifier">to</span> <span class="identifier">n</span>)
+        .<span class="identifier">map</span>(<span class="identifier">x</span> => (<span class="identifier">x</span>, <span class="identifier">x</span> <span class="identifier">/</span> <span class="identifier">partition</span>))
+        .<span class="identifier">groupBy</span>(_.<span class="identifier">_2</span>)
+        .<span class="identifier">values</span>
+        .<span class="identifier">toList</span>
+        .<span class="identifier">map</span> { <span class="identifier">x</span> =>
+          <span class="identifier">Future</span> {
+            <span class="identifier">x</span>.<span class="identifier">count</span>(<span class="identifier">y</span> => <span class="identifier">BigInt</span>(<span class="identifier">y</span>.<span class="identifier">_1</span>).<span class="identifier">isProbablePrime</span>(<span class="number">10</span>))
+          }
+        }
+    }.<span class="identifier">map</span>(_.<span class="identifier">reduce</span>(_ <span class="identifier">+</span> _))
+  }
 
-    <span class="keyword">new</span> <span class="identifier">PrintWriter</span>(<span class="identifier">path</span>) {
-      <span class="identifier">write</span>(<span class="identifier">contents</span>)
-      <span class="identifier">close</span>()
+  <span class="keyword">def</span> <span class="identifier">getDoc</span>(<span class="identifier">s</span>: <span class="identifier">String</span>): <span class="identifier">Future</span>[<span class="identifier">Document</span>] = <span class="identifier">Future</span> {
+    <span class="identifier">Jsoup</span>.<span class="identifier">connect</span>(<span class="identifier">s</span>).<span class="identifier">get</span>()
+  }
+
+  <span class="keyword">def</span> <span class="identifier">getHeader</span>(<span class="identifier">s</span>: <span class="identifier">String</span>, <span class="identifier">header</span>: <span class="identifier">String</span> = <span class="string">"Server"</span>): <span class="identifier">Future</span>[<span class="identifier">String</span>] = <span class="identifier">Future</span> {
+    <span class="identifier">Jsoup</span>
+      .<span class="identifier">connect</span>(<span class="identifier">s</span>)
+      .<span class="identifier">execute</span>().<span class="identifier">header</span>(<span class="identifier">header</span>)
+  }
+
+  <span class="keyword">def</span> <span class="identifier">readLinks</span>(<span class="identifier">doc</span>: <span class="identifier">Document</span>): <span class="identifier">List</span>[<span class="identifier">String</span>] = {
+    <span class="identifier">doc</span>.<span class="identifier">select</span>(<span class="string">"a[href]"</span>)
+      .<span class="identifier">asScala</span>
+      .<span class="identifier">map</span>(<span class="identifier">el</span> => <span class="identifier">el</span>.<span class="identifier">attr</span>(<span class="string">"abs:href"</span>)).<span class="identifier">toList</span>
+  }
+
+  <span class="keyword">def</span> <span class="identifier">getLinks</span>(<span class="identifier">doc</span>: <span class="identifier">Document</span>) = <span class="identifier">Future</span> {
+    <span class="identifier">readLinks</span>(<span class="identifier">doc</span>).<span class="identifier">mkString</span>(<span class="string">"\n"</span>)
+  }
+
+  <span class="keyword">def</span> <span class="identifier">getLinkServerHeader</span>(<span class="identifier">f</span>: (<span class="identifier">String</span>,<span class="identifier">String</span>) => <span class="identifier">Future</span>[<span class="identifier">String</span>] = <span class="identifier">getHeader</span>)(<span class="identifier">doc</span>: <span class="identifier">Document</span>)
+  : <span class="identifier">Future</span>[<span class="identifier">String</span>] = {
+    <span class="identifier">Future</span>.<span class="identifier">traverse</span>(<span class="identifier">readLinks</span>(<span class="identifier">doc</span>).<span class="identifier">filterNot</span>(_.<span class="identifier">isEmpty</span>).<span class="identifier">take</span>(<span class="number">25</span>)) { <span class="identifier">x</span>: <span class="identifier">String</span> =>
+      <span class="identifier">f</span>(<span class="identifier">x</span>,<span class="string">"Server"</span>)
+    }.<span class="identifier">map</span> {
+      _.<span class="identifier">groupBy</span>(<span class="identifier">key</span> => <span class="identifier">key</span>).<span class="identifier">map</span> {
+        <span class="keyword">case</span> (<span class="identifier">k</span>, <span class="identifier">v</span>) =>
+          <span class="number">f</span>"<span class="number">server: $</span>{<span class="identifier">k</span>}<span class="number">, count: $</span>{<span class="identifier">v</span>.<span class="identifier">size</span>}<span class="string">"</span>
+      }.<span class="identifier">mkString</span>(<span class="string">"\n"</span>)
     }
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>8.Write a program that asks the user for a URL, reads the web page at that URL, and
+displays all the hyperlinks. Use a separate Future for each of these three steps.&quot;)</strong>
+<code>scala&gt; Await.result(Chapter17.getLinks(Chapter17.getDoc _)(),200.seconds)</code></p></p></div>
+                <div class="code empty">&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>9.Write a program that asks the user for a URL, reads the web page at that URL,
+finds all the hyperlinks, visits each of them concurrently, and locates the Server HTTP
+header for each of them. Finally, print a table of which servers were found how often. The
+futures that visit each page should return the header.</strong>
+<code>scala&gt; Await.result(Chapter17.getLinks(Chapter17.getDoc _)(Chapter17.getLinkServerHeader
+()),200.seconds)</code></p></p></div>
+                <div class="code ">  <span class="keyword">def</span> <span class="identifier">getLinks</span>(<span class="identifier">f</span>: <span class="identifier">String</span> => <span class="identifier">Future</span>[<span class="identifier">Document</span>] = <span class="identifier">getDoc</span>)
+              (<span class="identifier">g</span>: <span class="identifier">Document</span> => <span class="identifier">Future</span>[<span class="identifier">String</span>] = <span class="identifier">getLinks</span>): <span class="identifier">Future</span>[<span class="identifier">String</span>] = {
+    <span class="keyword">def</span> <span class="identifier">readInput</span> = <span class="identifier">Future</span> { <span class="identifier">scala</span>.<span class="identifier">io</span>.<span class="identifier">StdIn</span>.<span class="identifier">readLine</span>() }
+    <span class="identifier">readInput</span>.<span class="identifier">flatMap</span> ( <span class="identifier">url</span> =>
+      <span class="identifier">f</span>(<span class="identifier">url</span>).<span class="identifier">flatMap</span>(
+          <span class="identifier">doc</span> =><span class="identifier">g</span>(<span class="identifier">doc</span>)
+      )
+    )
   }
 }&nbsp;</div>
               </section>

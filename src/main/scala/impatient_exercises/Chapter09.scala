@@ -1,4 +1,4 @@
-// Example: Chapter 9: **Files and Regular Expressions**
+// Example: Chapter 9: Files and Regular Expressions
 
 package impatient_exercises
 

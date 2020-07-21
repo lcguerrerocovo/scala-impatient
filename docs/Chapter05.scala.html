@@ -266,7 +266,7 @@ hr {
 </style>
           
           <section id="header">
-            <div class="comment"><h1>Chapter 9: Files and Regular Expressions</h1></div>
+            <div class="comment"><h1>Chapter 5: Classes</h1></div>
             <div class="code"></div>
           </section>
           
@@ -275,38 +275,160 @@ hr {
                 <div class="code ">
 <span class="keyword">package</span> <span class="identifier">impatient_exercises</span>
 
-<span class="keyword">import</span> <span class="identifier">java</span>.<span class="identifier">io</span>.<span class="identifier">PrintWriter</span>
-<span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">io</span>.<span class="identifier">Source</span>
-
-<span class="keyword">object</span> <span class="identifier">Chapter09</span> {
+<span class="keyword">object</span> <span class="identifier">Chapter05</span> {
 &nbsp;</div>
               </section>
             
               <section class="">
-                <div class="comment "><p><strong>1.Write a Scala code snippet that reverses the lines in a file (making the last line the
-first one, and so on).</strong></p></p></div>
-                <div class="code ">  <span class="keyword">def</span> <span class="identifier">reverseFile</span>(<span class="identifier">path</span>: <span class="identifier">String</span>): <span class="identifier">Unit</span>  = {
-    <span class="keyword">val</span> <span class="identifier">reversedContents</span> = <span class="identifier">Source</span>.<span class="identifier">fromFile</span>(<span class="identifier">path</span>).<span class="identifier">getLines</span>.<span class="identifier">toArray</span>.<span class="identifier">reverse</span>.<span class="identifier">mkString</span>(<span class="string">"\n"</span>)
-    <span class="keyword">new</span> <span class="identifier">PrintWriter</span>(<span class="identifier">path</span>) {
-      <span class="identifier">write</span>(<span class="identifier">reversedContents</span>)
-      <span class="identifier">close</span>()
+                <div class="comment "><p><strong>1.Improve the Counter class in Section 5.1, “Simple Classes and Parameterless Methods,”
+on page 55 so that it doesn’t turn negative at Int.MaxValue.</strong></p></p></div>
+                <div class="code ">  <span class="keyword">class</span> <span class="identifier">Counter</span> {
+    <span class="keyword">private</span> <span class="keyword">var</span> <span class="identifier">value</span> = <span class="number">0</span>
+
+    <span class="keyword">def</span> this(<span class="identifier">value</span>: <span class="identifier">Int</span>) {
+      this()
+      this.<span class="identifier">value</span> = <span class="identifier">value</span>
+    }
+
+    <span class="keyword">def</span> <span class="identifier">increment</span>() {
+      <span class="keyword">if</span>(<span class="identifier">value</span> <span class="identifier">==</span> <span class="identifier">Int</span>.<span class="identifier">MaxValue</span>)
+        throw <span class="keyword">new</span> <span class="identifier">Exception</span>(<span class="string">"trying to increment counter over maxium value for Int"</span>)
+      <span class="keyword">else</span> <span class="identifier">value</span> <span class="identifier">+=</span> <span class="number">1</span>
+    }
+    <span class="keyword">def</span> <span class="identifier">current</span>() = <span class="identifier">value</span>
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>2.Write a class BankAccount with methods deposit and withdraw, and a read-only property
+balance.</strong></p></p></div>
+                <div class="code ">  <span class="keyword">class</span> <span class="identifier">BankAccount</span> {
+    <span class="keyword">private</span> <span class="keyword">var</span> <span class="identifier">currentBalance</span>: <span class="identifier">Double</span> = <span class="number">0</span>
+
+    <span class="keyword">def</span> <span class="identifier">deposit</span>(<span class="identifier">amount</span>: <span class="identifier">Double</span>) = {
+      <span class="identifier">currentBalance</span> <span class="identifier">+=</span> <span class="identifier">amount</span>
+    }
+
+    <span class="keyword">def</span> <span class="identifier">withdraw</span>(<span class="identifier">amount</span>: <span class="identifier">Double</span>) = {
+      <span class="keyword">if</span>(<span class="identifier">currentBalance</span> <span class="identifier">-</span> <span class="identifier">amount</span> <span class="identifier">&lt;</span> <span class="number">0</span>)
+        throw <span class="keyword">new</span> <span class="identifier">Exception</span>(<span class="string">"trying to withdraw more than existing balance"</span>)
+      <span class="keyword">else</span> <span class="identifier">currentBalance</span> <span class="identifier">-=</span> <span class="identifier">amount</span>
+    }
+
+    <span class="keyword">def</span> <span class="identifier">balance</span>(): <span class="identifier">Double</span> = this.<span class="identifier">currentBalance</span>
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>3.Write a class Time with read-only properties hours and minutes and a method before
+(other: Time): Boolean that checks whether this time comes before the other. A Time object
+should be constructed as new Time(hrs, min), where hrs is in military time format (between 0
+and 23).</strong></p></p></div>
+                <div class="code ">  <span class="keyword">class</span> <span class="identifier">Time</span>(<span class="keyword">val</span> <span class="identifier">hours</span>: <span class="identifier">Int</span>, <span class="keyword">val</span> <span class="identifier">minutes</span>: <span class="identifier">Int</span>) { <span class="identifier">self</span> =>
+    <span class="keyword">if</span>(this.<span class="identifier">hours</span> <span class="identifier">></span> <span class="number">23</span> <span class="identifier">||</span> this.<span class="identifier">hours</span> <span class="identifier">&lt;</span> <span class="number">0</span>)
+      throw <span class="keyword">new</span> <span class="identifier">Exception</span>(<span class="string">"time must be in military format (0-23)"</span>)
+    <span class="keyword">if</span>(this.<span class="identifier">minutes</span> <span class="identifier">></span> <span class="number">59</span> <span class="identifier">||</span> this.<span class="identifier">minutes</span> <span class="identifier">&lt;</span> <span class="number">0</span>)
+      throw <span class="keyword">new</span> <span class="identifier">Exception</span>(<span class="string">"minutes must be within range (0-59)"</span>)
+
+    <span class="keyword">def</span> <span class="identifier">before</span>(<span class="identifier">other</span>: <span class="identifier">Time</span>) = {
+      (<span class="identifier">self</span>.<span class="identifier">hours</span> <span class="identifier">></span> <span class="identifier">other</span>.<span class="identifier">hours</span>
+        <span class="identifier">||</span> (<span class="identifier">self</span>.<span class="identifier">hours</span> <span class="identifier">==</span> <span class="identifier">other</span>.<span class="identifier">hours</span> <span class="identifier">&&</span> <span class="identifier">self</span>.<span class="identifier">minutes</span> <span class="identifier">></span> <span class="identifier">other</span>.<span class="identifier">minutes</span>))
+    }
+
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>4.Reimplement the Time class from the preceding exercise so that the internal representation
+is the number of minutes since midnight (between 0 and 24 × 60 – 1). Do not change the public
+interface. That is, client code should be unaffected by your change.</strong></p></p></div>
+                <div class="code ">  <span class="keyword">class</span> <span class="identifier">BetterTime</span>(<span class="keyword">val</span> <span class="identifier">hours</span>: <span class="identifier">Int</span>, <span class="keyword">val</span> <span class="identifier">minutes</span>: <span class="identifier">Int</span>) { <span class="identifier">self</span> =>
+    <span class="keyword">if</span>(this.<span class="identifier">hours</span> <span class="identifier">></span> <span class="number">23</span> <span class="identifier">||</span> this.<span class="identifier">hours</span> <span class="identifier">&lt;</span> <span class="number">0</span>)
+      throw <span class="keyword">new</span> <span class="identifier">Exception</span>(<span class="string">"time must be in military format (0-23)"</span>)
+    <span class="keyword">if</span>(this.<span class="identifier">minutes</span> <span class="identifier">></span> <span class="number">59</span> <span class="identifier">||</span> this.<span class="identifier">minutes</span> <span class="identifier">&lt;</span> <span class="number">0</span>)
+      throw <span class="keyword">new</span> <span class="identifier">Exception</span>(<span class="string">"minutes must be within range (0-59)"</span>)
+
+    <span class="keyword">private</span> <span class="keyword">var</span> <span class="identifier">minutesFromMidnight</span> = (this.<span class="identifier">hours</span> <span class="identifier">*</span> <span class="number">60</span>) <span class="identifier">+</span> this.<span class="identifier">minutes</span>
+
+    <span class="keyword">def</span> <span class="identifier">before</span>(<span class="identifier">other</span>: <span class="identifier">BetterTime</span>) =
+      <span class="identifier">self</span>.<span class="identifier">minutesFromMidnight</span> <span class="identifier">></span> <span class="identifier">other</span>.<span class="identifier">minutesFromMidnight</span>
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>6.In the Person class of Section 5.1, “Simple Classes and Parameterless Methods,” on page 55,
+provide a primary constructor that turns negative ages to 0.</strong></p></p></div>
+                <div class="code ">  <span class="keyword">class</span> <span class="identifier">Person</span>(<span class="keyword">var</span> <span class="identifier">age</span>: <span class="identifier">Int</span>) {
+    <span class="keyword">if</span>(<span class="identifier">age</span> <span class="identifier">&lt;</span> <span class="number">0</span>) <span class="identifier">age</span> = <span class="number">0</span>
+
+    <span class="keyword">def</span> <span class="identifier">getAge</span>: <span class="identifier">Int</span> = <span class="identifier">age</span>
+
+    <span class="keyword">def</span> <span class="identifier">setAge</span>(<span class="identifier">age</span>: <span class="identifier">Int</span>): <span class="identifier">Unit</span> = {
+      this.<span class="identifier">age</span> = <span class="identifier">age</span>
     }
   }
 &nbsp;</div>
               </section>
             
               <section class="">
-                <div class="comment "><p><strong>2.Write a Scala program that reads a file with tabs, replaces each tab with spaces so that
-tab stops are at n-column boundaries, and writes the result to the same file.</strong></p></p></div>
-                <div class="code ">  <span class="keyword">def</span> <span class="identifier">tabsToSpaces</span>(<span class="identifier">path</span>: <span class="identifier">String</span>, <span class="identifier">spaces</span>: <span class="identifier">Int</span>): <span class="identifier">Unit</span>  = {
-    <span class="keyword">val</span> <span class="identifier">contents</span> = <span class="identifier">Source</span>.<span class="identifier">fromFile</span>(<span class="identifier">path</span>)
-      .<span class="identifier">mkString</span>
-      .<span class="identifier">replaceAll</span>(<span class="string">"\t"</span>, (<span class="string">" "</span> <span class="identifier">*</span> <span class="identifier">spaces</span>))
-
-    <span class="keyword">new</span> <span class="identifier">PrintWriter</span>(<span class="identifier">path</span>) {
-      <span class="identifier">write</span>(<span class="identifier">contents</span>)
-      <span class="identifier">close</span>()
+                <div class="comment "><p><strong>7.Write a class Person with a primary constructor that accepts a string containing a first
+name, a space, and a last name, such as new Person(&quot;Fred Smith&quot;). Supply read-only properties
+firstName and lastName. Should the primary constructor parameter be a var, a val, or a plain
+parameter? Why?</strong></p></p></div>
+                <div class="code ">  <span class="keyword">class</span> <span class="identifier">BetterPerson</span>(<span class="identifier">fullName</span>: <span class="identifier">String</span>) {
+    <span class="keyword">val</span> (<span class="identifier">firstName</span>, <span class="identifier">lastName</span>) = <span class="identifier">fullName</span>.<span class="identifier">split</span>(<span class="string">" "</span>).<span class="identifier">take</span>(<span class="number">2</span>) <span class="keyword">match</span> {
+      <span class="keyword">case</span> <span class="identifier">Array</span>(<span class="identifier">firstName</span>, <span class="identifier">lastName</span>) => (<span class="identifier">firstName</span>, <span class="identifier">lastName</span>)
+      <span class="keyword">case</span> _ => throw <span class="keyword">new</span> <span class="identifier">Exception</span>(<span class="string">"fullName must contain first name and last name separated by "</span> <span class="identifier">+</span>
+        <span class="string">"space"</span>)
     }
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>8.Make a class Car with read-only properties for manufacturer, model name, and model year,
+and a read-write property for the license plate. Supply four constructors. All require the
+manufacturer and model name. Optionally, model year and license plate can also be specified
+in the constructor. If not, the model year is set to -1 and the license plate to the empty
+string. Which constructor are you choosing as the primary constructor? Why?</strong></p></p></div>
+                <div class="code ">  <span class="keyword">class</span> <span class="identifier">Car</span>(<span class="keyword">val</span> <span class="identifier">manufacturer</span>: <span class="identifier">String</span>, <span class="keyword">val</span> <span class="identifier">modelName</span>: <span class="identifier">String</span>, <span class="keyword">val</span> <span class="identifier">modelYear</span>: <span class="identifier">Int</span>, <span class="keyword">var</span>
+  <span class="identifier">licensePlate</span>: <span class="identifier">String</span>) {
+
+    <span class="keyword">def</span> this(<span class="identifier">manufacturer</span>: <span class="identifier">String</span>, <span class="identifier">modelName</span>: <span class="identifier">String</span>) {
+      this(<span class="identifier">manufacturer</span>, <span class="identifier">modelName</span>, <span class="identifier">-</span><span class="number">1</span>, <span class="string">""</span>)
+    }
+
+    <span class="keyword">def</span> this(<span class="identifier">manufacturer</span>: <span class="identifier">String</span>, <span class="identifier">modelName</span>: <span class="identifier">String</span>, <span class="identifier">modelYear</span>: <span class="identifier">Int</span>) {
+      this(<span class="identifier">manufacturer</span>, <span class="identifier">modelName</span>, <span class="identifier">modelYear</span>, <span class="string">""</span>)
+    }
+
+    <span class="keyword">def</span> this(<span class="identifier">manufacturer</span>: <span class="identifier">String</span>, <span class="identifier">modelName</span>: <span class="identifier">String</span>, <span class="identifier">licensePlate</span>: <span class="identifier">String</span>) {
+      this(<span class="identifier">manufacturer</span>, <span class="identifier">modelName</span>, <span class="identifier">-</span><span class="number">1</span>, <span class="identifier">licensePlate</span>)
+    }
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>10.Consider the class:</strong></p></p></div>
+                <div class="code ">  <span class="keyword">class</span> <span class="identifier">Employee</span>(<span class="keyword">val</span> <span class="identifier">name</span>: <span class="identifier">String</span>, <span class="keyword">var</span> <span class="identifier">salary</span>: <span class="identifier">Double</span>)
+  {
+    <span class="keyword">def</span> this() {
+      this(<span class="string">"John Q. Public"</span>, <span class="number">0.0</span>)
+    }
+  }&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>Rewrite it to use explicit fields and a default primary constructor. Which form do you prefer?
+Why?</strong></p></p></div>
+                <div class="code ">  <span class="keyword">class</span> <span class="identifier">Employee2</span>() {
+    <span class="keyword">val</span> <span class="identifier">name</span>: <span class="identifier">String</span> = <span class="string">"John Q. Public"</span>
+    <span class="keyword">var</span> <span class="identifier">salary</span>: <span class="identifier">Double</span> = <span class="number">0.0</span>
   }
 }&nbsp;</div>
               </section>

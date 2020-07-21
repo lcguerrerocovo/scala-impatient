@@ -25,7 +25,7 @@ object Main extends App {
   println("7. What do you need to import so that you can get a random prime as probablePrime(100, Random), without any qualifiers before probablePrime and Random?")
   println("-- import scala.util.Random & import scala.BigInt._")
   println("8. One way to create ran dom file or directory names is to produce a random BigInt and convert it to base 36, yielding a string such as \"qsnvbevtomcj38o06kul\". Poke around Scaladoc to find a way of doing this in Scala.")
-  println("> " + Chapter01.randomeFileName)
+  println("> " + Chapter01.randomFileName)
   println("9. How do you get the first character of a string in Scala? The last character?")
   println("> " + Chapter01.firstAndLast)
   println("10. What do the take, drop, takeRight, and dropRight string functions do? What advantage or disadvantage do they have over using substring?")

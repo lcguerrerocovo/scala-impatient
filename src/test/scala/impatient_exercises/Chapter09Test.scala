@@ -70,4 +70,23 @@ class Chapter09Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
                           |""".stripMargin
       }
     }
+
+  behavior of "numberStats"
+
+  it should "prints sum, average, min and max of floating point numbers in file" in
+    withFile { (file, writer) =>
+      val contents = """4.5 6.7 8.985 34.56 78.56 0.01""".stripMargin
+      writer.write(contents)
+      writer.close()
+
+      val out = new ByteArrayOutputStream
+      Console.withOut(out) {
+        Chapter09.numberStats(file.getAbsolutePath)
+        out.toString shouldEqual """133.315
+                                   |22.219166666666666
+                                   |78.56
+                                   |0.01
+                                   |""".stripMargin
+      }
+    }
 }

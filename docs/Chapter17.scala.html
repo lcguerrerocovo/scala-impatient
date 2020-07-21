@@ -459,7 +459,7 @@ primes in each part in concurrent futures and combine the results.&quot;)</stron
     }.<span class="identifier">map</span> {
       _.<span class="identifier">groupBy</span>(<span class="identifier">key</span> => <span class="identifier">key</span>).<span class="identifier">map</span> {
         <span class="keyword">case</span> (<span class="identifier">k</span>, <span class="identifier">v</span>) =>
-          <span class="number">f</span>"<span class="number">server: $</span>{<span class="identifier">k</span>}<span class="number">, count: $</span>{<span class="identifier">v</span>.<span class="identifier">size</span>}<span class="string">"</span>
+          <span class="string">f</span>"<span class="string">server: $</span>{<span class="identifier">k</span>}<span class="string">, count: $</span>{<span class="identifier">v</span>.<span class="identifier">size</span>}<span class="string">"</span>
       }.<span class="identifier">mkString</span>(<span class="string">"\n"</span>)
     }
   }

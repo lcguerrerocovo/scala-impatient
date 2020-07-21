@@ -29,4 +29,13 @@ object Chapter09 {
       close()
     }
   }
+
+  // **3.Write a Scala code snippet that reads a file and prints all words with more than 12
+  // characters to the console. Extra credit if you can do this in a single line.**
+  def printWords(path: String, minimumWordSize: Int) = {
+    Source.fromFile(path)
+      .mkString.split("\\s+")
+      .filter(_.length > minimumWordSize)
+      .foreach(println)
+  }
 }

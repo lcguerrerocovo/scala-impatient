@@ -1,6 +1,6 @@
 package impatient_exercises
 
-import java.io.{File, FileWriter, PrintWriter}
+import java.io.{ByteArrayOutputStream, File, FileWriter, PrintWriter}
 
 import org.scalacheck.Gen
 import org.scalatest.flatspec.AnyFlatSpec
@@ -49,4 +49,25 @@ class Chapter09Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
       Source.fromFile(file.getAbsolutePath, "UTF-8").mkString shouldEqual
         "1      2      3      4      5"
   }
+
+  behavior of "printWords"
+
+  it should "print all words in contents of file with more than 12 characters" in
+    withFile { (file, writer) =>
+      val contents = """thesearethefile's contents
+                       |ithasseverallineswithlongwords that should be parsed
+                       |andthelongwordsshould be printedtotheconsoleoutput""".stripMargin
+      writer.write(contents)
+      writer.close()
+
+      val out = new ByteArrayOutputStream
+      Console.withOut(out) {
+        Chapter09.printWords(file.getAbsolutePath, 13)
+        out.toString shouldEqual """thesearethefile's
+                          |ithasseverallineswithlongwords
+                          |andthelongwordsshould
+                          |printedtotheconsoleoutput
+                          |""".stripMargin
+      }
+    }
 }

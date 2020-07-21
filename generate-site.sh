@@ -5,5 +5,4 @@ set -o nounset
 set -o pipefail
 
 # generate github pages site
-sbt "clean; compile;"
-mv *.html docs/
+sbt "clean; enableSocco; compile;"

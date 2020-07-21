@@ -266,7 +266,7 @@ hr {
 </style>
           
           <section id="header">
-            <div class="comment"><h1>Chapter 9: Files and Regular Expressions</h1></div>
+            <div class="comment"><h1>Chapter 9: Files and Regular Expressions loco</h1></div>
             <div class="code"></div>
           </section>
           
@@ -307,6 +307,18 @@ tab stops are at n-column boundaries, and writes the result to the same file.</s
       <span class="identifier">write</span>(<span class="identifier">contents</span>)
       <span class="identifier">close</span>()
     }
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>3.Write a Scala code snippet that reads a file and prints all words with more than 12
+characters to the console. Extra credit if you can do this in a single line.</strong></p></p></div>
+                <div class="code ">  <span class="keyword">def</span> <span class="identifier">printWords</span>(<span class="identifier">path</span>: <span class="identifier">String</span>, <span class="identifier">minimumWordSize</span>: <span class="identifier">Int</span>) = {
+    <span class="identifier">Source</span>.<span class="identifier">fromFile</span>(<span class="identifier">path</span>)
+      .<span class="identifier">mkString</span>.<span class="identifier">split</span>(<span class="string">"\\s+"</span>)
+      .<span class="identifier">filter</span>(_.<span class="identifier">length</span> <span class="identifier">></span> <span class="identifier">minimumWordSize</span>)
+      .<span class="identifier">foreach</span>(<span class="identifier">println</span>)
   }
 }&nbsp;</div>
               </section>

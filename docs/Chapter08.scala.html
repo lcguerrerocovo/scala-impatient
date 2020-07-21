@@ -461,7 +461,7 @@ width 0.</strong></p></p></div>
 and analyze the class files with javap. How many name fields are there? How many name
 getter methods are there? What do they get? (Hint: Use the -c and -private options.)</strong></p></p></div>
                 <div class="code "><span class="keyword">class</span> <span class="identifier">Person</span>(<span class="keyword">val</span> <span class="identifier">name</span>: <span class="identifier">String</span>) {
-  override <span class="keyword">def</span> <span class="identifier">toString</span> = <span class="number">s</span>"<span class="number">$</span>{<span class="identifier">getClass</span>.<span class="identifier">getName</span>}<span class="number">[name=$</span><span class="identifier">name</span><span class="string">]"</span>
+  override <span class="keyword">def</span> <span class="identifier">toString</span> = <span class="string">s</span>"<span class="string">$</span>{<span class="identifier">getClass</span>.<span class="identifier">getName</span>}<span class="string">[name=$</span><span class="identifier">name</span><span class="string">]"</span>
 }
 
 <span class="keyword">class</span> <span class="identifier">SecretAgent</span>(<span class="identifier">codename</span>: <span class="identifier">String</span>) <span class="keyword">extends</span> <span class="identifier">Person</span>(<span class="identifier">codename</span>) {

@@ -1,0 +1,1 @@
+addSbtPlugin("io.regadas" % "sbt-socco" % "0.1.0")

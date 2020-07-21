@@ -89,4 +89,56 @@ class Chapter09Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
                                    |""".stripMargin
       }
     }
+
+  behavior of "powersAndReciprocals"
+
+  it should "write a table to a file with powers and reciprocals of base 2 with exponent from 0 " +
+    "to 20" in
+    withFile { (file, writer) =>
+      Chapter09.powersAndReciprocals(file.getAbsolutePath,2,0 to 20)
+      Source.fromFile(file.getAbsolutePath, "UTF-8").mkString shouldEqual
+      """1         1.0
+        |2         0.5
+        |4         0.25
+        |8         0.125
+        |16        0.0625
+        |32        0.03125
+        |64        0.015625
+        |128       0.0078125
+        |256       0.00390625
+        |512       0.001953125
+        |1024      9.765625E-4
+        |2048      4.8828125E-4
+        |4096      2.44140625E-4
+        |8192      1.220703125E-4
+        |16384     6.103515625E-5
+        |32768     3.0517578125E-5
+        |65536     1.52587890625E-5
+        |131072    7.62939453125E-6
+        |262144    3.814697265625E-6
+        |524288    1.9073486328125E-6
+        |1048576   9.5367431640625E-7
+        |""".stripMargin
+    }
+
+  behavior of "quotedStrings"
+
+  it should "print all quoted strings in a file" in
+    withFile { (file, writer) =>
+      val contents =
+        """"like this, maybe with \" or \\" this is a continuation of "the example"" string
+          |"from the book"""".stripMargin
+      writer.write(contents)
+      writer.close()
+
+      val out = new ByteArrayOutputStream
+      Console.withOut(out) {
+        Chapter09.quotedStrings(file.getAbsolutePath)
+        out.toString shouldEqual """"like this, maybe with \"
+                                   |" this is a continuation of "
+                                   |""
+                                   |"from the book"
+                                   |""".stripMargin
+      }
+    }
 }

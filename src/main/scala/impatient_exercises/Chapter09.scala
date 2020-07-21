@@ -57,10 +57,26 @@ object Chapter09 {
   //      2     0.5
   //      4     0.25
   //      ...   ...
+  def powersAndReciprocals(path: String, base: Int, exponents: Range): Unit = {
+    new PrintWriter(path) {
+      for(exp <- exponents) {
+        val a = math.pow(base,exp)
+        write(f"${a.toLong.toString.padTo(10,' ')}${(1/a).toString}\n")
+      }
+      close()
+    }
+  }
 
   // **6.Make a regular expression searching for quoted strings "like this, maybe with \" or \\"
   // in a Java or C++ program. Write a Scala program that prints out all such strings in a source
   // file.**
+  def quotedStrings(path: String): Unit = {
+    val pattern = """"[^"]*"""".r
+    val content = Source.fromFile(path)
+      .mkString
+    pattern.findAllIn(content)
+      .foreach(println)
+  }
 
   // **7.Write a Scala program that reads a text file and prints all tokens in the file that are
   // not floating-point numbers. Use a regular expression.**

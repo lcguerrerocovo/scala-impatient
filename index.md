@@ -2,10 +2,10 @@
 
   [Scala for the impatient](https://horstmann.com/scala/)
   
-  - Chapter 1 **The basics** ([source](https://github.com/lcguerrerocovo/scala-impatient/blob/master/src/main/scala/impatient_exercises/Chapter01.scala))
-  - Chapter 2 **Controls structures and functions** ([source](https://github.com/lcguerrerocovo/scala-impatient/blob/master/src/main/scala/impatient_exercises/Chapter02.scala),[tests](https://github.com/lcguerrerocovo/scala-impatient/blob/master/src/test/scala/impatient_exercises/Chapter02Test.scala))
-  - Chapter 3 **Working with arrays** ([source](https://github.com/lcguerrerocovo/scala-impatient/blob/master/src/main/scala/impatient_exercises/Chapter03.scala))
-  - Chapter 4 **Maps and Tuples** ([source](https://github.com/lcguerrerocovo/scala-impatient/blob/master/src/main/scala/impatient_exercises/Chapter04.scala),[tests](https://github.com/lcguerrerocovo/scala-impatient/blob/master/src/test/scala/impatient_exercises/Chapter04Test.scala))
+  - Chapter 1: **The basics** ([source](https://github.com/lcguerrerocovo/scala-impatient/blob/master/src/main/scala/impatient_exercises/Chapter01.scala))
+  - [Chapter 2: Controls structures and functions](docs/Chapter02.scala.html) ([source](https://github.com/lcguerrerocovo/scala-impatient/blob/master/src/main/scala/impatient_exercises/Chapter02.scala),[tests](https://github.com/lcguerrerocovo/scala-impatient/blob/master/src/test/scala/impatient_exercises/Chapter02Test.scala))
+  - Chapter 3: **Working with arrays** ([source](https://github.com/lcguerrerocovo/scala-impatient/blob/master/src/main/scala/impatient_exercises/Chapter03.scala))
+  - Chapter 4: **Maps and Tuples** ([source](https://github.com/lcguerrerocovo/scala-impatient/blob/master/src/main/scala/impatient_exercises/Chapter04.scala),[tests](https://github.com/lcguerrerocovo/scala-impatient/blob/master/src/test/scala/impatient_exercises/Chapter04Test.scala))
   - [Chapter 5: Classes](docs/Chapter05.scala.html) ([source](https://github.com/lcguerrerocovo/scala-impatient/blob/master/src/main/scala/impatient_exercises/Chapter05.scala),[tests](https://github.com/lcguerrerocovo/scala-impatient/blob/master/src/test/scala/impatient_exercises/Chapter05Test.scala))
   - [Chapter 6: Objects](docs/Chapter06.scala.html) ([source](https://github.com/lcguerrerocovo/scala-impatient/blob/master/src/main/scala/impatient_exercises/Chapter06.scala),[tests](https://github.com/lcguerrerocovo/scala-impatient/blob/master/src/test/scala/impatient_exercises/Chapter06Test.scala))
   - [Chapter 7: Packages and Imports](docs/Chapter07.scala.html) ([source](https://github.com/lcguerrerocovo/scala-impatient/blob/master/src/main/scala/impatient_exercises/Chapter07.scala),[tests](https://github.com/lcguerrerocovo/scala-impatient/blob/master/src/test/scala/impatient_exercises/Chapter07Test.scala))

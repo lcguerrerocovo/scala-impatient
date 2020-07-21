@@ -1,11 +1,6 @@
 package impatient_exercises
 
-import impatient_exercises.Chapter01._
-
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.collection.mutable.ArrayBuffer
-import scala.concurrent.{Await, Future}
-import scala.concurrent.duration._
 
 object Main extends App {
 
@@ -31,31 +26,6 @@ object Main extends App {
   println("10. What do the take, drop, takeRight, and dropRight string functions do? What advantage or disadvantage do they have over using substring?")
   println("-- with substring the indexes have to be within the bounds of the string size or an " +
     "'IndexOutOfBoundsException' exception is thrown")
-
-
-  println("Chapter 2 controls structures - exercises")
-
-  println("1. The signum of a number is 1 if the number is positive, –1 if it is negative, and " +
-    "0 if it is zero. Write a function that computes this value.")
-  println("> " + Chapter02.signum(0))
-  println("2. What is the value of an empty block expression {}? What is its type?")
-  println("-- value is (), type is Unit")
-  println("3. Come up with one situation where the assignment x = y = 1 is valid in Scala.\n(Hint: Pick a suitable type for x.)")
-  println("-- x is of type unit")
-  println("4. Write a Scala equivalent for the Java loop\nfor (int i = 10; i >= 0; i--) System.out.println(i);")
-  Chapter02.countDown(10)
-  println("5. Write a procedure countdown(n: Int) that prints the numbers from n to 0.")
-  println("-- same as above answer")
-  println("6. Write a for loop for computing the product of the Unicode codes of all letters in a string. For example, the product of the characters in \"Hello\" is 825152896.")
-  println(Chapter02.unicodeProduct("Hello"))
-  println("7. Solve the preceding exercise without writing a loop. (Hint: Look at the StringOps Scaladoc.)")
-  println(Chapter02.unicodeProduct2("Hello"))
-  println("9. Make the function of the preceding exercise a recursive function.")
-  println(Chapter02.product("Hello"))
-  println("10. Write a function that computes x , where n is an integer. Use the " +
-    "following\nrecursive definition:")
-  println(Chapter02.power(2,3))
-
 
   println("Chapter 3 Arrays - exercises")
 

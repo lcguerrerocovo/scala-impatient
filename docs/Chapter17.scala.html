@@ -298,8 +298,8 @@ hr {
             
               <section class="">
                 <div class="comment "><p><strong>How is the expression translated to map and flatMap calls? Are the two futures executed
-concurrently or one after the other? In which thread does the call to println occur?</strong>
-<code>scala&gt; Chapter17.flatMapFuture</code></p></p></div>
+concurrently or one after the other? In which thread does the call to println occur?</strong></p>
+<p><code>scala&gt; Chapter17.flatMapFuture</code></p></p></div>
                 <div class="code ">  <span class="keyword">def</span> <span class="identifier">flatMapFuture</span> = {
     <span class="keyword">val</span> <span class="identifier">future1</span> = <span class="identifier">Future</span> { <span class="identifier">Thread</span>.<span class="identifier">sleep</span>(<span class="number">1000</span>) ; <span class="number">2</span> }
     <span class="keyword">val</span> <span class="identifier">future2</span> = <span class="identifier">Future</span> { <span class="identifier">Thread</span>.<span class="identifier">sleep</span>(<span class="number">1000</span>) ; <span class="number">40</span> }
@@ -315,9 +315,9 @@ concurrently or one after the other? In which thread does the call to println oc
               </section>
             
               <section class="">
-                <div class="comment "><p>2.Write a function doInOrder that, given two functions f: T =&gt; Future[U] and g: U =&gt; Future[V]
-produces a function T =&gt; Future[U] that, for a given t, eventually yields g(f(t))
-<code>scala&gt; Chapter17.doInOrder(3)</code></p></p></div>
+                <div class="comment "><p><strong>2.Write a function doInOrder that, given two functions f: T =&gt; Future[U] and g: U =&gt; Future[V]
+produces a function T =&gt; Future[U] that, for a given t, eventually yields g(f(t))</strong></p>
+<p><code>scala&gt; Chapter17.doInOrder(3)</code></p></p></div>
                 <div class="code ">  <span class="keyword">def</span> <span class="identifier">doInOrder</span>(<span class="identifier">x</span>: <span class="identifier">Int</span>): <span class="identifier">String</span> = {
     <span class="keyword">def</span> <span class="identifier">f</span>: <span class="identifier">Int</span> => <span class="identifier">Future</span>[<span class="identifier">Double</span>] = { <span class="identifier">x</span>: <span class="identifier">Int</span> =>
       <span class="identifier">Future</span>[<span class="identifier">Double</span>] { <span class="identifier">Thread</span>.<span class="identifier">sleep</span>(<span class="number">1000</span>) ; <span class="identifier">x</span>.<span class="identifier">toDouble</span><span class="identifier">/</span><span class="number">10</span> }
@@ -339,10 +339,8 @@ produces a function T =&gt; Future[U] that, for a given t, eventually yields g(f
               </section>
             
               <section class="">
-                <div class="comment "><ol class="arabic">
-  <li>Repeat the preceding exercise for any sequence of functions of type T =&gt; Future[T].&quot;&quot;&quot;)
-  <code>scala&gt; Chapter17.doInSequence(3,5))</code></li>
-</ol></p></div>
+                <div class="comment "><p><strong>3.Repeat the preceding exercise for any sequence of functions of type T =&gt; Future[T].&quot;&quot;&quot;)</strong></p>
+<p><code>scala&gt; Chapter17.doInSequence(3,5))</code></p></p></div>
                 <div class="code ">  <span class="keyword">def</span> <span class="identifier">doInSequence</span>(<span class="identifier">x</span>: <span class="identifier">Int</span>, <span class="identifier">times</span>: <span class="identifier">Int</span>): <span class="identifier">Int</span> = {
     <span class="keyword">def</span> <span class="identifier">f</span>: <span class="identifier">Int</span> => <span class="identifier">Future</span>[<span class="identifier">Int</span>] = { <span class="identifier">x</span>: <span class="identifier">Int</span> =>
       <span class="identifier">Future</span>[<span class="identifier">Int</span>] { <span class="identifier">Thread</span>.<span class="identifier">sleep</span>(<span class="number">1000</span>) ; <span class="identifier">x</span> <span class="identifier">*</span> <span class="number">10</span> }
@@ -361,8 +359,8 @@ produces a function T =&gt; Future[U] that, for a given t, eventually yields g(f
               <section class="">
                 <div class="comment "><p><strong>4.Write a function doTogether that, given two functions f: T =&gt; Future[U] and g: U =&gt;
 Future[V], produces a function T =&gt; Future[(U, V)], running the two computations in parallel
-and, for a given t, eventually yielding (f(t), g(t)).&quot;&quot;&quot;)</strong>
-<code>scala&gt; println(Chapter17.doTogether(3))</code></p></p></div>
+and, for a given t, eventually yielding (f(t), g(t)).&quot;&quot;&quot;)</strong></p>
+<p><code>scala&gt; println(Chapter17.doTogether(3))</code></p></p></div>
                 <div class="code ">  <span class="keyword">def</span> <span class="identifier">doTogether</span>(<span class="identifier">x</span>: <span class="identifier">Int</span>): (<span class="identifier">Double</span>,<span class="identifier">String</span>) ={
     <span class="keyword">def</span> <span class="identifier">f</span>: <span class="identifier">Int</span> => <span class="identifier">Future</span>[<span class="identifier">Double</span>] = { <span class="identifier">x</span>: <span class="identifier">Int</span> =>
       <span class="identifier">Future</span>[<span class="identifier">Double</span>] { <span class="identifier">Thread</span>.<span class="identifier">sleep</span>(<span class="number">1000</span>) ; <span class="identifier">x</span>.<span class="identifier">toDouble</span><span class="identifier">/</span><span class="number">10</span> }
@@ -385,8 +383,8 @@ and, for a given t, eventually yielding (f(t), g(t)).&quot;&quot;&quot;)</strong
             
               <section class="">
                 <div class="comment "><p><strong>5.Write a function that receives a sequence of futures and returns a future that
-eventually yields a sequence of all results</strong>
-<code>scala&gt; Chapter17.eventuallyDoSequence</code></p></p></div>
+eventually yields a sequence of all results</strong></p>
+<p><code>scala&gt; Chapter17.eventuallyDoSequence</code></p></p></div>
                 <div class="code ">  <span class="keyword">def</span> <span class="identifier">eventuallyDoSequence</span>: <span class="identifier">Seq</span>[<span class="identifier">Int</span>] = {
     <span class="keyword">def</span> <span class="identifier">parts</span> = <span class="identifier">Seq</span>(<span class="number">1</span><span class="identifier">*</span><span class="number">1</span>,<span class="number">2</span><span class="identifier">*</span><span class="number">2</span>,<span class="number">3</span><span class="identifier">*</span><span class="number">4</span>)
     <span class="keyword">def</span> <span class="identifier">futures</span>: <span class="identifier">Seq</span>[<span class="identifier">Future</span>[<span class="identifier">Int</span>]] = <span class="identifier">parts</span>.<span class="identifier">map</span>(<span class="identifier">p</span> => <span class="identifier">Future</span> { <span class="identifier">p</span> })
@@ -396,11 +394,11 @@ eventually yields a sequence of all results</strong>
               </section>
             
               <section class="">
-                <div class="comment "><p>6.Write a method Future[T] repeat(action: =&gt; T, until: T =&gt; Boolean)
+                <div class="comment "><p><strong>6.Write a method Future[T] repeat(action: =&gt; T, until: T =&gt; Boolean)
 that asynchronously repeats the action until it produces a value that is accepted by the until
 predicate, which should also run asynchronously. Test with a function that reads a password
 from the console, and a function that simulates a validity check by sleeping for a second
-and then checking that the password is &quot;secret&quot;. Hint: Use recursion.</p></p></div>
+and then checking that the password is &quot;secret&quot;. Hint: Use recursion.</strong></p></p></div>
                 <div class="code ">  <span class="keyword">def</span> <span class="identifier">repeat</span>[<span class="identifier">T</span>](<span class="identifier">action</span>: => <span class="identifier">T</span>, <span class="identifier">until</span>: <span class="identifier">T</span> => <span class="identifier">Boolean</span>): <span class="identifier">Future</span>[<span class="identifier">T</span>] = {
     <span class="keyword">def</span> <span class="identifier">eventuallyAction</span> = <span class="identifier">Future</span> { <span class="identifier">action</span> }
     <span class="keyword">def</span> <span class="identifier">eventuallyUntil</span>(<span class="identifier">x</span>: <span class="identifier">T</span>) = <span class="identifier">Future</span> { <span class="identifier">Thread</span>.<span class="identifier">sleep</span>(<span class="number">1000</span>); <span class="identifier">until</span>(<span class="identifier">x</span>) }
@@ -470,8 +468,8 @@ primes in each part in concurrent futures and combine the results.&quot;)</stron
             
               <section class="">
                 <div class="comment "><p><strong>8.Write a program that asks the user for a URL, reads the web page at that URL, and
-displays all the hyperlinks. Use a separate Future for each of these three steps.&quot;)</strong>
-<code>scala&gt; Await.result(Chapter17.getLinks(Chapter17.getDoc _)(),200.seconds)</code></p></p></div>
+displays all the hyperlinks. Use a separate Future for each of these three steps.&quot;)</strong></p>
+<p><code>scala&gt; Await.result(Chapter17.getLinks(Chapter17.getDoc _)(),200.seconds)</code></p></p></div>
                 <div class="code empty">&nbsp;</div>
               </section>
             
@@ -479,8 +477,8 @@ displays all the hyperlinks. Use a separate Future for each of these three steps
                 <div class="comment "><p><strong>9.Write a program that asks the user for a URL, reads the web page at that URL,
 finds all the hyperlinks, visits each of them concurrently, and locates the Server HTTP
 header for each of them. Finally, print a table of which servers were found how often. The
-futures that visit each page should return the header.</strong>
-<code>scala&gt; Await.result(Chapter17.getLinks(Chapter17.getDoc _)(Chapter17.getLinkServerHeader
+futures that visit each page should return the header.</strong></p>
+<p><code>scala&gt; Await.result(Chapter17.getLinks(Chapter17.getDoc _)(Chapter17.getLinkServerHeader
 ()),200.seconds)</code></p></p></div>
                 <div class="code ">  <span class="keyword">def</span> <span class="identifier">getLinks</span>(<span class="identifier">f</span>: <span class="identifier">String</span> => <span class="identifier">Future</span>[<span class="identifier">Document</span>] = <span class="identifier">getDoc</span>)
               (<span class="identifier">g</span>: <span class="identifier">Document</span> => <span class="identifier">Future</span>[<span class="identifier">String</span>] = <span class="identifier">getLinks</span>): <span class="identifier">Future</span>[<span class="identifier">String</span>] = {

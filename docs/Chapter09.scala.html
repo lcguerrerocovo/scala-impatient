@@ -374,13 +374,28 @@ file.</strong></p></p></div>
               <section class="">
                 <div class="comment "><p><strong>7.Write a Scala program that reads a text file and prints all tokens in the file that are
 not floating-point numbers. Use a regular expression.</strong></p></p></div>
-                <div class="code empty">&nbsp;</div>
+                <div class="code ">  <span class="keyword">def</span> <span class="identifier">nonFloatingPoint</span>(<span class="identifier">path</span>: <span class="identifier">String</span>): <span class="identifier">Unit</span> = {
+    <span class="identifier">Source</span>.<span class="identifier">fromFile</span>(<span class="identifier">path</span>)
+      .<span class="identifier">mkString</span>.<span class="identifier">split</span>(<span class="string">"\\s+"</span>)
+      .<span class="identifier">filterNot</span>(_.<span class="identifier">matches</span>(<span class="string">"[+-]?[0-9]*[.][0-9]+"</span>))
+      .<span class="identifier">foreach</span>(<span class="identifier">println</span>)
+  }
+&nbsp;</div>
               </section>
             
               <section class="">
                 <div class="comment "><p><strong>8.Write a Scala program that prints the src attributes of all img tags of a web page. Use
 regular expressions and groups.</strong></p></p></div>
-                <div class="code empty">&nbsp;</div>
+                <div class="code ">  <span class="keyword">def</span> <span class="identifier">srcImgTags</span>(<span class="identifier">url</span>: <span class="identifier">String</span>): <span class="identifier">Unit</span> = {
+    <span class="keyword">val</span> <span class="identifier">pattern</span> = <span class="string">"""(&lt;img[^>]+)(src=")([^"]*)"""</span>.<span class="identifier">r</span>
+    <span class="keyword">val</span> <span class="identifier">content</span> = <span class="identifier">Source</span>.<span class="identifier">fromURL</span>(<span class="identifier">url</span>, <span class="string">"UTF-8"</span>).<span class="identifier">mkString</span>
+    <span class="identifier">pattern</span>.<span class="identifier">findAllIn</span>(<span class="identifier">content</span>)
+      .<span class="identifier">foreach</span> { <span class="identifier">token</span> =>
+        <span class="keyword">val</span> <span class="identifier">pattern</span>(_, _, <span class="identifier">path</span>) = <span class="identifier">token</span>
+        <span class="identifier">println</span>(<span class="identifier">path</span>)
+      }
+  }
+&nbsp;</div>
               </section>
             
               <section class="">

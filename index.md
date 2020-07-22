@@ -1,7 +1,7 @@
 # Solutions for Scala for the impatient (2nd edition)
 
-  ![Kiku](img/scala_impatient_rabbit.jpg)
-  
+  <img src="img/scala_impatient_rabbit.jpg" alt="rabbit" width="50"/>
+    
   [Scala for the impatient book](https://horstmann.com/scala/)
   
   - Chapter 1: **The basics** ([source](https://github.com/lcguerrerocovo/scala-impatient/blob/master/src/main/scala/impatient_exercises/Chapter01.scala))

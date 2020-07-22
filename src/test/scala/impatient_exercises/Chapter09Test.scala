@@ -1,6 +1,7 @@
 package impatient_exercises
 
 import java.io.{ByteArrayOutputStream, File, FileWriter, PrintWriter}
+import java.nio.file.Files
 
 import org.scalacheck.Gen
 import org.scalatest.flatspec.AnyFlatSpec
@@ -168,12 +169,29 @@ class Chapter09Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
   behavior of "srcImgTags"
 
   it should "print all tokens that are not a floating point number" in {
-
-      val out = new ByteArrayOutputStream
-      Console.withOut(out) {
-        Chapter09.srcImgTags("https://lcguerrerocovo.github.io/scala-impatient/")
-        out.toString shouldEqual """img/scala_impatient_rabbit.jpg
-                                   |""".stripMargin
-      }
+    val out = new ByteArrayOutputStream
+    Console.withOut(out) {
+      Chapter09.srcImgTags("https://lcguerrerocovo.github.io/scala-impatient/")
+      out.toString shouldEqual """img/scala_impatient_rabbit.jpg
+                                 |""".stripMargin
     }
+  }
+
+  behavior of "recursiveClassFileCount"
+
+  it should "count all class files walking a path recursively" in {
+    val tempDir = Files.createTempDirectory("for-test")
+    val otherTempDir = Files.createTempDirectory(tempDir, "one-level-deep")
+    val file = Files.createTempFile(tempDir, "test", ".class")
+    val otherFile = Files.createTempFile(otherTempDir, "test", ".class")
+    try {
+      val count = Chapter09.recursiveClassFileCount(tempDir.toFile.getAbsolutePath)
+      count shouldEqual 2
+    } finally {
+        new File(tempDir.toFile.getAbsolutePath).delete()
+        new File(otherTempDir.toFile.getAbsolutePath).delete()
+        new File(file.toFile.getAbsolutePath).delete()
+        new File(otherFile.toFile.getAbsolutePath).delete()
+    }
+  }
 }

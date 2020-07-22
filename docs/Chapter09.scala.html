@@ -401,7 +401,16 @@ regular expressions and groups.</strong></p></p></div>
               <section class="">
                 <div class="comment "><p><strong>9.Write a Scala program that counts how many files with .class extension are in a given
 directory and its subdirectories.</strong></p></p></div>
-                <div class="code empty">&nbsp;</div>
+                <div class="code ">  <span class="keyword">def</span> <span class="identifier">recursiveClassFileCount</span>(<span class="identifier">path</span>: <span class="identifier">String</span>) = {
+    <span class="keyword">import</span> <span class="identifier">java</span>.<span class="identifier">nio</span>.<span class="identifier">file</span>._
+    <span class="keyword">val</span> <span class="identifier">entries</span> = <span class="identifier">Files</span>.<span class="identifier">walk</span>(<span class="identifier">Paths</span>.<span class="identifier">get</span>(<span class="identifier">path</span>))
+    <span class="keyword">try</span> {
+      <span class="identifier">entries</span>.<span class="identifier">filter</span>(_.<span class="identifier">getFileName</span>.<span class="identifier">toString</span>.<span class="identifier">endsWith</span>(<span class="string">".class"</span>)).<span class="identifier">count</span>
+    } <span class="keyword">finally</span> {
+      <span class="identifier">entries</span>.<span class="identifier">close</span>()
+    }
+  }
+&nbsp;</div>
               </section>
             
               <section class="">

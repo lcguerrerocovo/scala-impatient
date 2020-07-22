@@ -101,6 +101,15 @@ object Chapter09 {
 
   // **9.Write a Scala program that counts how many files with .class extension are in a given
   // directory and its subdirectories.**
+  def recursiveClassFileCount(path: String) = {
+    import java.nio.file._
+    val entries = Files.walk(Paths.get(path))
+    try {
+      entries.filter(_.getFileName.toString.endsWith(".class")).count
+    } finally {
+      entries.close()
+    }
+  }
 
   // **10.Expand the example in Section 9.8, “Serialization,” on page 113. Construct a few Person
   // objects, make some of them friends of others, and save an Array[Person] to a file. Read the

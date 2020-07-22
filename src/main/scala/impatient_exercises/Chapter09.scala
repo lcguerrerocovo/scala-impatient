@@ -80,9 +80,24 @@ object Chapter09 {
 
   // **7.Write a Scala program that reads a text file and prints all tokens in the file that are
   // not floating-point numbers. Use a regular expression.**
+  def nonFloatingPoint(path: String): Unit = {
+    Source.fromFile(path)
+      .mkString.split("\\s+")
+      .filterNot(_.matches("[+-]?[0-9]*[.][0-9]+"))
+      .foreach(println)
+  }
 
   // **8.Write a Scala program that prints the src attributes of all img tags of a web page. Use
   // regular expressions and groups.**
+  def srcImgTags(url: String): Unit = {
+    val pattern = """(<img[^>]+)(src=")([^"]*)""".r
+    val content = Source.fromURL(url, "UTF-8").mkString
+    pattern.findAllIn(content)
+      .foreach { token =>
+        val pattern(_, _, path) = token
+        println(path)
+      }
+  }
 
   // **9.Write a Scala program that counts how many files with .class extension are in a given
   // directory and its subdirectories.**

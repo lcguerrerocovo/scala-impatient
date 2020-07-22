@@ -141,4 +141,39 @@ class Chapter09Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
                                    |""".stripMargin
       }
     }
+
+  behavior of "nonFloatingPoint"
+
+  it should "print all tokens that are not a floating point number" in
+    withFile { (file, writer) =>
+      val contents =
+        """12.34 . 4. +3.5 -1.2345 -1. 45
+          |token +34 .34 0.45""".stripMargin
+      writer.write(contents)
+      writer.close()
+
+      val out = new ByteArrayOutputStream
+      Console.withOut(out) {
+        Chapter09.nonFloatingPoint(file.getAbsolutePath)
+        out.toString shouldEqual """.
+                                   |4.
+                                   |-1.
+                                   |45
+                                   |token
+                                   |+34
+                                   |""".stripMargin
+      }
+    }
+
+  behavior of "srcImgTags"
+
+  it should "print all tokens that are not a floating point number" in {
+
+      val out = new ByteArrayOutputStream
+      Console.withOut(out) {
+        Chapter09.srcImgTags("https://lcguerrerocovo.github.io/scala-impatient/")
+        out.toString shouldEqual """img/scala_impatient_rabbit.jpg
+                                   |""".stripMargin
+      }
+    }
 }

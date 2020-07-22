@@ -1,6 +1,8 @@
 # Solutions for Scala for the impatient (2nd edition)
 
-  [Scala for the impatient](https://horstmann.com/scala/)
+  ![Kiku](img/scala_impatient_rabbit.jpg)
+  
+  [Scala for the impatient book](https://horstmann.com/scala/)
   
   - Chapter 1: **The basics** ([source](https://github.com/lcguerrerocovo/scala-impatient/blob/master/src/main/scala/impatient_exercises/Chapter01.scala))
   - [Chapter 2: Controls structures and functions](docs/Chapter02.scala.html) ([source](https://github.com/lcguerrerocovo/scala-impatient/blob/master/src/main/scala/impatient_exercises/Chapter02.scala),[tests](https://github.com/lcguerrerocovo/scala-impatient/blob/master/src/test/scala/impatient_exercises/Chapter02Test.scala))

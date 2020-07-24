@@ -275,7 +275,11 @@ hr {
                 <div class="code ">
 <span class="keyword">package</span> <span class="identifier">impatient_exercises</span>
 
-<span class="keyword">import</span> <span class="identifier">java</span>.<span class="identifier">io</span>.<span class="identifier">PrintWriter</span>
+<span class="keyword">import</span> <span class="identifier">java</span>.<span class="identifier">io</span>.{<span class="identifier">FileWriter</span>, <span class="identifier">PrintWriter</span>}
+
+<span class="keyword">import</span> <span class="identifier">impatient_exercises</span>.<span class="identifier">Chapter08</span>.<span class="identifier">Point</span>
+
+<span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">collection</span>.<span class="identifier">mutable</span>.<span class="identifier">ArrayBuffer</span>
 <span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">io</span>.<span class="identifier">Source</span>
 
 <span class="keyword">object</span> <span class="identifier">Chapter09</span> {
@@ -417,7 +421,31 @@ directory and its subdirectories.</strong></p></p></div>
                 <div class="comment "><p><strong>10.Expand the example in Section 9.8, “Serialization,” on page 113. Construct a few Person
 objects, make some of them friends of others, and save an Array[Person] to a file. Read the
 array back in and verify that the friend relations are intact.</strong></p></p></div>
-                <div class="code ">}&nbsp;</div>
+                <div class="code ">  <span class="keyword">class</span> <span class="identifier">Person</span>(<span class="keyword">val</span> <span class="identifier">name</span>: <span class="identifier">String</span>) <span class="keyword">extends</span> <span class="identifier">Serializable</span> {
+    <span class="keyword">private</span> <span class="keyword">val</span> <span class="identifier">friends</span> = <span class="keyword">new</span> <span class="identifier">ArrayBuffer</span>[<span class="identifier">Person</span>]
+
+    <span class="keyword">def</span> <span class="identifier">addFriend</span>(<span class="identifier">friend</span>: <span class="identifier">Person</span>) = {
+      <span class="identifier">friends</span> <span class="identifier">+=</span> <span class="identifier">friend</span>
+    }
+
+    <span class="keyword">def</span> <span class="identifier">getFriends</span> = {
+      <span class="identifier">friends</span>.<span class="identifier">toArray</span>
+    }
+
+    <span class="keyword">final</span> override <span class="keyword">def</span> <span class="identifier">equals</span>(<span class="identifier">other</span>: <span class="identifier">Any</span>) = {
+      <span class="keyword">val</span> <span class="identifier">that</span> = <span class="identifier">other</span>.<span class="identifier">asInstanceOf</span>[<span class="identifier">Person</span>]
+      <span class="keyword">if</span> (<span class="identifier">that</span> <span class="identifier">==</span> null) false
+      <span class="keyword">else</span> <span class="identifier">name</span> <span class="identifier">==</span> <span class="identifier">that</span>.<span class="identifier">name</span>
+    }
+  }
+
+  <span class="keyword">def</span> <span class="identifier">saveToFile</span>(<span class="identifier">array</span>: <span class="identifier">Array</span>[<span class="identifier">Person</span>], <span class="identifier">path</span>: <span class="identifier">String</span>) = {
+    <span class="keyword">import</span> <span class="identifier">java</span>.<span class="identifier">io</span>._
+    <span class="keyword">val</span> <span class="identifier">out</span> = <span class="keyword">new</span> <span class="identifier">ObjectOutputStream</span>(<span class="keyword">new</span> <span class="identifier">FileOutputStream</span>(<span class="identifier">path</span>))
+    <span class="identifier">out</span>.<span class="identifier">writeObject</span>(<span class="identifier">array</span>)
+    <span class="identifier">out</span>.<span class="identifier">close</span>()
+  }
+}&nbsp;</div>
               </section>
             
           <section id="footer">

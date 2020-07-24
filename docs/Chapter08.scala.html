@@ -392,7 +392,7 @@ coordinates, such as <code>new LabeledPoint(&quot;Black Thursday&quot;, 1929, 23
     <span class="keyword">final</span> override <span class="keyword">def</span> <span class="identifier">equals</span>(<span class="identifier">other</span>: <span class="identifier">Any</span>) = {
       <span class="keyword">val</span> <span class="identifier">that</span> = <span class="identifier">other</span>.<span class="identifier">asInstanceOf</span>[<span class="identifier">Point</span>]
       <span class="keyword">if</span> (<span class="identifier">that</span> <span class="identifier">==</span> null) false
-      <span class="keyword">else</span> <span class="identifier">x</span> <span class="identifier">==</span> <span class="identifier">x</span> <span class="identifier">&&</span> <span class="identifier">y</span> <span class="identifier">==</span> <span class="identifier">y</span>
+      <span class="keyword">else</span> <span class="identifier">x</span> <span class="identifier">==</span> <span class="identifier">that</span>.<span class="identifier">x</span> <span class="identifier">&&</span> <span class="identifier">y</span> <span class="identifier">==</span> <span class="identifier">that</span>.<span class="identifier">y</span>
     }
   }
 

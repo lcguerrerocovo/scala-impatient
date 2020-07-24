@@ -2,7 +2,11 @@
 
 package impatient_exercises
 
-import java.io.PrintWriter
+import java.io.{FileWriter, PrintWriter}
+
+import impatient_exercises.Chapter08.Point
+
+import scala.collection.mutable.ArrayBuffer
 import scala.io.Source
 
 object Chapter09 {
@@ -114,4 +118,28 @@ object Chapter09 {
   // **10.Expand the example in Section 9.8, “Serialization,” on page 113. Construct a few Person
   // objects, make some of them friends of others, and save an Array[Person] to a file. Read the
   // array back in and verify that the friend relations are intact.**
+  class Person(val name: String) extends Serializable {
+    private val friends = new ArrayBuffer[Person]
+
+    def addFriend(friend: Person) = {
+      friends += friend
+    }
+
+    def getFriends = {
+      friends.toArray
+    }
+
+    final override def equals(other: Any) = {
+      val that = other.asInstanceOf[Person]
+      if (that == null) false
+      else name == that.name
+    }
+  }
+
+  def saveToFile(array: Array[Person], path: String) = {
+    import java.io._
+    val out = new ObjectOutputStream(new FileOutputStream(path))
+    out.writeObject(array)
+    out.close()
+  }
 }

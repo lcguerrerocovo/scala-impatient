@@ -107,7 +107,7 @@ object Chapter08 {
     final override def equals(other: Any) = {
       val that = other.asInstanceOf[Point]
       if (that == null) false
-      else x == x && y == y
+      else x == that.x && y == that.y
     }
   }
 

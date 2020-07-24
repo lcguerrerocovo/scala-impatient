@@ -1,6 +1,6 @@
 package impatient_exercises
 
-import java.io.{ByteArrayOutputStream, File, FileWriter, PrintWriter}
+import java.io.{ByteArrayOutputStream, File, FileInputStream, FileWriter, ObjectInputStream, PrintWriter}
 import java.nio.file.Files
 
 import org.scalacheck.Gen
@@ -8,6 +8,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
+import scala.collection.mutable.ArrayBuffer
 import scala.io.Source
 
 class Chapter09Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPropertyChecks {
@@ -194,4 +195,34 @@ class Chapter09Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
         new File(otherFile.toFile.getAbsolutePath).delete()
     }
   }
+
+  behavior of "Person"
+
+  it should "create friend relationships, write to file and verify relationships hold" in
+    withFile { (file, writer) =>
+      import Chapter09.{Person, saveToFile}
+      val p1 = new Person("fred")
+      val p2 = new Person("wilma")
+      val p3 = new Person("barney")
+      val p4 = new Person("betty")
+
+      p1.addFriend(p2)
+      p2.addFriend(p1)
+      p2.addFriend(p3)
+      p3.addFriend(p2)
+      val arr = new ArrayBuffer[Person]()
+      arr += p1 += p2 += p3 += p4
+      saveToFile(arr.toArray, file.getAbsolutePath)
+      val in = new ObjectInputStream(new FileInputStream(file.getAbsolutePath))
+      val persons = in.readObject().asInstanceOf[Array[Person]]
+
+      persons(0) shouldEqual p1
+      persons(1) shouldEqual p2
+      persons(2) shouldEqual p3
+      persons(3) shouldEqual p4
+      persons(0).getFriends should contain only (p2)
+      persons(1).getFriends should contain allOf (p1,p3)
+      persons(2).getFriends should contain only (p2)
+      persons(3).getFriends shouldBe empty
+    }
 }

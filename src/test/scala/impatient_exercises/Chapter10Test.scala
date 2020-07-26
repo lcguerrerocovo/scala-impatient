@@ -1,6 +1,6 @@
 package impatient_exercises
 
-import impatient_exercises.Chapter10.RectangleLike
+import impatient_exercise.Chapter10.{OrderedPoint, RectangleLike}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
@@ -29,7 +29,21 @@ class Chapter10Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
     egg.height shouldEqual 70.0
   }
 
+  behavior of "OrderedPoint"
 
+  it should "compare two points using lexicographical ordering, left hand side being lesser" in {
+    new OrderedPoint(0,2) < new OrderedPoint(1,2) shouldEqual true
+    new OrderedPoint(1,2) < new OrderedPoint(1,3) shouldEqual true
+  }
+
+  it should "compare two points using lexicographical ordering being both equal" in {
+    new OrderedPoint(1,2) == new OrderedPoint(1,2) shouldEqual true
+  }
+
+  it should "compare two points using lexicographical ordering, right hand side being lesser" in {
+    new OrderedPoint(1,3) > new OrderedPoint(1,2) shouldEqual true
+    new OrderedPoint(1,2) > new OrderedPoint(0,2) shouldEqual true
+  }
 
 
 }

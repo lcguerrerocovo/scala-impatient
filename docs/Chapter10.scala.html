@@ -273,8 +273,10 @@ hr {
               <section class="">
                 <div class="comment empty"></p></div>
                 <div class="code ">
-<span class="keyword">package</span> <span class="identifier">impatient_exercises</span>
+<span class="keyword">package</span> <span class="identifier">impatient_exercise</span>
 
+<span class="keyword">import</span> <span class="identifier">impatient_exercises</span>.{<span class="identifier">Point</span> => _, _}
+<span class="keyword">import</span> <span class="identifier">java</span>.<span class="identifier">awt</span>.<span class="identifier">Point</span>
 <span class="keyword">import</span> <span class="identifier">java</span>.<span class="identifier">awt</span>.<span class="identifier">Rectangle</span>
 
 <span class="keyword">object</span> <span class="identifier">Chapter10</span> {
@@ -287,12 +289,10 @@ absent from classes such as java.awt.geom.Ellipse2D. In Scala, you can fix this 
 Define a trait RectangleLike with concrete methods translate and grow. Provide any
 abstract methods that you need for the implementation, so that you can mix in the trait
 like this:</strong></p>
-<p><code>`
-val egg = new java.awt.geom.Ellipse2D.Double(5, 10, 20, 30) with RectangleLike
+<p><code>val egg = new java.awt.geom.Ellipse2D.Double(5, 10, 20, 30) with RectangleLike
 egg.translate(10, -10)
-egg.grow(10, 20)</code>`</p></p></div>
-                <div class="code ">
-  trait <span class="identifier">RectangleLike</span> {
+egg.grow(10, 20)</code></p></p></div>
+                <div class="code ">  trait <span class="identifier">RectangleLike</span> {
     <span class="keyword">def</span> <span class="identifier">getX</span>: <span class="identifier">Double</span>
     <span class="keyword">def</span> <span class="identifier">getY</span>: <span class="identifier">Double</span>
     <span class="keyword">def</span> <span class="identifier">getWidth</span>: <span class="identifier">Double</span>
@@ -311,6 +311,20 @@ egg.grow(10, 20)</code>`</p></p></div>
       <span class="identifier">rectangle</span>.<span class="identifier">setRect</span>(<span class="identifier">getX</span>,<span class="identifier">getY</span>,<span class="identifier">getWidth</span>,<span class="identifier">getHeight</span>)
       <span class="identifier">rectangle</span>.<span class="identifier">grow</span>(<span class="identifier">h</span>,<span class="identifier">v</span>)
       <span class="identifier">setFrame</span>(<span class="identifier">rectangle</span>.<span class="identifier">x</span>,<span class="identifier">rectangle</span>.<span class="identifier">y</span>,<span class="identifier">rectangle</span>.<span class="identifier">width</span>,<span class="identifier">rectangle</span>.<span class="identifier">height</span>)
+    }
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>2.Define a class OrderedPoint by mixing scala.math.Ordered[Point] into java.awt.Point.
+Use lexicographic ordering, i.e. (x, y) &lt; (x’, y’) if x &lt; x’ or x = x’ and y &lt; y’</strong></p></p></div>
+                <div class="code ">  <span class="keyword">class</span> <span class="identifier">OrderedPoint</span>(<span class="identifier">x</span>: <span class="identifier">Int</span>, <span class="identifier">y</span>: <span class="identifier">Int</span>) <span class="keyword">extends</span> <span class="identifier">Point</span>(<span class="identifier">x</span>, <span class="identifier">y</span>) with
+  <span class="identifier">Ordered</span>[<span class="identifier">Point</span>] {
+    <span class="keyword">def</span> <span class="identifier">compare</span>(<span class="identifier">that</span>: <span class="identifier">Point</span>) = {
+      <span class="keyword">if</span>(this.<span class="identifier">getX</span> <span class="identifier">&lt;</span> <span class="identifier">that</span>.<span class="identifier">getX</span> <span class="identifier">||</span> (this.<span class="identifier">getX</span> <span class="identifier">==</span> <span class="identifier">that</span>.<span class="identifier">getX</span> <span class="identifier">&&</span> this.<span class="identifier">getY</span> <span class="identifier">&lt;</span> <span class="identifier">that</span>.<span class="identifier">getY</span>)) <span class="identifier">-</span><span class="number">1</span>
+      <span class="keyword">else</span> <span class="keyword">if</span>(this.<span class="identifier">getX</span> <span class="identifier">==</span> <span class="identifier">that</span>.<span class="identifier">getX</span> <span class="identifier">&&</span> this.<span class="identifier">getY</span> <span class="identifier">==</span> <span class="identifier">that</span>.<span class="identifier">getY</span>) <span class="number">0</span>
+      <span class="keyword">else</span> <span class="number">1</span>
     }
   }
 

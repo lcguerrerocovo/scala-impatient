@@ -1,7 +1,9 @@
 // Example: Chapter 10: Traits
 
-package impatient_exercises
+package impatient_exercise
 
+import impatient_exercises.{Point => _, _}
+import java.awt.Point
 import java.awt.Rectangle
 
 object Chapter10 {
@@ -12,12 +14,9 @@ object Chapter10 {
   //     abstract methods that you need for the implementation, so that you can mix in the trait
   //     like this:**
   //
-  //     ```
-  //     val egg = new java.awt.geom.Ellipse2D.Double(5, 10, 20, 30) with RectangleLike
+  //     `val egg = new java.awt.geom.Ellipse2D.Double(5, 10, 20, 30) with RectangleLike
   //     egg.translate(10, -10)
-  //     egg.grow(10, 20)
-  //     ```
-
+  //     egg.grow(10, 20)`
   trait RectangleLike {
     def getX: Double
     def getY: Double
@@ -37,6 +36,17 @@ object Chapter10 {
       rectangle.setRect(getX,getY,getWidth,getHeight)
       rectangle.grow(h,v)
       setFrame(rectangle.x,rectangle.y,rectangle.width,rectangle.height)
+    }
+  }
+
+  // **2.Define a class OrderedPoint by mixing scala.math.Ordered[Point] into java.awt.Point.
+  // Use lexicographic ordering, i.e. (x, y) < (x’, y’) if x < x’ or x = x’ and y < y’**
+  class OrderedPoint(x: Int, y: Int) extends Point(x, y) with
+  Ordered[Point] {
+    def compare(that: Point) = {
+      if(this.getX < that.getX || (this.getX == that.getX && this.getY < that.getY)) -1
+      else if(this.getX == that.getX && this.getY == that.getY) 0
+      else 1
     }
   }
 

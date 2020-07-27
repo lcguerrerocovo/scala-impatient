@@ -2,7 +2,7 @@ package impatient_exercises
 
 import java.io.ByteArrayOutputStream
 
-import impatient_exercise.Chapter10.{BankAccount, CryptoLogger, OrderedPoint, RectangleLike}
+import impatient_exercise.Chapter10.{BankAccount, CryptoLogger, NotifyChangesPoint, OrderedPoint, RectangleLike}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
@@ -77,6 +77,16 @@ class Chapter10Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
                                  |zlwkgudzlqj
                                  |""".stripMargin
     }
+  }
+
+  behavior of "NotifyChangesPoint"
+
+  it should "notify listener whenever changes are made to the class's fields" in {
+    val point = new NotifyChangesPoint(1,2)
+    point.x =  2
+    point.y =  3
+    point.x shouldEqual 2
+    point.y shouldEqual 3
   }
 
 

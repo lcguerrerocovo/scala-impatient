@@ -5,7 +5,7 @@ package impatient_exercise
 import impatient_exercises.{Point => _, _}
 import java.awt.Point
 import java.awt.Rectangle
-import java.util.logging.Logger
+import java.beans.{PropertyChangeEvent, PropertyChangeListener, PropertyChangeSupport}
 
 object Chapter10 {
 
@@ -89,5 +89,69 @@ object Chapter10 {
     def withdraw(amount: Double) = { balance -= amount; log("withdrawing"); balance }
   }
 
+  // **5.The JavaBeans specification has the notion of a property change listener, a standardized
+  //     way for beans to communicate changes in their properties. The PropertyChangeSupport class
+  //     is provided as a convenience superclass for any bean that wishes to support property
+  //     change listeners. Unfortunately, a class that already has another superclass—such as
+  //     JComponent—must reimplement the methods. Reimplement PropertyChangeSupport as a trait,
+  //     and mix it into the java.awt.Point class.**
+  trait ScalaPropertyChangeSupport {
+    val pcs: PropertyChangeSupport = new PropertyChangeSupport(this);
 
+    def addPropertyChangeListener(listener: PropertyChangeListener) {
+      this.pcs.addPropertyChangeListener(listener);
+    }
+
+    def removePropertyChangeListener(listener: PropertyChangeListener) {
+      this.pcs.removePropertyChangeListener(listener);
+    }
+
+    def firePropertyChange(propertyName: String, oldValue: Any, newValue: Any): Unit = {
+      this.pcs.firePropertyChange(propertyName, oldValue, newValue)
+    }
+  }
+
+  class NotifyChangesPoint(private val p1: Int, private val p2: Int) extends java.awt.Point(p1,p2)
+    with ScalaPropertyChangeSupport {
+    val listener = new PropertyChangeListener {
+      override def propertyChange(e: PropertyChangeEvent): Unit = {
+        val propertyName = e.getPropertyName
+        println(propertyName)
+      }
+    }
+    addPropertyChangeListener(listener)
+
+    def x_=(x: Int) = {
+      val oldX = this.x
+      this.x = x
+      firePropertyChange("x", oldX, this.x);
+    }
+
+    def y_=(y: Int) = {
+      val oldY = this.y
+      this.y = y
+      firePropertyChange("y", oldY, this.x);
+    }
+
+    override def setLocation(x: Double, y: Double) {
+      val oldX, oldY = (this.x,this.y)
+      super.setLocation(x,y)
+      firePropertyChange("x", oldX, this.x);
+      firePropertyChange("y", oldY, this.y);
+    }
+
+    override def move(x: Int, y: Int) {
+      val oldX, oldY = (this.x,this.y)
+      super.move(x,y)
+      firePropertyChange("x", oldX, this.x);
+      firePropertyChange("y", oldY, this.y);
+    }
+
+    override def translate(x: Int, y: Int) {
+      val oldX, oldY = (this.x,this.y)
+      super.translate(x,y)
+      firePropertyChange("x", oldX, this.x);
+      firePropertyChange("y", oldY, this.y);
+    }
+  }
 }

@@ -278,7 +278,7 @@ hr {
 <span class="keyword">import</span> <span class="identifier">impatient_exercises</span>.{<span class="identifier">Point</span> => _, _}
 <span class="keyword">import</span> <span class="identifier">java</span>.<span class="identifier">awt</span>.<span class="identifier">Point</span>
 <span class="keyword">import</span> <span class="identifier">java</span>.<span class="identifier">awt</span>.<span class="identifier">Rectangle</span>
-<span class="keyword">import</span> <span class="identifier">java</span>.<span class="identifier">util</span>.<span class="identifier">logging</span>.<span class="identifier">Logger</span>
+<span class="keyword">import</span> <span class="identifier">java</span>.<span class="identifier">beans</span>.{<span class="identifier">PropertyChangeEvent</span>, <span class="identifier">PropertyChangeListener</span>, <span class="identifier">PropertyChangeSupport</span>}
 
 <span class="keyword">object</span> <span class="identifier">Chapter10</span> {
 &nbsp;</div>
@@ -332,10 +332,10 @@ Use lexicographic ordering, i.e. (x, y) &lt; (x’, y’) if x &lt; x’ or x = 
               </section>
             
               <section class="">
-                <div class="comment "><p>*<em>4.Provide a CryptoLogger trait that encrypts the log messages with the Caesar cipher.
+                <div class="comment "><p><strong>4.Provide a CryptoLogger trait that encrypts the log messages with the Caesar cipher.
 The key should be 3 by default, but it should be overridable by the user. Provide usage
-examples with the default key and a key of –3. *</em>
-TODO check if negative number is working properly for ceasar cypher shift</p></p></div>
+examples with the default key and a key of –3.</strong>
+TODO check if negative number is working properly for caesar cypher shift</p></p></div>
                 <div class="code ">  trait <span class="identifier">CryptoLogger</span> {
     <span class="keyword">val</span> <span class="identifier">key</span> = <span class="number">3</span>
     <span class="keyword">val</span> <span class="identifier">intToChar</span> = ((<span class="number">0</span> <span class="identifier">to</span> <span class="number">25</span>) <span class="identifier">zip</span> (<span class="number">'a'</span> <span class="identifier">to</span> <span class="number">'z'</span>)).<span class="identifier">toMap</span>
@@ -369,8 +369,75 @@ TODO check if negative number is working properly for ceasar cypher shift</p></p
     <span class="keyword">def</span> <span class="identifier">deposit</span>(<span class="identifier">amount</span>: <span class="identifier">Double</span>) = { <span class="identifier">balance</span> <span class="identifier">+=</span> <span class="identifier">amount</span>; <span class="identifier">log</span>(<span class="string">"depositing"</span>) ;<span class="identifier">balance</span> }
     <span class="keyword">def</span> <span class="identifier">withdraw</span>(<span class="identifier">amount</span>: <span class="identifier">Double</span>) = { <span class="identifier">balance</span> <span class="identifier">-=</span> <span class="identifier">amount</span>; <span class="identifier">log</span>(<span class="string">"withdrawing"</span>); <span class="identifier">balance</span> }
   }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>5.The JavaBeans specification has the notion of a property change listener, a standardized
+way for beans to communicate changes in their properties. The PropertyChangeSupport class
+is provided as a convenience superclass for any bean that wishes to support property
+change listeners. Unfortunately, a class that already has another superclass—such as
+JComponent—must reimplement the methods. Reimplement PropertyChangeSupport as a trait,
+and mix it into the java.awt.Point class.</strong></p></p></div>
+                <div class="code ">  trait <span class="identifier">ScalaPropertyChangeSupport</span> {
+    <span class="keyword">val</span> <span class="identifier">pcs</span>: <span class="identifier">PropertyChangeSupport</span> = <span class="keyword">new</span> <span class="identifier">PropertyChangeSupport</span>(this);
 
+    <span class="keyword">def</span> <span class="identifier">addPropertyChangeListener</span>(<span class="identifier">listener</span>: <span class="identifier">PropertyChangeListener</span>) {
+      this.<span class="identifier">pcs</span>.<span class="identifier">addPropertyChangeListener</span>(<span class="identifier">listener</span>);
+    }
 
+    <span class="keyword">def</span> <span class="identifier">removePropertyChangeListener</span>(<span class="identifier">listener</span>: <span class="identifier">PropertyChangeListener</span>) {
+      this.<span class="identifier">pcs</span>.<span class="identifier">removePropertyChangeListener</span>(<span class="identifier">listener</span>);
+    }
+
+    <span class="keyword">def</span> <span class="identifier">firePropertyChange</span>(<span class="identifier">propertyName</span>: <span class="identifier">String</span>, <span class="identifier">oldValue</span>: <span class="identifier">Any</span>, <span class="identifier">newValue</span>: <span class="identifier">Any</span>): <span class="identifier">Unit</span> = {
+      this.<span class="identifier">pcs</span>.<span class="identifier">firePropertyChange</span>(<span class="identifier">propertyName</span>, <span class="identifier">oldValue</span>, <span class="identifier">newValue</span>)
+    }
+  }
+
+  <span class="keyword">class</span> <span class="identifier">NotifyChangesPoint</span>(<span class="keyword">private</span> <span class="keyword">val</span> <span class="identifier">p1</span>: <span class="identifier">Int</span>, <span class="keyword">private</span> <span class="keyword">val</span> <span class="identifier">p2</span>: <span class="identifier">Int</span>) <span class="keyword">extends</span> <span class="identifier">java</span>.<span class="identifier">awt</span>.<span class="identifier">Point</span>(<span class="identifier">p1</span>,<span class="identifier">p2</span>)
+    with <span class="identifier">ScalaPropertyChangeSupport</span> {
+    <span class="keyword">val</span> <span class="identifier">listener</span> = <span class="keyword">new</span> <span class="identifier">PropertyChangeListener</span> {
+      override <span class="keyword">def</span> <span class="identifier">propertyChange</span>(<span class="identifier">e</span>: <span class="identifier">PropertyChangeEvent</span>): <span class="identifier">Unit</span> = {
+        <span class="keyword">val</span> <span class="identifier">propertyName</span> = <span class="identifier">e</span>.<span class="identifier">getPropertyName</span>
+        <span class="identifier">println</span>(<span class="identifier">propertyName</span>)
+      }
+    }
+    <span class="identifier">addPropertyChangeListener</span>(<span class="identifier">listener</span>)
+
+    <span class="keyword">def</span> <span class="identifier">x_=</span>(<span class="identifier">x</span>: <span class="identifier">Int</span>) = {
+      <span class="keyword">val</span> <span class="identifier">oldX</span> = this.<span class="identifier">x</span>
+      this.<span class="identifier">x</span> = <span class="identifier">x</span>
+      <span class="identifier">firePropertyChange</span>(<span class="string">"x"</span>, <span class="identifier">oldX</span>, this.<span class="identifier">x</span>);
+    }
+
+    <span class="keyword">def</span> <span class="identifier">y_=</span>(<span class="identifier">y</span>: <span class="identifier">Int</span>) = {
+      <span class="keyword">val</span> <span class="identifier">oldY</span> = this.<span class="identifier">y</span>
+      this.<span class="identifier">y</span> = <span class="identifier">y</span>
+      <span class="identifier">firePropertyChange</span>(<span class="string">"y"</span>, <span class="identifier">oldY</span>, this.<span class="identifier">x</span>);
+    }
+
+    override <span class="keyword">def</span> <span class="identifier">setLocation</span>(<span class="identifier">x</span>: <span class="identifier">Double</span>, <span class="identifier">y</span>: <span class="identifier">Double</span>) {
+      <span class="keyword">val</span> <span class="identifier">oldX</span>, <span class="identifier">oldY</span> = (this.<span class="identifier">x</span>,this.<span class="identifier">y</span>)
+      <span class="keyword">super</span>.<span class="identifier">setLocation</span>(<span class="identifier">x</span>,<span class="identifier">y</span>)
+      <span class="identifier">firePropertyChange</span>(<span class="string">"x"</span>, <span class="identifier">oldX</span>, this.<span class="identifier">x</span>);
+      <span class="identifier">firePropertyChange</span>(<span class="string">"y"</span>, <span class="identifier">oldY</span>, this.<span class="identifier">y</span>);
+    }
+
+    override <span class="keyword">def</span> <span class="identifier">move</span>(<span class="identifier">x</span>: <span class="identifier">Int</span>, <span class="identifier">y</span>: <span class="identifier">Int</span>) {
+      <span class="keyword">val</span> <span class="identifier">oldX</span>, <span class="identifier">oldY</span> = (this.<span class="identifier">x</span>,this.<span class="identifier">y</span>)
+      <span class="keyword">super</span>.<span class="identifier">move</span>(<span class="identifier">x</span>,<span class="identifier">y</span>)
+      <span class="identifier">firePropertyChange</span>(<span class="string">"x"</span>, <span class="identifier">oldX</span>, this.<span class="identifier">x</span>);
+      <span class="identifier">firePropertyChange</span>(<span class="string">"y"</span>, <span class="identifier">oldY</span>, this.<span class="identifier">y</span>);
+    }
+
+    override <span class="keyword">def</span> <span class="identifier">translate</span>(<span class="identifier">x</span>: <span class="identifier">Int</span>, <span class="identifier">y</span>: <span class="identifier">Int</span>) {
+      <span class="keyword">val</span> <span class="identifier">oldX</span>, <span class="identifier">oldY</span> = (this.<span class="identifier">x</span>,this.<span class="identifier">y</span>)
+      <span class="keyword">super</span>.<span class="identifier">translate</span>(<span class="identifier">x</span>,<span class="identifier">y</span>)
+      <span class="identifier">firePropertyChange</span>(<span class="string">"x"</span>, <span class="identifier">oldX</span>, this.<span class="identifier">x</span>);
+      <span class="identifier">firePropertyChange</span>(<span class="string">"y"</span>, <span class="identifier">oldY</span>, this.<span class="identifier">y</span>);
+    }
+  }
 }&nbsp;</div>
               </section>
             

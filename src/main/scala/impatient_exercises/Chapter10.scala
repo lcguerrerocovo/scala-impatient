@@ -6,6 +6,10 @@ import impatient_exercises.{Point => _, _}
 import java.awt.Point
 import java.awt.Rectangle
 import java.beans.{PropertyChangeEvent, PropertyChangeListener, PropertyChangeSupport}
+import java.io
+import java.io.InputStream
+
+import impatient_exercise.Chapter10.BufferedInputStream
 
 object Chapter10 {
 
@@ -136,4 +140,59 @@ object Chapter10 {
       firePropertyChange("y", oldY, this.y)
     }
   }
+
+  // **6.In the Java AWT library, we have a class Container, a subclass of Component that
+  //     collects multiple components. For example, a Button is a Component, but a Panel is a
+  //     Container. That’s the composite pattern at work. Swing has JComponent and JButton, but if
+  //     you look closely, you will notice something strange. JComponent extends Container, even
+  //     though it makes no sense to add other components to, say, a JButton. Ideally, the Swing
+  //     designers would have preferred the design in Figure 10–4.
+  //
+  //     But that’s not possible in Java. Explain why not. How could the design be executed in
+  //     Scala with traits?**
+  //
+  //     - A hypothetical `JContainer` couldn't inherit from two classes (`Container` and
+  //       `JComponent`) and thus the design is not feasible in Java. In Scala we could create a
+  //       trait `Container` that encapsulates the state and functionality to collect multiple
+  //       components in the object and make JContainer extend JComponent and implement the
+  //       `Container` trait like so => `JContainer extends JComponent with Container`
+
+  // **7.Construct an example where a class needs to be recompiled when one of the mixins changes.
+  //     Start with class SavingsAccount extends Account with ConsoleLogger. Put each class and
+  //     trait in a separate source file. Add a field to Account. In Main (also in a separate
+  //     source file), construct a SavingsAccount and access the new field. Recompile all files
+  //     except for SavingsAccount and verify that the program works. Now add a field to
+  //     ConsoleLogger and access it in Main. Again, recompile all files except for SavingsAccount.
+  //     What happens? Why?**
+
+  // **8.There are dozens of Scala trait tutorials with silly examples of barking dogs or
+  //     philosophizing frogs. Reading through contrived hierarchies can be tedious and not very
+  //     helpful, but designing your own is very illuminating. Make your own silly trait hierarchy
+  //     example that demonstrates layered traits, concrete and abstract methods, and concrete and
+  //     abstract fields.**
+
+  // **9.In the java.io library, you add buffering to an input stream with a BufferedInputStream
+  //     decorator. Reimplement buffering as a trait. For simplicity, override the read method.**
+  //  [decorator pattern in java.io](https://kymr.github
+  //  .io/2016/11/27/Decorator-Pattern/#:~:text=BufferedInputStream%20is%20Concrete%20Decorator%20class.&text=FileInputStream%20is%20InputStream%20that%20can,from%20the%20stream%20to%20buffer.)
+  trait BufferedInputStream extends InputStream {
+    val bis: java.io.BufferedInputStream
+
+    override def read(): Int = {
+      this.bis.read()
+    }
+
+    def readChar(): Char = {
+      this.read.asInstanceOf[Char]
+    }
+  }
+
+  // **10.Using the logger traits from this chapter, add logging to the solution of the preceding
+  //      problem that demonstrates buffering.**
+
+  // **11.Implement a class IterableInputStream that extends java.io.InputStream with the trait
+  //      Iterable[Byte].**
+
+  // **12.Using javap -c -private, analyze how the call super.log(msg) is translated to Java. How
+  //      does the same call invoke two different methods, depending on the mixin order?**
 }

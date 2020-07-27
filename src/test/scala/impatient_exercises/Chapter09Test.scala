@@ -1,6 +1,6 @@
 package impatient_exercises
 
-import java.io.{ByteArrayOutputStream, File, FileInputStream, FileWriter, ObjectInputStream, PrintWriter}
+import java.io.{ByteArrayOutputStream, File, FileInputStream, ObjectInputStream}
 import java.nio.file.Files
 
 import org.scalacheck.Gen
@@ -13,20 +13,9 @@ import scala.io.Source
 
 class Chapter09Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPropertyChecks {
 
-  def withFile(testCode: (File, FileWriter) => Any) {
-    val file = File.createTempFile("file", ".out") // create the fixture
-    val writer = new FileWriter(file)
-    try {
-      testCode(file, writer)
-    }
-    finally {
-      new File(file.getAbsolutePath).delete()
-    }
-  }
-
   behavior of "reverseFile"
 
-  it should "reverse a file's contents" in withFile { (file, writer) =>
+  it should "reverse a file's contents" in utils.withFile { (file, writer) =>
     val contents = """these are the file's contents
                      |it has several lines
                      |and it should be reversed by reverseFile""".stripMargin
@@ -41,7 +30,7 @@ class Chapter09Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
   behavior of "tabsToSpaces"
 
   it should "replace all tab characters with specified number of spaces" in
-    withFile { (file, writer) =>
+    utils.withFile { (file, writer) =>
 
       val contents = "1\t2\t3\t4\t5"
       writer.write(contents)
@@ -55,7 +44,7 @@ class Chapter09Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
   behavior of "printWords"
 
   it should "print all words in contents of file with more than 12 characters" in
-    withFile { (file, writer) =>
+    utils.withFile { (file, writer) =>
       val contents = """thesearethefile's contents
                        |ithasseverallineswithlongwords that should be parsed
                        |andthelongwordsshould be printedtotheconsoleoutput""".stripMargin
@@ -76,7 +65,7 @@ class Chapter09Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
   behavior of "numberStats"
 
   it should "prints sum, average, min and max of floating point numbers in file" in
-    withFile { (file, writer) =>
+    utils.withFile { (file, writer) =>
       val contents = """4.5 6.7 8.985 34.56 78.56 0.01""".stripMargin
       writer.write(contents)
       writer.close()
@@ -96,7 +85,7 @@ class Chapter09Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
 
   it should "write a table to a file with powers and reciprocals of base 2 with exponent from 0 " +
     "to 20" in
-    withFile { (file, writer) =>
+    utils.withFile { (file, writer) =>
       Chapter09.powersAndReciprocals(file.getAbsolutePath,2,0 to 20)
       Source.fromFile(file.getAbsolutePath, "UTF-8").mkString shouldEqual
       """1         1.0
@@ -126,7 +115,7 @@ class Chapter09Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
   behavior of "quotedStrings"
 
   it should "print all quoted strings in a file" in
-    withFile { (file, writer) =>
+    utils.withFile { (file, writer) =>
       val contents =
         """"like this, maybe with \" or \\" this is a continuation of "the example"" string
           |"from the book"""".stripMargin
@@ -147,7 +136,7 @@ class Chapter09Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
   behavior of "nonFloatingPoint"
 
   it should "print all tokens that are not a floating point number" in
-    withFile { (file, writer) =>
+    utils.withFile { (file, writer) =>
       val contents =
         """12.34 . 4. +3.5 -1.2345 -1. 45
           |token +34 .34 0.45""".stripMargin
@@ -199,7 +188,7 @@ class Chapter09Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
   behavior of "Person"
 
   it should "create friend relationships, write to file and verify relationships hold" in
-    withFile { (file, writer) =>
+    utils.withFile { (file, writer) =>
       import Chapter09.{Person, saveToFile}
       val p1 = new Person("fred")
       val p2 = new Person("wilma")

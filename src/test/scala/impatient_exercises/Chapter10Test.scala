@@ -1,12 +1,14 @@
 package impatient_exercises
 
 import java.beans.{PropertyChangeEvent, PropertyChangeListener}
-import java.io.ByteArrayOutputStream
+import java.io.{ByteArrayOutputStream, File, FileWriter}
 
-import impatient_exercise.Chapter10.{BankAccount, CryptoLogger, NotifyChangesPoint, OrderedPoint, RectangleLike}
+import impatient_exercise.Chapter10.{BankAccount, BufferedInputStream, CryptoLogger, NotifyChangesPoint, OrderedPoint, RectangleLike}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
+
+import scala.io.Source
 
 class Chapter10Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPropertyChecks {
 
@@ -91,7 +93,7 @@ class Chapter10Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
     )
     testCode(point)
   }
-  
+
   behavior of "NotifyChangesPoint"
 
   it should "notify listener on translate" in
@@ -106,26 +108,53 @@ class Chapter10Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
     }
 
   it should "notify listener on move" in
-    withPoint(1,2) { point =>
+    withPoint(0,0) { point =>
       val out = new ByteArrayOutputStream
       Console.withOut(out) {
         point.move(2, 3)
-        out.toString shouldEqual """property:x/oldValue:1/newValue:2
-                                   |property:y/oldValue:2/newValue:3
+        out.toString shouldEqual """property:x/oldValue:0/newValue:2
+                                   |property:y/oldValue:0/newValue:3
                                    |""".stripMargin
       }
     }
 
   it should "notify listener on setLocation" in
-    withPoint(1,2) { point =>
+    withPoint(0,0) { point =>
       val out = new ByteArrayOutputStream
       Console.withOut(out) {
         point.setLocation(9, 10)
-        out.toString shouldEqual """property:x/oldValue:1/newValue:9
-                                   |property:y/oldValue:2/newValue:10
+        out.toString shouldEqual """property:x/oldValue:0/newValue:9
+                                   |property:y/oldValue:0/newValue:10
                                    |""".stripMargin
       }
     }
+
+  behavior of "BufferedInputStream"
+
+  it should "temp file should be read in by BufferedInputStream trait" in utils.withFile {
+    (file,writer) =>
+      import java.io.FileInputStream
+
+      val text = """these are the file's contents
+                       |it has several lines
+                       |and it should be read by BufferedInputStream trait""".stripMargin
+      writer.write(text)
+      writer.close()
+
+
+      val out = new ByteArrayOutputStream
+      Console.withOut(out) {
+        val fis = new FileInputStream(file.getAbsolutePath) with
+          BufferedInputStream {
+          override val bis = new java.io.BufferedInputStream(this)
+        }
+        while (fis.bis.available > 0) {
+          print(fis.readChar())
+        }
+        fis.close()
+        out.toString shouldEqual text
+      }
+  }
 
 
 }

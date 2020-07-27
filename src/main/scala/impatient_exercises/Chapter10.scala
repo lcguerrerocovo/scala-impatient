@@ -96,7 +96,7 @@ object Chapter10 {
   //     JComponent—must reimplement the methods. Reimplement PropertyChangeSupport as a trait,
   //     and mix it into the java.awt.Point class.**
   trait ScalaPropertyChangeSupport {
-    val pcs: PropertyChangeSupport = new PropertyChangeSupport(this);
+    val pcs: PropertyChangeSupport
 
     def addPropertyChangeListener(listener: PropertyChangeListener) {
       this.pcs.addPropertyChangeListener(listener);
@@ -111,47 +111,29 @@ object Chapter10 {
     }
   }
 
-  class NotifyChangesPoint(private val p1: Int, private val p2: Int) extends java.awt.Point(p1,p2)
+  class NotifyChangesPoint(private[this] val px: Int, private[this] val py: Int) extends java.awt.Point(px,py)
     with ScalaPropertyChangeSupport {
-    val listener = new PropertyChangeListener {
-      override def propertyChange(e: PropertyChangeEvent): Unit = {
-        val propertyName = e.getPropertyName
-        println(propertyName)
-      }
-    }
-    addPropertyChangeListener(listener)
-
-    def x_=(x: Int) = {
-      val oldX = this.x
-      this.x = x
-      firePropertyChange("x", oldX, this.x);
-    }
-
-    def y_=(y: Int) = {
-      val oldY = this.y
-      this.y = y
-      firePropertyChange("y", oldY, this.x);
-    }
+    override val pcs = new PropertyChangeSupport(this);
 
     override def setLocation(x: Double, y: Double) {
-      val oldX, oldY = (this.x,this.y)
+      val (oldX, oldY) = (this.x,this.y)
       super.setLocation(x,y)
-      firePropertyChange("x", oldX, this.x);
-      firePropertyChange("y", oldY, this.y);
+      firePropertyChange("x", oldX, this.x)
+      firePropertyChange("y", oldY, this.y)
     }
 
     override def move(x: Int, y: Int) {
-      val oldX, oldY = (this.x,this.y)
+      val (oldX, oldY) = (this.x,this.y)
       super.move(x,y)
-      firePropertyChange("x", oldX, this.x);
-      firePropertyChange("y", oldY, this.y);
+      firePropertyChange("x", oldX, this.x)
+      firePropertyChange("y", oldY, this.y)
     }
 
     override def translate(x: Int, y: Int) {
-      val oldX, oldY = (this.x,this.y)
+      val (oldX, oldY) = (this.x,this.y)
       super.translate(x,y)
-      firePropertyChange("x", oldX, this.x);
-      firePropertyChange("y", oldY, this.y);
+      firePropertyChange("x", oldX, this.x)
+      firePropertyChange("y", oldY, this.y)
     }
   }
 }

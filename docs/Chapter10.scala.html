@@ -380,7 +380,7 @@ change listeners. Unfortunately, a class that already has another superclass—s
 JComponent—must reimplement the methods. Reimplement PropertyChangeSupport as a trait,
 and mix it into the java.awt.Point class.</strong></p></p></div>
                 <div class="code ">  trait <span class="identifier">ScalaPropertyChangeSupport</span> {
-    <span class="keyword">val</span> <span class="identifier">pcs</span>: <span class="identifier">PropertyChangeSupport</span> = <span class="keyword">new</span> <span class="identifier">PropertyChangeSupport</span>(this);
+    <span class="keyword">val</span> <span class="identifier">pcs</span>: <span class="identifier">PropertyChangeSupport</span>
 
     <span class="keyword">def</span> <span class="identifier">addPropertyChangeListener</span>(<span class="identifier">listener</span>: <span class="identifier">PropertyChangeListener</span>) {
       this.<span class="identifier">pcs</span>.<span class="identifier">addPropertyChangeListener</span>(<span class="identifier">listener</span>);
@@ -395,47 +395,29 @@ and mix it into the java.awt.Point class.</strong></p></p></div>
     }
   }
 
-  <span class="keyword">class</span> <span class="identifier">NotifyChangesPoint</span>(<span class="keyword">private</span> <span class="keyword">val</span> <span class="identifier">p1</span>: <span class="identifier">Int</span>, <span class="keyword">private</span> <span class="keyword">val</span> <span class="identifier">p2</span>: <span class="identifier">Int</span>) <span class="keyword">extends</span> <span class="identifier">java</span>.<span class="identifier">awt</span>.<span class="identifier">Point</span>(<span class="identifier">p1</span>,<span class="identifier">p2</span>)
+  <span class="keyword">class</span> <span class="identifier">NotifyChangesPoint</span>(<span class="keyword">private</span>[this] <span class="keyword">val</span> <span class="identifier">px</span>: <span class="identifier">Int</span>, <span class="keyword">private</span>[this] <span class="keyword">val</span> <span class="identifier">py</span>: <span class="identifier">Int</span>) <span class="keyword">extends</span> <span class="identifier">java</span>.<span class="identifier">awt</span>.<span class="identifier">Point</span>(<span class="identifier">px</span>,<span class="identifier">py</span>)
     with <span class="identifier">ScalaPropertyChangeSupport</span> {
-    <span class="keyword">val</span> <span class="identifier">listener</span> = <span class="keyword">new</span> <span class="identifier">PropertyChangeListener</span> {
-      override <span class="keyword">def</span> <span class="identifier">propertyChange</span>(<span class="identifier">e</span>: <span class="identifier">PropertyChangeEvent</span>): <span class="identifier">Unit</span> = {
-        <span class="keyword">val</span> <span class="identifier">propertyName</span> = <span class="identifier">e</span>.<span class="identifier">getPropertyName</span>
-        <span class="identifier">println</span>(<span class="identifier">propertyName</span>)
-      }
-    }
-    <span class="identifier">addPropertyChangeListener</span>(<span class="identifier">listener</span>)
-
-    <span class="keyword">def</span> <span class="identifier">x_=</span>(<span class="identifier">x</span>: <span class="identifier">Int</span>) = {
-      <span class="keyword">val</span> <span class="identifier">oldX</span> = this.<span class="identifier">x</span>
-      this.<span class="identifier">x</span> = <span class="identifier">x</span>
-      <span class="identifier">firePropertyChange</span>(<span class="string">"x"</span>, <span class="identifier">oldX</span>, this.<span class="identifier">x</span>);
-    }
-
-    <span class="keyword">def</span> <span class="identifier">y_=</span>(<span class="identifier">y</span>: <span class="identifier">Int</span>) = {
-      <span class="keyword">val</span> <span class="identifier">oldY</span> = this.<span class="identifier">y</span>
-      this.<span class="identifier">y</span> = <span class="identifier">y</span>
-      <span class="identifier">firePropertyChange</span>(<span class="string">"y"</span>, <span class="identifier">oldY</span>, this.<span class="identifier">x</span>);
-    }
+    override <span class="keyword">val</span> <span class="identifier">pcs</span> = <span class="keyword">new</span> <span class="identifier">PropertyChangeSupport</span>(this);
 
     override <span class="keyword">def</span> <span class="identifier">setLocation</span>(<span class="identifier">x</span>: <span class="identifier">Double</span>, <span class="identifier">y</span>: <span class="identifier">Double</span>) {
-      <span class="keyword">val</span> <span class="identifier">oldX</span>, <span class="identifier">oldY</span> = (this.<span class="identifier">x</span>,this.<span class="identifier">y</span>)
+      <span class="keyword">val</span> (<span class="identifier">oldX</span>, <span class="identifier">oldY</span>) = (this.<span class="identifier">x</span>,this.<span class="identifier">y</span>)
       <span class="keyword">super</span>.<span class="identifier">setLocation</span>(<span class="identifier">x</span>,<span class="identifier">y</span>)
-      <span class="identifier">firePropertyChange</span>(<span class="string">"x"</span>, <span class="identifier">oldX</span>, this.<span class="identifier">x</span>);
-      <span class="identifier">firePropertyChange</span>(<span class="string">"y"</span>, <span class="identifier">oldY</span>, this.<span class="identifier">y</span>);
+      <span class="identifier">firePropertyChange</span>(<span class="string">"x"</span>, <span class="identifier">oldX</span>, this.<span class="identifier">x</span>)
+      <span class="identifier">firePropertyChange</span>(<span class="string">"y"</span>, <span class="identifier">oldY</span>, this.<span class="identifier">y</span>)
     }
 
     override <span class="keyword">def</span> <span class="identifier">move</span>(<span class="identifier">x</span>: <span class="identifier">Int</span>, <span class="identifier">y</span>: <span class="identifier">Int</span>) {
-      <span class="keyword">val</span> <span class="identifier">oldX</span>, <span class="identifier">oldY</span> = (this.<span class="identifier">x</span>,this.<span class="identifier">y</span>)
+      <span class="keyword">val</span> (<span class="identifier">oldX</span>, <span class="identifier">oldY</span>) = (this.<span class="identifier">x</span>,this.<span class="identifier">y</span>)
       <span class="keyword">super</span>.<span class="identifier">move</span>(<span class="identifier">x</span>,<span class="identifier">y</span>)
-      <span class="identifier">firePropertyChange</span>(<span class="string">"x"</span>, <span class="identifier">oldX</span>, this.<span class="identifier">x</span>);
-      <span class="identifier">firePropertyChange</span>(<span class="string">"y"</span>, <span class="identifier">oldY</span>, this.<span class="identifier">y</span>);
+      <span class="identifier">firePropertyChange</span>(<span class="string">"x"</span>, <span class="identifier">oldX</span>, this.<span class="identifier">x</span>)
+      <span class="identifier">firePropertyChange</span>(<span class="string">"y"</span>, <span class="identifier">oldY</span>, this.<span class="identifier">y</span>)
     }
 
     override <span class="keyword">def</span> <span class="identifier">translate</span>(<span class="identifier">x</span>: <span class="identifier">Int</span>, <span class="identifier">y</span>: <span class="identifier">Int</span>) {
-      <span class="keyword">val</span> <span class="identifier">oldX</span>, <span class="identifier">oldY</span> = (this.<span class="identifier">x</span>,this.<span class="identifier">y</span>)
+      <span class="keyword">val</span> (<span class="identifier">oldX</span>, <span class="identifier">oldY</span>) = (this.<span class="identifier">x</span>,this.<span class="identifier">y</span>)
       <span class="keyword">super</span>.<span class="identifier">translate</span>(<span class="identifier">x</span>,<span class="identifier">y</span>)
-      <span class="identifier">firePropertyChange</span>(<span class="string">"x"</span>, <span class="identifier">oldX</span>, this.<span class="identifier">x</span>);
-      <span class="identifier">firePropertyChange</span>(<span class="string">"y"</span>, <span class="identifier">oldY</span>, this.<span class="identifier">y</span>);
+      <span class="identifier">firePropertyChange</span>(<span class="string">"x"</span>, <span class="identifier">oldX</span>, this.<span class="identifier">x</span>)
+      <span class="identifier">firePropertyChange</span>(<span class="string">"y"</span>, <span class="identifier">oldY</span>, this.<span class="identifier">y</span>)
     }
   }
 }&nbsp;</div>

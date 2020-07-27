@@ -1,5 +1,6 @@
 package impatient_exercises
 
+import java.beans.{PropertyChangeEvent, PropertyChangeListener}
 import java.io.ByteArrayOutputStream
 
 import impatient_exercise.Chapter10.{BankAccount, CryptoLogger, NotifyChangesPoint, OrderedPoint, RectangleLike}
@@ -79,15 +80,52 @@ class Chapter10Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
     }
   }
 
+  def withPoint(x: Int, y: Int)(testCode: java.awt.Point => Any) = {
+    val point = new NotifyChangesPoint(x,y)
+
+    point.addPropertyChangeListener( e =>
+      println("property:" + e.getPropertyName
+        + "/oldValue:" + e.getOldValue
+        + "/newValue:" + e.getNewValue
+      )
+    )
+    testCode(point)
+  }
+  
   behavior of "NotifyChangesPoint"
 
-  it should "notify listener whenever changes are made to the class's fields" in {
-    val point = new NotifyChangesPoint(1,2)
-    point.x =  2
-    point.y =  3
-    point.x shouldEqual 2
-    point.y shouldEqual 3
-  }
+  it should "notify listener on translate" in
+    withPoint(1,2) { point =>
+      val out = new ByteArrayOutputStream
+      Console.withOut(out) {
+        point.translate(2, 3)
+        out.toString shouldEqual """property:x/oldValue:1/newValue:3
+                                   |property:y/oldValue:2/newValue:5
+                                   |""".stripMargin
+      }
+    }
+
+  it should "notify listener on move" in
+    withPoint(1,2) { point =>
+      val out = new ByteArrayOutputStream
+      Console.withOut(out) {
+        point.move(2, 3)
+        out.toString shouldEqual """property:x/oldValue:1/newValue:2
+                                   |property:y/oldValue:2/newValue:3
+                                   |""".stripMargin
+      }
+    }
+
+  it should "notify listener on setLocation" in
+    withPoint(1,2) { point =>
+      val out = new ByteArrayOutputStream
+      Console.withOut(out) {
+        point.setLocation(9, 10)
+        out.toString shouldEqual """property:x/oldValue:1/newValue:9
+                                   |property:y/oldValue:2/newValue:10
+                                   |""".stripMargin
+      }
+    }
 
 
 }

@@ -1,6 +1,8 @@
 package impatient_exercises
 
-import impatient_exercise.Chapter10.{OrderedPoint, RectangleLike}
+import java.io.ByteArrayOutputStream
+
+import impatient_exercise.Chapter10.{BankAccount, CryptoLogger, OrderedPoint, RectangleLike}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
@@ -43,6 +45,38 @@ class Chapter10Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
   it should "compare two points using lexicographical ordering, right hand side being lesser" in {
     new OrderedPoint(1,3) > new OrderedPoint(1,2) shouldEqual true
     new OrderedPoint(1,2) > new OrderedPoint(0,2) shouldEqual true
+  }
+
+  behavior of "CryptoLogger"
+
+  it should "encrypt log messages using caesar cypher with default key" in {
+    val out = new ByteArrayOutputStream
+    Console.withOut(out) {
+      val account = new BankAccount(10) with CryptoLogger
+      account.currentBalance
+      account.deposit(10)
+      account.withdraw(5)
+      out.toString shouldEqual """fxuuhqwEdodqfh
+                                 |ghsrvlwlqj
+                                 |zlwkgudzlqj
+                                 |""".stripMargin
+    }
+  }
+
+  it should "encrypt log messages using caesar cypher with non default key" in {
+    val out = new ByteArrayOutputStream
+    Console.withOut(out) {
+      val account = new {
+        override val key = -3
+      } with BankAccount(10) with CryptoLogger
+      account.currentBalance
+      account.deposit(10)
+      account.withdraw(5)
+      out.toString shouldEqual """fxuuhqwEdodqfh
+                                 |ghsrvlwlqj
+                                 |zlwkgudzlqj
+                                 |""".stripMargin
+    }
   }
 
 

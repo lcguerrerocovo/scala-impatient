@@ -5,6 +5,7 @@ package impatient_exercise
 import impatient_exercises.{Point => _, _}
 import java.awt.Point
 import java.awt.Rectangle
+import java.util.logging.Logger
 
 object Chapter10 {
 
@@ -40,7 +41,7 @@ object Chapter10 {
   }
 
   // **2.Define a class OrderedPoint by mixing scala.math.Ordered[Point] into java.awt.Point.
-  // Use lexicographic ordering, i.e. (x, y) < (x’, y’) if x < x’ or x = x’ and y < y’**
+  //     Use lexicographic ordering, i.e. (x, y) < (x’, y’) if x < x’ or x = x’ and y < y’**
   class OrderedPoint(x: Int, y: Int) extends Point(x, y) with
   Ordered[Point] {
     def compare(that: Point) = {
@@ -48,6 +49,44 @@ object Chapter10 {
       else if(this.getX == that.getX && this.getY == that.getY) 0
       else 1
     }
+  }
+
+  // **4.Provide a CryptoLogger trait that encrypts the log messages with the Caesar cipher.
+  //     The key should be 3 by default, but it should be overridable by the user. Provide usage
+  //     examples with the default key and a key of –3.**
+  // TODO check if negative number is working properly for caesar cypher shift
+  trait CryptoLogger {
+    val key = 3
+    val intToChar = ((0 to 25) zip ('a' to 'z')).toMap
+    val charToInt = (('a' to 'z') zip (0 to 25)).toMap.withDefaultValue(-1)
+
+    def log(msg: String) = println(encrypt(msg))
+
+    def encrypt(clearText: String): String = {
+      clearText.map {
+        case e if e.isLetter && charToInt(e.toLower) == -1 =>
+          throw new Exception("unsupported character")
+        case e if e.isLetter && e.isUpper => operation(e.toLower,key).toUpper
+        case e if e.isLetter => operation(e,key)
+        case _ =>
+      }.mkString
+    }
+
+    def operation(char: Char, key: Int) = {
+      if(key.signum == -1) intToChar(((charToInt(char) % 26) - (key % 26)) % 26)
+      else intToChar(((charToInt(char) % 26) + (key % 26)) % 26)
+    }
+  }
+
+  trait Logger {
+    def log(msg: String)
+  }
+
+  abstract class BankAccount(initialBalance: Double) extends Logger {
+    private var balance = initialBalance
+    def currentBalance = log("currentBalance"); balance
+    def deposit(amount: Double) = { balance += amount; log("depositing") ;balance }
+    def withdraw(amount: Double) = { balance -= amount; log("withdrawing"); balance }
   }
 
 

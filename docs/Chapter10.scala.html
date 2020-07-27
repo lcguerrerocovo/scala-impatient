@@ -278,6 +278,7 @@ hr {
 <span class="keyword">import</span> <span class="identifier">impatient_exercises</span>.{<span class="identifier">Point</span> => _, _}
 <span class="keyword">import</span> <span class="identifier">java</span>.<span class="identifier">awt</span>.<span class="identifier">Point</span>
 <span class="keyword">import</span> <span class="identifier">java</span>.<span class="identifier">awt</span>.<span class="identifier">Rectangle</span>
+<span class="keyword">import</span> <span class="identifier">java</span>.<span class="identifier">util</span>.<span class="identifier">logging</span>.<span class="identifier">Logger</span>
 
 <span class="keyword">object</span> <span class="identifier">Chapter10</span> {
 &nbsp;</div>
@@ -326,6 +327,47 @@ Use lexicographic ordering, i.e. (x, y) &lt; (x’, y’) if x &lt; x’ or x = 
       <span class="keyword">else</span> <span class="keyword">if</span>(this.<span class="identifier">getX</span> <span class="identifier">==</span> <span class="identifier">that</span>.<span class="identifier">getX</span> <span class="identifier">&&</span> this.<span class="identifier">getY</span> <span class="identifier">==</span> <span class="identifier">that</span>.<span class="identifier">getY</span>) <span class="number">0</span>
       <span class="keyword">else</span> <span class="number">1</span>
     }
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p>*<em>4.Provide a CryptoLogger trait that encrypts the log messages with the Caesar cipher.
+The key should be 3 by default, but it should be overridable by the user. Provide usage
+examples with the default key and a key of –3. *</em>
+TODO check if negative number is working properly for ceasar cypher shift</p></p></div>
+                <div class="code ">  trait <span class="identifier">CryptoLogger</span> {
+    <span class="keyword">val</span> <span class="identifier">key</span> = <span class="number">3</span>
+    <span class="keyword">val</span> <span class="identifier">intToChar</span> = ((<span class="number">0</span> <span class="identifier">to</span> <span class="number">25</span>) <span class="identifier">zip</span> (<span class="number">'a'</span> <span class="identifier">to</span> <span class="number">'z'</span>)).<span class="identifier">toMap</span>
+    <span class="keyword">val</span> <span class="identifier">charToInt</span> = ((<span class="number">'a'</span> <span class="identifier">to</span> <span class="number">'z'</span>) <span class="identifier">zip</span> (<span class="number">0</span> <span class="identifier">to</span> <span class="number">25</span>)).<span class="identifier">toMap</span>.<span class="identifier">withDefaultValue</span>(<span class="identifier">-</span><span class="number">1</span>)
+
+    <span class="keyword">def</span> <span class="identifier">log</span>(<span class="identifier">msg</span>: <span class="identifier">String</span>) = <span class="identifier">println</span>(<span class="identifier">encrypt</span>(<span class="identifier">msg</span>))
+
+    <span class="keyword">def</span> <span class="identifier">encrypt</span>(<span class="identifier">clearText</span>: <span class="identifier">String</span>): <span class="identifier">String</span> = {
+      <span class="identifier">clearText</span>.<span class="identifier">map</span> {
+        <span class="keyword">case</span> <span class="identifier">e</span> <span class="keyword">if</span> <span class="identifier">e</span>.<span class="identifier">isLetter</span> <span class="identifier">&&</span> <span class="identifier">charToInt</span>(<span class="identifier">e</span>.<span class="identifier">toLower</span>) <span class="identifier">==</span> <span class="identifier">-</span><span class="number">1</span> =>
+          throw <span class="keyword">new</span> <span class="identifier">Exception</span>(<span class="string">"unsupported character"</span>)
+        <span class="keyword">case</span> <span class="identifier">e</span> <span class="keyword">if</span> <span class="identifier">e</span>.<span class="identifier">isLetter</span> <span class="identifier">&&</span> <span class="identifier">e</span>.<span class="identifier">isUpper</span> => <span class="identifier">operation</span>(<span class="identifier">e</span>.<span class="identifier">toLower</span>,<span class="identifier">key</span>).<span class="identifier">toUpper</span>
+        <span class="keyword">case</span> <span class="identifier">e</span> <span class="keyword">if</span> <span class="identifier">e</span>.<span class="identifier">isLetter</span> => <span class="identifier">operation</span>(<span class="identifier">e</span>,<span class="identifier">key</span>)
+        <span class="keyword">case</span> _ =>
+      }.<span class="identifier">mkString</span>
+    }
+
+    <span class="keyword">def</span> <span class="identifier">operation</span>(<span class="identifier">char</span>: <span class="identifier">Char</span>, <span class="identifier">key</span>: <span class="identifier">Int</span>) = {
+      <span class="keyword">if</span>(<span class="identifier">key</span>.<span class="identifier">signum</span> <span class="identifier">==</span> <span class="identifier">-</span><span class="number">1</span>) <span class="identifier">intToChar</span>(((<span class="identifier">charToInt</span>(<span class="identifier">char</span>) <span class="identifier">%</span> <span class="number">26</span>) <span class="identifier">-</span> (<span class="identifier">key</span> <span class="identifier">%</span> <span class="number">26</span>)) <span class="identifier">%</span> <span class="number">26</span>)
+      <span class="keyword">else</span> <span class="identifier">intToChar</span>(((<span class="identifier">charToInt</span>(<span class="identifier">char</span>) <span class="identifier">%</span> <span class="number">26</span>) <span class="identifier">+</span> (<span class="identifier">key</span> <span class="identifier">%</span> <span class="number">26</span>)) <span class="identifier">%</span> <span class="number">26</span>)
+    }
+  }
+
+  trait <span class="identifier">Logger</span> {
+    <span class="keyword">def</span> <span class="identifier">log</span>(<span class="identifier">msg</span>: <span class="identifier">String</span>)
+  }
+
+  <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="identifier">BankAccount</span>(<span class="identifier">initialBalance</span>: <span class="identifier">Double</span>) <span class="keyword">extends</span> <span class="identifier">Logger</span> {
+    <span class="keyword">private</span> <span class="keyword">var</span> <span class="identifier">balance</span> = <span class="identifier">initialBalance</span>
+    <span class="keyword">def</span> <span class="identifier">currentBalance</span> = <span class="identifier">log</span>(<span class="string">"currentBalance"</span>); <span class="identifier">balance</span>
+    <span class="keyword">def</span> <span class="identifier">deposit</span>(<span class="identifier">amount</span>: <span class="identifier">Double</span>) = { <span class="identifier">balance</span> <span class="identifier">+=</span> <span class="identifier">amount</span>; <span class="identifier">log</span>(<span class="string">"depositing"</span>) ;<span class="identifier">balance</span> }
+    <span class="keyword">def</span> <span class="identifier">withdraw</span>(<span class="identifier">amount</span>: <span class="identifier">Double</span>) = { <span class="identifier">balance</span> <span class="identifier">-=</span> <span class="identifier">amount</span>; <span class="identifier">log</span>(<span class="string">"withdrawing"</span>); <span class="identifier">balance</span> }
   }
 
 

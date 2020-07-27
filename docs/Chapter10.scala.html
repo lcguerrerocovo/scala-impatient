@@ -428,14 +428,13 @@ and mix it into the java.awt.Point class.</strong></p></p></div>
               </section>
             
               <section class="">
-                <div class="comment "><p>**6.In the Java AWT library, we have a class Container, a subclass of Component that
+                <div class="comment "><p><strong>6.In the Java AWT library, we have a class Container, a subclass of Component that
 collects multiple components. For example, a Button is a Component, but a Panel is a
 Container. That’s the composite pattern at work. Swing has JComponent and JButton, but if
 you look closely, you will notice something strange. JComponent extends Container, even
 though it makes no sense to add other components to, say, a JButton. Ideally, the Swing
-designers would have preferred the design in Figure 10–4.</p>
-<p>But that’s not possible in Java. Explain why not. How could the design be executed in
-Scala with traits?**</p>
+designers would have preferred the design in Figure 10–4.But that’s not possible in Java.
+Explain why not. How could the design be executed in Scala with traits?</strong></p>
 <ul>
   <li>A hypothetical <code>JContainer</code> couldn&#39;t inherit from two classes (<code>Container</code> and
   <code>JComponent</code>) and thus the design is not feasible in Java. In Scala we could create a

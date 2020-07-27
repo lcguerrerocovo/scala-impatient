@@ -146,10 +146,8 @@ object Chapter10 {
   //     Container. That’s the composite pattern at work. Swing has JComponent and JButton, but if
   //     you look closely, you will notice something strange. JComponent extends Container, even
   //     though it makes no sense to add other components to, say, a JButton. Ideally, the Swing
-  //     designers would have preferred the design in Figure 10–4.
-  //
-  //     But that’s not possible in Java. Explain why not. How could the design be executed in
-  //     Scala with traits?**
+  //     designers would have preferred the design in Figure 10–4.But that’s not possible in Java.
+  //     Explain why not. How could the design be executed in Scala with traits?**
   //
   //     - A hypothetical `JContainer` couldn't inherit from two classes (`Container` and
   //       `JComponent`) and thus the design is not feasible in Java. In Scala we could create a

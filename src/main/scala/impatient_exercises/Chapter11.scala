@@ -2,8 +2,6 @@
 
 package impatient_exercises
 
-import impatient_exercises.Chapter08.Point
-
 object Chapter11 {
 
   // **1.According to the precedence rules, how are 3 + 4 -> 5 and 3 -> 4 + 5 evaluated?**

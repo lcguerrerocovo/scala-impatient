@@ -37,7 +37,7 @@ class Chapter11Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
     new Fraction(10,-6) + new Fraction(5,-6) shouldEqual new Fraction(-5, 2)
   }
 
-  it should "subtract fractions" in {
+  it should "subtract fractions" in withIntGenerator {
     (a: Int, b: Int, c: Int, d: Int) =>
       val result = a / b.toDouble - c / d.toDouble
       val fraction = new Fraction(a, b) - new Fraction(c, d)
@@ -48,7 +48,7 @@ class Chapter11Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
     new Fraction(20,-6) - new Fraction(5,-6) shouldEqual new Fraction(-5, 2)
   }
 
-  it should "multiply fractions" in {
+  it should "multiply fractions" in withIntGenerator {
     (a: Int, b: Int, c: Int, d: Int) =>
       val result = a / b.toDouble * c / d.toDouble
       val fraction = new Fraction(a, b) * new Fraction(c, d)
@@ -59,7 +59,7 @@ class Chapter11Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
     new Fraction(20,-6) * new Fraction(5,-6) shouldEqual new Fraction(25, 9)
   }
 
-  it should "divide fractions" in {
+  it should "divide fractions" in withIntGenerator {
     (a: Int, b: Int, c: Int, d: Int) =>
       val result = (a / b.toDouble) / (c / d.toDouble)
       val fraction = new Fraction(a, b) / new Fraction(c, d)

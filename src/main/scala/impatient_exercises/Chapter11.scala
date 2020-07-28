@@ -8,8 +8,8 @@ object Chapter11 {
 
   // **1.According to the precedence rules, how are 3 + 4 -> 5 and 3 -> 4 + 5 evaluated?**
   //
-  //     `-3 + 4 -> 5 = ((-3) + 4) -> 5 = (1, 5)`
-  //     `3 -> 4 + 5 = (3,4) + 4 = error`
+  //     - `-3 + 4 -> 5 = ((-3) + 4) -> 5 = (1, 5)`
+  //     - `3 -> 4 + 5 = (3,4) + 4 = error`
 
   // **2.The BigInt class has a pow method, not an operator. Why didn’t the Scala library
   //     designers choose ** (as in Fortran) or ^ (as in Pascal) for a power operator?**
@@ -19,7 +19,7 @@ object Chapter11 {
   //     would have had to be changed since it has lower precedence in the scala specification
 
   // **3.Implement the Fraction class with operations + - * /. Normalize fractions, for example,
-  //     turning 15/–6 into –5/2. Divide by the greatest common divisor, like this:
+  //     turning 15/–6 into –5/2. Divide by the greatest common divisor, like this:**
 
   /*
   class Fraction(n: Int, d: Int) {
@@ -77,5 +77,5 @@ object Chapter11 {
 
   // **4.Implement a class Money with fields for dollars and cents. Supply +, - operators as well
   //     as comparison operators == and <. For example, Money(1, 75) + Money(0, 50) == Money(2, 25)
-  //     should be true. Should you also supply * and / operators? Why or why not?
+  //     should be true. Should you also supply * and / operators? Why or why not?**
 }

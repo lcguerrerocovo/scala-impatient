@@ -275,18 +275,27 @@ hr {
                 <div class="code ">
 <span class="keyword">package</span> <span class="identifier">impatient_exercises</span>
 
+<span class="keyword">import</span> <span class="identifier">impatient_exercises</span>.<span class="identifier">Chapter08</span>.<span class="identifier">Point</span>
+
 <span class="keyword">object</span> <span class="identifier">Chapter11</span> {
 &nbsp;</div>
               </section>
             
               <section class="">
-                <div class="comment "><p><strong>1.According to the precedence rules, how are 3 + 4 -&gt; 5 and 3 -&gt; 4 + 5 evaluated?</strong></p></p></div>
+                <div class="comment "><p><strong>1.According to the precedence rules, how are 3 + 4 -&gt; 5 and 3 -&gt; 4 + 5 evaluated?</strong></p>
+<p><code>-3 + 4 -&gt; 5 = ((-3) + 4) -&gt; 5 = (1, 5)</code>
+<code>3 -&gt; 4 + 5 = (3,4) + 4 = error</code></p></p></div>
                 <div class="code empty">&nbsp;</div>
               </section>
             
               <section class="">
                 <div class="comment "><p><strong>2.The BigInt class has a pow method, not an operator. Why didn’t the Scala library
-designers choose ** (as in Fortran) or ^ (as in Pascal) for a power operator?</strong></p></p></div>
+designers choose ** (as in Fortran) or ^ (as in Pascal) for a power operator?</strong></p>
+<ul>
+  <li>Because of existing precedence rules. Precedence is decided by first character of the
+  operator making <code>**</code> have the same precedence as multiplication and for <code>^</code> precedence
+  would have had to be changed since it has lower precedence in the scala specification</li>
+</ul></p></div>
                 <div class="code empty">&nbsp;</div>
               </section>
             
@@ -298,11 +307,55 @@ turning 15/–6 into –5/2. Divide by the greatest common divisor, like this:</
   class Fraction(n: Int, d: Int) {
     private val num: Int = if (d == 0) 1 else n * sign(d) / gcd(n, d);
     private val den: Int = if (d == 0) 0 else d * sign(d) / gcd(n, d);
-    override def toString = s"$num/$den" defsign(a:Int)=if(a>0)1elseif(a<0)-1else0
+    override def toString = s"$num/$den"
+    def sign(a:Int) = if(a>0) 1 else if (a<0) -1 else 0
     def gcd(a: Int, b: Int): Int = if (b == 0) abs(a) else gcd(b, a % b)
     ...
   }
   */
+  <span class="keyword">class</span> <span class="identifier">Fraction</span>(<span class="identifier">n</span>: <span class="identifier">Int</span>, <span class="identifier">d</span>: <span class="identifier">Int</span>) {
+    <span class="keyword">private</span> <span class="keyword">val</span> <span class="identifier">num</span>: <span class="identifier">Int</span> = <span class="keyword">if</span> (<span class="identifier">d</span> <span class="identifier">==</span> <span class="number">0</span>) <span class="number">1</span> <span class="keyword">else</span> <span class="identifier">n</span> <span class="identifier">*</span> <span class="identifier">sign</span>(<span class="identifier">d</span>) <span class="identifier">/</span> <span class="identifier">gcd</span>(<span class="identifier">n</span>, <span class="identifier">d</span>);
+    <span class="keyword">private</span> <span class="keyword">val</span> <span class="identifier">den</span>: <span class="identifier">Int</span> = <span class="keyword">if</span> (<span class="identifier">d</span> <span class="identifier">==</span> <span class="number">0</span>) <span class="number">0</span> <span class="keyword">else</span> <span class="identifier">d</span> <span class="identifier">*</span> <span class="identifier">sign</span>(<span class="identifier">d</span>) <span class="identifier">/</span> <span class="identifier">gcd</span>(<span class="identifier">n</span>, <span class="identifier">d</span>);
+
+    override <span class="keyword">def</span> <span class="identifier">toString</span> = <span class="string">s</span>"<span class="string">$</span><span class="identifier">num</span><span class="string">/$</span><span class="identifier">den</span><span class="string">"</span>
+    <span class="keyword">def</span> <span class="identifier">sign</span>(<span class="identifier">a</span>:<span class="identifier">Int</span>)= <span class="keyword">if</span> (<span class="identifier">a</span> <span class="identifier">></span> <span class="number">0</span>) <span class="number">1</span> <span class="keyword">else</span> <span class="keyword">if</span> (<span class="identifier">a</span> <span class="identifier">&lt;</span> <span class="number">0</span>) <span class="identifier">-</span><span class="number">1</span> <span class="keyword">else</span> <span class="number">0</span>
+    <span class="keyword">def</span> <span class="identifier">gcd</span>(<span class="identifier">a</span>: <span class="identifier">Int</span>, <span class="identifier">b</span>: <span class="identifier">Int</span>): <span class="identifier">Int</span> = <span class="keyword">if</span> (<span class="identifier">b</span> <span class="identifier">==</span> <span class="number">0</span>) <span class="identifier">math</span>.<span class="identifier">abs</span>(<span class="identifier">a</span>) <span class="keyword">else</span> <span class="identifier">gcd</span>(<span class="identifier">b</span>, <span class="identifier">a</span> <span class="identifier">%</span> <span class="identifier">b</span>)
+
+    <span class="keyword">def</span> <span class="identifier">+</span>(<span class="identifier">other</span>: <span class="identifier">Fraction</span>) = {
+      (this <span class="identifier">+-</span> <span class="identifier">other</span>)(_ <span class="identifier">+</span> _)
+    }
+
+    <span class="keyword">def</span> <span class="identifier">-</span>(<span class="identifier">other</span>: <span class="identifier">Fraction</span>) = {
+      (this <span class="identifier">+-</span> <span class="identifier">other</span>)(_ <span class="identifier">-</span> _)
+    }
+
+    <span class="keyword">private</span> <span class="keyword">def</span> <span class="identifier">+-</span>(<span class="identifier">other</span>: <span class="identifier">Fraction</span>)(<span class="identifier">op</span>: (<span class="identifier">Int</span>, <span class="identifier">Int</span>) => <span class="identifier">Int</span>) = {
+      <span class="keyword">val</span> <span class="identifier">pNum</span> = <span class="identifier">op</span>(<span class="identifier">num</span><span class="identifier">*</span><span class="identifier">other</span>.<span class="identifier">den</span>,<span class="identifier">other</span>.<span class="identifier">num</span><span class="identifier">*</span><span class="identifier">den</span>)
+      <span class="keyword">val</span> <span class="identifier">pDen</span> = <span class="identifier">den</span><span class="identifier">*</span><span class="identifier">other</span>.<span class="identifier">den</span>
+      <span class="keyword">val</span> <span class="identifier">fractionGcd</span> = <span class="identifier">gcd</span>(<span class="identifier">pNum</span>,<span class="identifier">pDen</span>)
+      <span class="keyword">new</span> <span class="identifier">Fraction</span>(<span class="identifier">pNum</span><span class="identifier">/</span><span class="identifier">fractionGcd</span>,<span class="identifier">pDen</span><span class="identifier">/</span><span class="identifier">fractionGcd</span>)
+    }
+
+    <span class="keyword">def</span> <span class="identifier">/</span>(<span class="identifier">other</span>: <span class="identifier">Fraction</span>) = {
+      this <span class="identifier">*</span> <span class="keyword">new</span> <span class="identifier">Fraction</span>(<span class="identifier">other</span>.<span class="identifier">den</span>,<span class="identifier">other</span>.<span class="identifier">num</span>)
+    }
+
+    <span class="keyword">def</span> <span class="identifier">*</span>(<span class="identifier">other</span>: <span class="identifier">Fraction</span>) = {
+      <span class="keyword">val</span> <span class="identifier">pNum</span> = <span class="identifier">num</span><span class="identifier">*</span><span class="identifier">other</span>.<span class="identifier">num</span>
+      <span class="keyword">val</span> <span class="identifier">pDen</span> = <span class="identifier">den</span><span class="identifier">*</span><span class="identifier">other</span>.<span class="identifier">den</span>
+      <span class="keyword">val</span> <span class="identifier">fractionGcd</span> = <span class="identifier">gcd</span>(<span class="identifier">pNum</span>,<span class="identifier">pDen</span>)
+      <span class="keyword">new</span> <span class="identifier">Fraction</span>(<span class="identifier">pNum</span><span class="identifier">/</span><span class="identifier">fractionGcd</span>,<span class="identifier">pDen</span><span class="identifier">/</span><span class="identifier">fractionGcd</span>)
+    }
+
+    <span class="keyword">def</span> <span class="identifier">toDouble</span>: <span class="identifier">Double</span> = <span class="identifier">num</span><span class="identifier">/</span><span class="identifier">den</span>.<span class="identifier">toDouble</span>
+
+    <span class="keyword">final</span> override <span class="keyword">def</span> <span class="identifier">equals</span>(<span class="identifier">other</span>: <span class="identifier">Any</span>) = {
+      <span class="keyword">val</span> <span class="identifier">that</span> = <span class="identifier">other</span>.<span class="identifier">asInstanceOf</span>[<span class="identifier">Fraction</span>]
+      <span class="keyword">if</span> (<span class="identifier">that</span> <span class="identifier">==</span> null) false
+      <span class="keyword">else</span> <span class="identifier">num</span> <span class="identifier">==</span> <span class="identifier">that</span>.<span class="identifier">num</span> <span class="identifier">&&</span> <span class="identifier">den</span> <span class="identifier">==</span> <span class="identifier">that</span>.<span class="identifier">den</span>
+    }
+
+  }
 &nbsp;</div>
               </section>
             

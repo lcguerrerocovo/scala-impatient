@@ -266,7 +266,7 @@ hr {
 </style>
           
           <section id="header">
-            <div class="comment"><h1>Chapter 11: Operators</h1></div>
+            <div class="comment"><h1>Chapter 12: Higher-Order Functions</h1></div>
             <div class="code"></div>
           </section>
           
@@ -275,94 +275,92 @@ hr {
                 <div class="code ">
 <span class="keyword">package</span> <span class="identifier">impatient_exercises</span>
 
-<span class="keyword">object</span> <span class="identifier">Chapter11</span> {
+<span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">collection</span>.<span class="identifier">mutable</span>.<span class="identifier">ListBuffer</span>
+
+<span class="keyword">object</span> <span class="identifier">Chapter12</span> {
 &nbsp;</div>
               </section>
             
               <section class="">
-                <div class="comment "><p><strong>1.According to the precedence rules, how are 3 + 4 -&gt; 5 and 3 -&gt; 4 + 5 evaluated?</strong></p>
+                <div class="comment "><p><strong>1.Write a function values(fun: (Int) =&gt; Int, low: Int, high: Int) that yields a collection
+of function inputs and outputs in a given range.</strong></p>
 <ul>
-  <li><code>-3 + 4 -&gt; 5 = ((-3) + 4) -&gt; 5 = (1, 5)</code></li>
-  <li><code>3 -&gt; 4 + 5 = (3,4) + 4 = error</code></li>
+  <li>For example, values(x =&gt; x*x,-5,5) should produce a collection of pairs (-5,25),(-4,
+  16),(-3,9), ..., (5, 25).</li>
 </ul></p></div>
-                <div class="code empty">&nbsp;</div>
-              </section>
-            
-              <section class="">
-                <div class="comment "><p><strong>2.The BigInt class has a pow method, not an operator. Why didn’t the Scala library
-designers choose ** (as in Fortran) or ^ (as in Pascal) for a power operator?</strong></p>
-<ul>
-  <li>Because of existing precedence rules. Precedence is decided by first character of the
-  operator making <code>**</code> have the same precedence as multiplication and for <code>^</code> precedence
-  would have had to be changed since it has lower precedence in the scala specification</li>
-</ul></p></div>
-                <div class="code empty">&nbsp;</div>
-              </section>
-            
-              <section class="">
-                <div class="comment "><p><strong>3.Implement the Fraction class with operations + - * /. Normalize fractions, for example,
-turning 15/–6 into –5/2. Divide by the greatest common divisor, like this:</strong></p></p></div>
-                <div class="code ">
-  /*
-  class Fraction(n: Int, d: Int) {
-    private val num: Int = if (d == 0) 1 else n * sign(d) / gcd(n, d);
-    private val den: Int = if (d == 0) 0 else d * sign(d) / gcd(n, d);
-    override def toString = s"$num/$den"
-    def sign(a:Int) = if(a>0) 1 else if (a<0) -1 else 0
-    def gcd(a: Int, b: Int): Int = if (b == 0) abs(a) else gcd(b, a % b)
-    ...
-  }
-  */
-  <span class="keyword">class</span> <span class="identifier">Fraction</span>(<span class="identifier">n</span>: <span class="identifier">Int</span>, <span class="identifier">d</span>: <span class="identifier">Int</span>) {
-    <span class="keyword">private</span> <span class="keyword">val</span> <span class="identifier">num</span>: <span class="identifier">Int</span> = <span class="keyword">if</span> (<span class="identifier">d</span> <span class="identifier">==</span> <span class="number">0</span>) <span class="number">1</span> <span class="keyword">else</span> <span class="identifier">n</span> <span class="identifier">*</span> <span class="identifier">sign</span>(<span class="identifier">d</span>) <span class="identifier">/</span> <span class="identifier">gcd</span>(<span class="identifier">n</span>, <span class="identifier">d</span>);
-    <span class="keyword">private</span> <span class="keyword">val</span> <span class="identifier">den</span>: <span class="identifier">Int</span> = <span class="keyword">if</span> (<span class="identifier">d</span> <span class="identifier">==</span> <span class="number">0</span>) <span class="number">0</span> <span class="keyword">else</span> <span class="identifier">d</span> <span class="identifier">*</span> <span class="identifier">sign</span>(<span class="identifier">d</span>) <span class="identifier">/</span> <span class="identifier">gcd</span>(<span class="identifier">n</span>, <span class="identifier">d</span>);
-
-    override <span class="keyword">def</span> <span class="identifier">toString</span> = <span class="string">s</span>"<span class="string">$</span><span class="identifier">num</span><span class="string">/$</span><span class="identifier">den</span><span class="string">"</span>
-    <span class="keyword">def</span> <span class="identifier">sign</span>(<span class="identifier">a</span>:<span class="identifier">Int</span>)= <span class="keyword">if</span> (<span class="identifier">a</span> <span class="identifier">></span> <span class="number">0</span>) <span class="number">1</span> <span class="keyword">else</span> <span class="keyword">if</span> (<span class="identifier">a</span> <span class="identifier">&lt;</span> <span class="number">0</span>) <span class="identifier">-</span><span class="number">1</span> <span class="keyword">else</span> <span class="number">0</span>
-    <span class="keyword">def</span> <span class="identifier">gcd</span>(<span class="identifier">a</span>: <span class="identifier">Int</span>, <span class="identifier">b</span>: <span class="identifier">Int</span>): <span class="identifier">Int</span> = <span class="keyword">if</span> (<span class="identifier">b</span> <span class="identifier">==</span> <span class="number">0</span>) <span class="identifier">math</span>.<span class="identifier">abs</span>(<span class="identifier">a</span>) <span class="keyword">else</span> <span class="identifier">gcd</span>(<span class="identifier">b</span>, <span class="identifier">a</span> <span class="identifier">%</span> <span class="identifier">b</span>)
-
-    <span class="keyword">def</span> <span class="identifier">+</span>(<span class="identifier">other</span>: <span class="identifier">Fraction</span>) = {
-      (this <span class="identifier">+-</span> <span class="identifier">other</span>)(_ <span class="identifier">+</span> _)
-    }
-
-    <span class="keyword">def</span> <span class="identifier">-</span>(<span class="identifier">other</span>: <span class="identifier">Fraction</span>) = {
-      (this <span class="identifier">+-</span> <span class="identifier">other</span>)(_ <span class="identifier">-</span> _)
-    }
-
-    <span class="keyword">private</span> <span class="keyword">def</span> <span class="identifier">+-</span>(<span class="identifier">other</span>: <span class="identifier">Fraction</span>)(<span class="identifier">op</span>: (<span class="identifier">Int</span>, <span class="identifier">Int</span>) => <span class="identifier">Int</span>) = {
-      <span class="keyword">val</span> <span class="identifier">pNum</span> = <span class="identifier">op</span>(<span class="identifier">num</span><span class="identifier">*</span><span class="identifier">other</span>.<span class="identifier">den</span>,<span class="identifier">other</span>.<span class="identifier">num</span><span class="identifier">*</span><span class="identifier">den</span>)
-      <span class="keyword">val</span> <span class="identifier">pDen</span> = <span class="identifier">den</span><span class="identifier">*</span><span class="identifier">other</span>.<span class="identifier">den</span>
-      <span class="keyword">val</span> <span class="identifier">fractionGcd</span> = <span class="identifier">gcd</span>(<span class="identifier">pNum</span>,<span class="identifier">pDen</span>)
-      <span class="keyword">new</span> <span class="identifier">Fraction</span>(<span class="identifier">pNum</span><span class="identifier">/</span><span class="identifier">fractionGcd</span>,<span class="identifier">pDen</span><span class="identifier">/</span><span class="identifier">fractionGcd</span>)
-    }
-
-    <span class="keyword">def</span> <span class="identifier">/</span>(<span class="identifier">other</span>: <span class="identifier">Fraction</span>) = {
-      this <span class="identifier">*</span> <span class="keyword">new</span> <span class="identifier">Fraction</span>(<span class="identifier">other</span>.<span class="identifier">den</span>,<span class="identifier">other</span>.<span class="identifier">num</span>)
-    }
-
-    <span class="keyword">def</span> <span class="identifier">*</span>(<span class="identifier">other</span>: <span class="identifier">Fraction</span>) = {
-      <span class="keyword">val</span> <span class="identifier">pNum</span> = <span class="identifier">num</span><span class="identifier">*</span><span class="identifier">other</span>.<span class="identifier">num</span>
-      <span class="keyword">val</span> <span class="identifier">pDen</span> = <span class="identifier">den</span><span class="identifier">*</span><span class="identifier">other</span>.<span class="identifier">den</span>
-      <span class="keyword">val</span> <span class="identifier">fractionGcd</span> = <span class="identifier">gcd</span>(<span class="identifier">pNum</span>,<span class="identifier">pDen</span>)
-      <span class="keyword">new</span> <span class="identifier">Fraction</span>(<span class="identifier">pNum</span><span class="identifier">/</span><span class="identifier">fractionGcd</span>,<span class="identifier">pDen</span><span class="identifier">/</span><span class="identifier">fractionGcd</span>)
-    }
-
-    <span class="keyword">def</span> <span class="identifier">toDouble</span>: <span class="identifier">Double</span> = <span class="identifier">num</span><span class="identifier">/</span><span class="identifier">den</span>.<span class="identifier">toDouble</span>
-
-    <span class="keyword">final</span> override <span class="keyword">def</span> <span class="identifier">equals</span>(<span class="identifier">other</span>: <span class="identifier">Any</span>) = {
-      <span class="keyword">val</span> <span class="identifier">that</span> = <span class="identifier">other</span>.<span class="identifier">asInstanceOf</span>[<span class="identifier">Fraction</span>]
-      <span class="keyword">if</span> (<span class="identifier">that</span> <span class="identifier">==</span> null) false
-      <span class="keyword">else</span> <span class="identifier">num</span> <span class="identifier">==</span> <span class="identifier">that</span>.<span class="identifier">num</span> <span class="identifier">&&</span> <span class="identifier">den</span> <span class="identifier">==</span> <span class="identifier">that</span>.<span class="identifier">den</span>
-    }
-
+                <div class="code ">  /**
+   * values function does not check for integer overflow
+   */
+  <span class="keyword">def</span> <span class="identifier">values</span>(<span class="identifier">fun</span>: <span class="identifier">Int</span> => <span class="identifier">Int</span>, <span class="identifier">low</span>: <span class="identifier">Int</span>, <span class="identifier">high</span>: <span class="identifier">Int</span>): <span class="identifier">Seq</span>[(<span class="identifier">Int</span>,<span class="identifier">Int</span>)] = {
+    <span class="keyword">for</span> {
+      <span class="identifier">l</span> &lt;- <span class="identifier">low</span> <span class="identifier">to</span> <span class="identifier">high</span>
+    } <span class="keyword">yield</span>(<span class="identifier">l</span>, <span class="identifier">fun</span>(<span class="identifier">l</span>))
   }
 &nbsp;</div>
               </section>
             
               <section class="">
-                <div class="comment "><p><strong>4.Implement a class Money with fields for dollars and cents. Supply +, - operators as well
-as comparison operators == and &lt;. For example, Money(1, 75) + Money(0, 50) == Money(2, 25)
-should be true. Should you also supply * and / operators? Why or why not?</strong></p></p></div>
+                <div class="comment "><p><strong>2.How do you get the largest element of an array with reduceLeft?</strong></p></p></div>
+                <div class="code ">  <span class="keyword">def</span> <span class="identifier">largestElement</span>(<span class="identifier">arr</span>: <span class="identifier">Array</span>[<span class="identifier">Int</span>]): <span class="identifier">Int</span> = <span class="identifier">arr</span>.<span class="identifier">reduceLeft</span>(_ <span class="identifier">max</span> _)
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>3.Implement the factorial function using to and reduceLeft, without a loop or
+recursion.</strong></p></p></div>
+                <div class="code ">  /**
+   * does not check if x < 0
+   */
+  <span class="keyword">def</span> <span class="identifier">factorial</span>(<span class="identifier">x</span>: <span class="identifier">Int</span>): <span class="identifier">Int</span> = {
+    <span class="keyword">if</span>(<span class="identifier">x</span> <span class="identifier">==</span> <span class="number">0</span>) <span class="number">1</span>
+    <span class="keyword">else</span> (<span class="number">1</span> <span class="identifier">to</span> <span class="identifier">x</span>).<span class="identifier">reduceLeft</span>(_ <span class="identifier">*</span> _)
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>4.The previous implementation needed a special case when n &lt; 1. Show how you can avoid this
+with foldLeft. (Look at the Scaladoc for foldLeft. It’s like reduceLeft, except that the
+first value in the chain of combined values is supplied in the call.)</strong></p></p></div>
+                <div class="code ">  /**
+   * does not check if x < 0
+   */
+  <span class="keyword">def</span> <span class="identifier">factorial2</span>(<span class="identifier">x</span>: <span class="identifier">Int</span>): <span class="identifier">Int</span> = {
+    (<span class="number">1</span> <span class="identifier">to</span> <span class="identifier">x</span>).<span class="identifier">foldLeft</span>(<span class="number">1</span>)(_ <span class="identifier">*</span> _)
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>5.Write a function largest(fun: (Int) =&gt; Int, inputs: Seq[Int]) that yields the largest value
+of a function within a given sequence of inputs. For example, largest(x =&gt; 10 * x - x * x,
+1 to 10) should return 25. Don’t use a loop or recursion.</strong></p></p></div>
+                <div class="code ">  <span class="keyword">def</span> <span class="identifier">largest</span>(<span class="identifier">fun</span>: <span class="identifier">Int</span> => <span class="identifier">Int</span>, <span class="identifier">inputs</span>: <span class="identifier">Seq</span>[<span class="identifier">Int</span>]): <span class="identifier">Int</span> = {
+    <span class="identifier">inputs</span>.<span class="identifier">tail</span>.<span class="identifier">foldLeft</span>(<span class="identifier">fun</span>(<span class="identifier">inputs</span>.<span class="identifier">head</span>))(_ <span class="identifier">max</span> <span class="identifier">fun</span>(_))
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>6.Modify the previous function to return the input at which the output is largest. For
+example, largestAt(x =&gt; 10 * x - x * x, 1 to 10) should return 5. Don’t use a loop or
+recursion.</strong></p></p></div>
+                <div class="code ">  <span class="keyword">def</span> <span class="identifier">largestWithParameter</span>(<span class="identifier">fun</span>: <span class="identifier">Int</span> => <span class="identifier">Int</span>, <span class="identifier">inputs</span>: <span class="identifier">Seq</span>[<span class="identifier">Int</span>]): <span class="identifier">Int</span> = {
+    <span class="identifier">inputs</span>.<span class="identifier">reduceLeft</span>((<span class="identifier">a</span>,<span class="identifier">b</span>) => <span class="keyword">if</span>(<span class="identifier">fun</span>(<span class="identifier">a</span>) <span class="identifier">>=</span> <span class="identifier">fun</span>(<span class="identifier">b</span>)) <span class="identifier">a</span> <span class="keyword">else</span> <span class="identifier">b</span>)
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>7.It’s easy to get a sequence of pairs, for example:
+val pairs= (1 to 10) zip (11 to 20)
+Now, suppose you want to do something with such a sequence—say, add up the values. But
+you can’t do
+pairs.map(_ + <em>)
+The function _ + _ takes two Int parameters, not an (Int, Int) pair. Write a function
+adjustToPair that receives a function of type (Int, Int) =&gt; Int and returns the equivalent
+function that operates on a pair. For example, adjustToPair(</em> * <em>)((6, 7)) is 42. Then
+use this function in conjunction with map to compute the sums of the elements in pairs.**</em></strong></p></p></div>
                 <div class="code ">}&nbsp;</div>
               </section>
             

@@ -1,5 +1,7 @@
 package impatient_exercises
 
+import java.io.ByteArrayOutputStream
+
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
@@ -9,6 +11,10 @@ import impatient_exercises.Chapter12.factorial
 import impatient_exercises.Chapter12.factorial2
 import impatient_exercises.Chapter12.largest
 import impatient_exercises.Chapter12.largestWithParameter
+import impatient_exercises.Chapter12.adjustToPair
+import impatient_exercises.Chapter12.arrayElementsSizeIs
+import impatient_exercises.Chapter12.corresponds
+import impatient_exercises.Chapter12.unless
 
 class Chapter12Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPropertyChecks {
 
@@ -49,6 +55,42 @@ class Chapter12Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
   it should "return parameter for which function return is largest when applying a function to a " +
     "range of inputs" in {
     largestWithParameter(x => 10 * x - x * x, 1 to 10) shouldEqual(5)
+  }
+
+  behavior of "adjustToPair"
+
+  it should "take a function with two int parameters and apply it to a tuple input" in {
+    ((1 to 2) zip (3 to 4)).map(x => adjustToPair(_ * _)(x)) should contain only (3,8)
+  }
+
+  behavior of "arrayElementsSizeIs"
+
+  it should "check if sizes of the elements in array correspond to the array of ints input" in {
+    arrayElementsSizeIs(Array("cookie","sugar","tea"),Array(6,5,3)) shouldEqual true
+  }
+
+  behavior of "corresponds"
+
+  it should "work without currying if types are provided in function literal" in {
+    corresponds(
+      Array("cookie","sugar","tea"),
+      Array(6,5,3),
+      (a: String,b: Int) => a.length.equals(b)
+    ) shouldEqual true
+  }
+
+  behavior of "unless"
+
+  it should "behave like if expression with inverted condition" in {
+    val x = 0
+    val out = new ByteArrayOutputStream
+    Console.withOut(out) {
+      unless(x == 1) { println("condition met") }
+      unless(x == 0) { println("condition met") }
+      out.toString shouldEqual(
+        """condition met
+          |""".stripMargin)
+    }
   }
 
 

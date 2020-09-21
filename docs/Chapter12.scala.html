@@ -275,7 +275,9 @@ hr {
                 <div class="code ">
 <span class="keyword">package</span> <span class="identifier">impatient_exercises</span>
 
+<span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">collection</span>.{<span class="identifier">GenSeq</span>, <span class="identifier">GenSeqLike</span>, <span class="identifier">IterableLike</span>, <span class="identifier">Parallelizable</span>}
 <span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">collection</span>.<span class="identifier">mutable</span>.<span class="identifier">ListBuffer</span>
+<span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">collection</span>.<span class="identifier">parallel</span>.<span class="identifier">ParSeq</span>
 
 <span class="keyword">object</span> <span class="identifier">Chapter12</span> {
 &nbsp;</div>
@@ -361,7 +363,60 @@ The function _ + _ takes two Int parameters, not an (Int, Int) pair. Write a fun
 adjustToPair that receives a function of type (Int, Int) =&gt; Int and returns the equivalent
 function that operates on a pair. For example, adjustToPair(</em> * <em>)((6, 7)) is 42. Then
 use this function in conjunction with map to compute the sums of the elements in pairs.**</em></strong></p></p></div>
-                <div class="code ">}&nbsp;</div>
+                <div class="code ">  <span class="keyword">def</span> <span class="identifier">adjustToPair</span>(<span class="identifier">op</span>: (<span class="identifier">Int</span>,<span class="identifier">Int</span>) => <span class="identifier">Int</span>)
+  = (<span class="identifier">tuple</span> : (<span class="identifier">Int</span>,<span class="identifier">Int</span>)) => <span class="identifier">op</span>(<span class="identifier">tuple</span>.<span class="identifier">_1</span>,<span class="identifier">tuple</span>.<span class="identifier">_2</span>)
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>8.In Section 12.8, “Currying,” on page 164, you saw the corresponds method used with two
+arrays of strings. Make a call to corresponds that checks whether the elements in an array
+of strings have the lengths given in an array of integers.</strong></p></p></div>
+                <div class="code ">  <span class="keyword">def</span> <span class="identifier">arrayElementsSizeIs</span>(<span class="identifier">strs</span>: <span class="identifier">Array</span>[<span class="identifier">String</span>], <span class="identifier">sizes</span>: <span class="identifier">Array</span>[<span class="identifier">Int</span>]) = {
+    <span class="identifier">strs</span>.<span class="identifier">corresponds</span>(<span class="identifier">sizes</span>)(_.<span class="identifier">length</span>.<span class="identifier">equals</span>(_))
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>9.Implement corresponds without currying. Then try the call from the preceding exercise.
+What problem do you encounter?</strong></p></p></div>
+                <div class="code ">  /*
+     `corresponds(Array("cookie","sugar","tea"),Array(6,5,3),_.length.equals(_))`
+     doesn't work because types can't be inferred with error:
+       missing parameter type for expanded function
+       ((x$1: <error>, x$2: <error>) => x$1.length.equals(x$2))
+
+     `corresponds(Array("cookie","sugar","tea"),Array(6,5,3),(a: String,b: Int) => a.length.equals(b)`
+     works because types are provided in the function literal
+   */
+  <span class="keyword">def</span> <span class="identifier">corresponds</span>[<span class="identifier">A</span>,<span class="identifier">B</span>](<span class="identifier">arr1</span>: <span class="identifier">Seq</span>[<span class="identifier">A</span>], <span class="identifier">arr2</span>: <span class="identifier">Seq</span>[<span class="identifier">B</span>], <span class="identifier">p</span>: (<span class="identifier">A</span>,<span class="identifier">B</span>) => <span class="identifier">Boolean</span>): <span class="identifier">Boolean</span> = {
+    <span class="keyword">val</span> <span class="identifier">i</span> = <span class="identifier">arr1</span>.<span class="identifier">iterator</span>
+    <span class="keyword">val</span> <span class="identifier">j</span> = <span class="identifier">arr2</span>.<span class="identifier">iterator</span>
+    <span class="keyword">while</span> (<span class="identifier">i</span>.<span class="identifier">hasNext</span> <span class="identifier">&&</span> <span class="identifier">j</span>.<span class="identifier">hasNext</span>)
+      <span class="keyword">if</span> (<span class="identifier">!</span><span class="identifier">p</span>(<span class="identifier">i</span>.<span class="identifier">next</span>(), <span class="identifier">j</span>.<span class="identifier">next</span>()))
+        <span class="keyword">return</span> false
+
+    <span class="identifier">!</span><span class="identifier">i</span>.<span class="identifier">hasNext</span> <span class="identifier">&&</span> <span class="identifier">!</span><span class="identifier">j</span>.<span class="identifier">hasNext</span>
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p>**10.Implement an unless control abstraction that works just like if, but with an inverted
+condition. Does the first parameter need to be a call-by-name parameter? Do you need
+currying?</p></p></div>
+                <div class="code ">  /*
+          - Using call-by-name in first parameter is not really needed because condition can be
+            evaluated to a boolean on call, it does not need to be an expression that needs to be
+            evaluated within the unless function
+          - Currying is needed so that syntax is the same as if statement:
+              unless(condition) { block }
+   */
+  <span class="keyword">def</span> <span class="identifier">unless</span>(<span class="identifier">condition</span>: <span class="identifier">Boolean</span>)(<span class="identifier">block</span>: => <span class="identifier">Unit</span>) = {
+     <span class="keyword">if</span>(<span class="identifier">!</span><span class="identifier">condition</span>) <span class="identifier">block</span>
+  }
+}&nbsp;</div>
               </section>
             
           <section id="footer">

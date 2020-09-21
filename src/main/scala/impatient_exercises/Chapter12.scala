@@ -2,7 +2,9 @@
 
 package impatient_exercises
 
+import scala.collection.{GenSeq, GenSeqLike, IterableLike, Parallelizable}
 import scala.collection.mutable.ListBuffer
+import scala.collection.parallel.ParSeq
 
 object Chapter12 {
 
@@ -66,4 +68,48 @@ object Chapter12 {
   //     adjustToPair that receives a function of type (Int, Int) => Int and returns the equivalent
   //     function that operates on a pair. For example, adjustToPair(_ * _)((6, 7)) is 42. Then
   //     use this function in conjunction with map to compute the sums of the elements in pairs.**
+  def adjustToPair(op: (Int,Int) => Int)
+  = (tuple : (Int,Int)) => op(tuple._1,tuple._2)
+
+  // **8.In Section 12.8, “Currying,” on page 164, you saw the corresponds method used with two
+  //     arrays of strings. Make a call to corresponds that checks whether the elements in an array
+  //     of strings have the lengths given in an array of integers.**
+  def arrayElementsSizeIs(strs: Array[String], sizes: Array[Int]) = {
+    strs.corresponds(sizes)(_.length.equals(_))
+  }
+
+  // **9.Implement corresponds without currying. Then try the call from the preceding exercise.
+  //     What problem do you encounter?**
+  /*
+     `corresponds(Array("cookie","sugar","tea"),Array(6,5,3),_.length.equals(_))`
+     doesn't work because types can't be inferred with error:
+       missing parameter type for expanded function
+       ((x$1: <error>, x$2: <error>) => x$1.length.equals(x$2))
+
+     `corresponds(Array("cookie","sugar","tea"),Array(6,5,3),(a: String,b: Int) => a.length.equals(b)`
+     works because types are provided in the function literal
+   */
+  def corresponds[A,B](arr1: Seq[A], arr2: Seq[B], p: (A,B) => Boolean): Boolean = {
+    val i = arr1.iterator
+    val j = arr2.iterator
+    while (i.hasNext && j.hasNext)
+      if (!p(i.next(), j.next()))
+        return false
+
+    !i.hasNext && !j.hasNext
+  }
+
+  // **10.Implement an unless control abstraction that works just like if, but with an inverted
+  //      condition. Does the first parameter need to be a call-by-name parameter? Do you need
+  //      currying?
+  /*
+          - Using call-by-name in first parameter is not really needed because condition can be
+            evaluated to a boolean on call, it does not need to be an expression that needs to be
+            evaluated within the unless function
+          - Currying is needed so that syntax is the same as if statement:
+              unless(condition) { block }
+   */
+  def unless(condition: Boolean)(block: => Unit) = {
+     if(!condition) block
+  }
 }

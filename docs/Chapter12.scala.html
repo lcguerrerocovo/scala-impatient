@@ -284,11 +284,11 @@ hr {
               </section>
             
               <section class="">
-                <div class="comment "><p><strong>1.Write a function values(fun: (Int) =&gt; Int, low: Int, high: Int) that yields a collection
+                <div class="comment "><p><strong>1.Write a function <code>values(fun: (Int) =&gt; Int, low: Int, high: Int)</code> that yields a collection
 of function inputs and outputs in a given range.</strong></p>
 <ul>
-  <li>For example, values(x =&gt; x*x,-5,5) should produce a collection of pairs (-5,25),(-4,
-  16),(-3,9), ..., (5, 25).</li>
+  <li>For example, <code>values(x =&gt; x*x,-5,5)</code> should produce a collection of pairs <code>(-5,25),(-4,
+16),(-3,9), ..., (5, 25)</code>.</li>
 </ul></p></div>
                 <div class="code ">  /**
    * values function does not check for integer overflow
@@ -302,13 +302,13 @@ of function inputs and outputs in a given range.</strong></p>
               </section>
             
               <section class="">
-                <div class="comment "><p><strong>2.How do you get the largest element of an array with reduceLeft?</strong></p></p></div>
+                <div class="comment "><p><strong>2.How do you get the largest element of an array with <code>reduceLeft</code>?</strong></p></p></div>
                 <div class="code ">  <span class="keyword">def</span> <span class="identifier">largestElement</span>(<span class="identifier">arr</span>: <span class="identifier">Array</span>[<span class="identifier">Int</span>]): <span class="identifier">Int</span> = <span class="identifier">arr</span>.<span class="identifier">reduceLeft</span>(_ <span class="identifier">max</span> _)
 &nbsp;</div>
               </section>
             
               <section class="">
-                <div class="comment "><p><strong>3.Implement the factorial function using to and reduceLeft, without a loop or
+                <div class="comment "><p><strong>3.Implement the factorial function using <code>to</code> and <code>reduceLeft</code>, without a loop or
 recursion.</strong></p></p></div>
                 <div class="code ">  /**
    * does not check if x < 0
@@ -321,9 +321,12 @@ recursion.</strong></p></p></div>
               </section>
             
               <section class="">
-                <div class="comment "><p><strong>4.The previous implementation needed a special case when n &lt; 1. Show how you can avoid this
-with foldLeft. (Look at the Scaladoc for foldLeft. It’s like reduceLeft, except that the
-first value in the chain of combined values is supplied in the call.)</strong></p></p></div>
+                <div class="comment "><p><strong>4.The previous implementation needed a special case when <code>n &lt; 1</code>. Show how you can avoid this
+with <code>foldLeft</code>.</strong></p>
+<ul>
+  <li>(Look at the Scaladoc for <code>foldLeft</code>. It’s like <code>reduceLeft</code>, except that the
+  first value in the chain of combined values is supplied in the call.)</li>
+</ul></p></div>
                 <div class="code ">  /**
    * does not check if x < 0
    */
@@ -334,9 +337,12 @@ first value in the chain of combined values is supplied in the call.)</strong></
               </section>
             
               <section class="">
-                <div class="comment "><p><strong>5.Write a function largest(fun: (Int) =&gt; Int, inputs: Seq[Int]) that yields the largest value
-of a function within a given sequence of inputs. For example, largest(x =&gt; 10 * x - x * x,
-1 to 10) should return 25. Don’t use a loop or recursion.</strong></p></p></div>
+                <div class="comment "><p><strong>5.Write a function <code>largest(fun: (Int) =&gt; Int, inputs: Seq[Int])</code> that yields the largest value
+of a function within a given sequence of inputs.</strong></p>
+<ul>
+  <li>For example, <code>largest(x =&gt; 10 * x - x * x,1 to 10)</code> should return <code>25</code>. Don’t use a loop or
+  recursion.</li>
+</ul></p></div>
                 <div class="code ">  <span class="keyword">def</span> <span class="identifier">largest</span>(<span class="identifier">fun</span>: <span class="identifier">Int</span> => <span class="identifier">Int</span>, <span class="identifier">inputs</span>: <span class="identifier">Seq</span>[<span class="identifier">Int</span>]): <span class="identifier">Int</span> = {
     <span class="identifier">inputs</span>.<span class="identifier">tail</span>.<span class="identifier">foldLeft</span>(<span class="identifier">fun</span>(<span class="identifier">inputs</span>.<span class="identifier">head</span>))(_ <span class="identifier">max</span> <span class="identifier">fun</span>(_))
   }
@@ -344,9 +350,11 @@ of a function within a given sequence of inputs. For example, largest(x =&gt; 10
               </section>
             
               <section class="">
-                <div class="comment "><p><strong>6.Modify the previous function to return the input at which the output is largest. For
-example, largestAt(x =&gt; 10 * x - x * x, 1 to 10) should return 5. Don’t use a loop or
-recursion.</strong></p></p></div>
+                <div class="comment "><p><strong>6.Modify the previous function to return the input at which the output is largest.</strong></p>
+<ul>
+  <li>For example, <code>largestAt(x =&gt; 10 * x - x * x, 1 to 10)</code> should return <code>5</code>. Don’t use a loop or
+  recursion.</li>
+</ul></p></div>
                 <div class="code ">  <span class="keyword">def</span> <span class="identifier">largestWithParameter</span>(<span class="identifier">fun</span>: <span class="identifier">Int</span> => <span class="identifier">Int</span>, <span class="identifier">inputs</span>: <span class="identifier">Seq</span>[<span class="identifier">Int</span>]): <span class="identifier">Int</span> = {
     <span class="identifier">inputs</span>.<span class="identifier">reduceLeft</span>((<span class="identifier">a</span>,<span class="identifier">b</span>) => <span class="keyword">if</span>(<span class="identifier">fun</span>(<span class="identifier">a</span>) <span class="identifier">>=</span> <span class="identifier">fun</span>(<span class="identifier">b</span>)) <span class="identifier">a</span> <span class="keyword">else</span> <span class="identifier">b</span>)
   }
@@ -354,15 +362,26 @@ recursion.</strong></p></p></div>
               </section>
             
               <section class="">
-                <div class="comment "><p><strong>7.It’s easy to get a sequence of pairs, for example:
-val pairs= (1 to 10) zip (11 to 20)
-Now, suppose you want to do something with such a sequence—say, add up the values. But
-you can’t do
-pairs.map(_ + <em>)
-The function _ + _ takes two Int parameters, not an (Int, Int) pair. Write a function
-adjustToPair that receives a function of type (Int, Int) =&gt; Int and returns the equivalent
-function that operates on a pair. For example, adjustToPair(</em> * <em>)((6, 7)) is 42. Then
-use this function in conjunction with map to compute the sums of the elements in pairs.**</em></strong></p></p></div>
+                <div class="comment "><p><strong>7.Write a function <code>adjustToPair</code> that receives a function of type <code>(Int, Int) =&gt; Int</code> and
+returns the equivalent function that operates on a pair.</strong></p>
+<ul>
+  <li>
+    <p>It’s easy to get a sequence of pairs, for example:
+    <code>val pairs= (1 to 10) zip (11 to 20)</code></p>
+  </li>
+  <li>
+    <p>Now, suppose you want to do something with such a sequence—say, add up the values. But
+    you can’t do: <code>pairs.map(_ + _)</code></p>
+  </li>
+  <li>
+    <p>The function _ + _ takes two Int parameters, not an (Int, Int) pair.  For example:
+    <code>adjustToPair(_ * _)((6, 7)) is 42.</code></p>
+  </li>
+  <li>
+    <p>Then use this function in conjunction with map to compute the sums of the elements in
+    pairs.</p>
+  </li>
+</ul></p></div>
                 <div class="code ">  <span class="keyword">def</span> <span class="identifier">adjustToPair</span>(<span class="identifier">op</span>: (<span class="identifier">Int</span>,<span class="identifier">Int</span>) => <span class="identifier">Int</span>)
   = (<span class="identifier">tuple</span> : (<span class="identifier">Int</span>,<span class="identifier">Int</span>)) => <span class="identifier">op</span>(<span class="identifier">tuple</span>.<span class="identifier">_1</span>,<span class="identifier">tuple</span>.<span class="identifier">_2</span>)
 &nbsp;</div>
@@ -380,17 +399,20 @@ of strings have the lengths given in an array of integers.</strong></p></p></div
             
               <section class="">
                 <div class="comment "><p><strong>9.Implement corresponds without currying. Then try the call from the preceding exercise.
-What problem do you encounter?</strong></p></p></div>
-                <div class="code ">  /*
-     `corresponds(Array("cookie","sugar","tea"),Array(6,5,3),_.length.equals(_))`
-     doesn't work because types can't be inferred with error:
-       missing parameter type for expanded function
-       ((x$1: <error>, x$2: <error>) => x$1.length.equals(x$2))
-
-     `corresponds(Array("cookie","sugar","tea"),Array(6,5,3),(a: String,b: Int) => a.length.equals(b)`
-     works because types are provided in the function literal
-   */
-  <span class="keyword">def</span> <span class="identifier">corresponds</span>[<span class="identifier">A</span>,<span class="identifier">B</span>](<span class="identifier">arr1</span>: <span class="identifier">Seq</span>[<span class="identifier">A</span>], <span class="identifier">arr2</span>: <span class="identifier">Seq</span>[<span class="identifier">B</span>], <span class="identifier">p</span>: (<span class="identifier">A</span>,<span class="identifier">B</span>) => <span class="identifier">Boolean</span>): <span class="identifier">Boolean</span> = {
+What problem do you encounter?</strong></p>
+<ul>
+  <li>
+    <p><code>corresponds(Array(&quot;cookie&quot;,&quot;sugar&quot;,&quot;tea&quot;),Array(6,5,3),_.length.equals(_))</code> doesn&#39;t
+    work because types can&#39;t be inferred by compiler throwing this error:
+    <code>missing parameter type for expanded function ((x$1: &lt;error&gt;, x$2: &lt;error&gt;) =&gt;
+x$1.length.equals(x$2))</code></p>
+  </li>
+  <li>
+    <p><code>corresponds(Array(&quot;cookie&quot;,&quot;sugar&quot;,&quot;tea&quot;),Array(6,5,3),(a: String,b: Int) =&gt; a.length
+.equals(b)</code> works because types are provided in the function literal</p>
+  </li>
+</ul></p></div>
+                <div class="code ">  <span class="keyword">def</span> <span class="identifier">corresponds</span>[<span class="identifier">A</span>,<span class="identifier">B</span>](<span class="identifier">arr1</span>: <span class="identifier">Seq</span>[<span class="identifier">A</span>], <span class="identifier">arr2</span>: <span class="identifier">Seq</span>[<span class="identifier">B</span>], <span class="identifier">p</span>: (<span class="identifier">A</span>,<span class="identifier">B</span>) => <span class="identifier">Boolean</span>): <span class="identifier">Boolean</span> = {
     <span class="keyword">val</span> <span class="identifier">i</span> = <span class="identifier">arr1</span>.<span class="identifier">iterator</span>
     <span class="keyword">val</span> <span class="identifier">j</span> = <span class="identifier">arr2</span>.<span class="identifier">iterator</span>
     <span class="keyword">while</span> (<span class="identifier">i</span>.<span class="identifier">hasNext</span> <span class="identifier">&&</span> <span class="identifier">j</span>.<span class="identifier">hasNext</span>)
@@ -403,17 +425,21 @@ What problem do you encounter?</strong></p></p></div>
               </section>
             
               <section class="">
-                <div class="comment "><p>**10.Implement an unless control abstraction that works just like if, but with an inverted
+                <div class="comment "><p><strong>10.Implement an unless control abstraction that works just like if, but with an inverted
 condition. Does the first parameter need to be a call-by-name parameter? Do you need
-currying?</p></p></div>
-                <div class="code ">  /*
-          - Using call-by-name in first parameter is not really needed because condition can be
-            evaluated to a boolean on call, it does not need to be an expression that needs to be
-            evaluated within the unless function
-          - Currying is needed so that syntax is the same as if statement:
-              unless(condition) { block }
-   */
-  <span class="keyword">def</span> <span class="identifier">unless</span>(<span class="identifier">condition</span>: <span class="identifier">Boolean</span>)(<span class="identifier">block</span>: => <span class="identifier">Unit</span>) = {
+currying?</strong></p>
+<ul>
+  <li>
+    <p>Using call-by-name in first parameter is not really needed because condition can be
+    evaluated to a boolean on call, it does not need to be an expression that needs to be
+    evaluated within the unless function</p>
+  </li>
+  <li>
+    <p>Currying is needed so that syntax is the same as in if statement:
+    <code>unless(condition) { block }</code></p>
+  </li>
+</ul></p></div>
+                <div class="code ">  <span class="keyword">def</span> <span class="identifier">unless</span>(<span class="identifier">condition</span>: <span class="identifier">Boolean</span>)(<span class="identifier">block</span>: => <span class="identifier">Unit</span>) = {
      <span class="keyword">if</span>(<span class="identifier">!</span><span class="identifier">condition</span>) <span class="identifier">block</span>
   }
 }&nbsp;</div>

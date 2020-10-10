@@ -158,7 +158,7 @@ class Chapter09Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
 
   behavior of "srcImgTags"
 
-  it should "print all tokens that are not a floating point number" in {
+  ignore should "print all src image tags" in {
     val out = new ByteArrayOutputStream
     Console.withOut(out) {
       Chapter09.srcImgTags("https://lcguerrerocovo.github.io/scala-impatient/")

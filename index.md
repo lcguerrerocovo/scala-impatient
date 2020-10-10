@@ -1,6 +1,6 @@
 # Solutions for Scala for the impatient (2nd edition)
 
-  <img src="../img/scala_impatient_rabbit.jpg" alt="rabbit" width="150"/>
+  <img src="img/scala_impatient_rabbit.jpg" alt="rabbit" width="150"/>
     
   [Scala for the impatient book](https://horstmann.com/scala/)
   

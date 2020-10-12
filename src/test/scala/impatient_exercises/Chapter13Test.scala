@@ -44,5 +44,32 @@ class Chapter13Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
       utils.time {removeOdd2(ListBuffer('t','e','s','t','i','n','g')) }("removeOdd2")
   }
 
+  behavior of "simple"
+
+  it should "return a values in the map for the collection of keys" in {
+    simple(Array("Tom", "Fred", "Harry"),Map("Tom" -> 3, "Dick" -> 4, "Harry" -> 5)) shouldEqual
+      Array(3, 5)
+  }
+
+  behavior of "mkString"
+
+  it should "make a string composed of items in collection and separated by provided separator" in {
+    mkString(Array(1,2,3),",") shouldEqual "1,2,3"
+  }
+
+  behavior of "zipMap"
+
+  it should "it should zip and then map a function to zipped collection" in {
+    val prices = List(5.0, 20.0, 9.95)
+    val quantities = List(10, 2, 1)
+    zipMap(prices, quantities, (x: Double, y: Int) => x * y) shouldEqual List(50.0, 40.0, 9.95)
+  }
+
+  behavior of "array2D"
+
+  it should "take an array and slice it into a 2D array by half" in {
+    array2D(Array(1, 2, 3, 4, 5, 6)) shouldEqual Array(Array(1, 2, 3), Array(4, 5, 6))
+  }
+
 
 }

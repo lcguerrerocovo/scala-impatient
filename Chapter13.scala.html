@@ -275,7 +275,7 @@ hr {
                 <div class="code ">
 <span class="keyword">package</span> <span class="identifier">impatient_exercises</span>
 
-<span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">collection</span>.<span class="identifier">mutable</span>.<span class="identifier">LinkedHashSet</span>
+<span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">collection</span>.<span class="identifier">mutable</span>.{<span class="identifier">LinkedHashSet</span>, <span class="identifier">ListBuffer</span>}
 <span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">collection</span>.<span class="identifier">mutable</span>
 
 <span class="keyword">object</span> <span class="identifier">Chapter13</span> {
@@ -310,6 +310,35 @@ hr {
     <span class="identifier">zippedWord</span>.<span class="identifier">foldLeft</span>(<span class="identifier">Map</span>.<span class="identifier">empty</span>[<span class="identifier">Char</span>,<span class="identifier">List</span>[<span class="identifier">Int</span>]])( (<span class="identifier">x</span>,<span class="identifier">y</span>) =>
       <span class="identifier">x</span> <span class="identifier">+</span> (<span class="identifier">y</span>.<span class="identifier">_1</span> <span class="identifier">-></span> (<span class="identifier">x</span>.<span class="identifier">getOrElse</span>(<span class="identifier">y</span>.<span class="identifier">_1</span>,<span class="identifier">List</span>.<span class="identifier">empty</span>) <span class="identifier">:+</span> <span class="identifier">y</span>.<span class="identifier">_2</span>))
     )
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>3.Write a function that removes every second element from a ListBuffer. Try it two ways.
+Call remove(i) for all even i starting at the end of the list. Copy every second element
+to a new list. Compare the performance.</strong></p></p></div>
+                <div class="code ">  /*
+      ListBuffer is backed by a linkedlist, calling remove method means traversing the list O(n)
+      so complexity of removeOdd will be O(n^2)
+   */
+  <span class="keyword">def</span> <span class="identifier">removeOdd</span>(<span class="identifier">buf</span>: <span class="identifier">ListBuffer</span>[<span class="identifier">Any</span>]): <span class="identifier">ListBuffer</span>[<span class="identifier">Any</span>] = {
+    <span class="keyword">for</span>(<span class="identifier">i</span> &lt;- <span class="identifier">buf</span>.<span class="identifier">length</span><span class="identifier">-</span><span class="number">1</span> <span class="identifier">to</span> <span class="number">0</span> <span class="identifier">by</span> <span class="identifier">-</span><span class="number">1</span>) {
+      <span class="keyword">if</span>(<span class="identifier">i</span> <span class="identifier">%</span> <span class="number">2</span> <span class="identifier">!=</span> <span class="number">0</span>) <span class="identifier">buf</span>.<span class="identifier">remove</span>(<span class="identifier">i</span>)
+    }
+    <span class="identifier">buf</span>
+  }
+
+  /*
+    removeOdd only need to traverse the list one (O(n) and append desired elements to a new list,
+    appending an element to a linked list (ListBuffer) happens in constant time O(1)
+  */
+  <span class="keyword">def</span> <span class="identifier">removeOdd2</span>(<span class="identifier">buf</span>: <span class="identifier">ListBuffer</span>[<span class="identifier">Any</span>]): <span class="identifier">ListBuffer</span>[<span class="identifier">Any</span>] = {
+    <span class="keyword">val</span> <span class="identifier">out</span> = <span class="identifier">ListBuffer</span>.<span class="identifier">empty</span>[<span class="identifier">Any</span>]
+    <span class="keyword">for</span>(<span class="identifier">i</span> &lt;- <span class="number">0</span> <span class="identifier">to</span> <span class="identifier">buf</span>.<span class="identifier">length</span><span class="identifier">-</span><span class="number">1</span>) {
+      <span class="keyword">if</span>(<span class="identifier">i</span> <span class="identifier">%</span> <span class="number">2</span> <span class="identifier">==</span> <span class="number">0</span>) <span class="identifier">out</span> <span class="identifier">+=</span> <span class="identifier">buf</span>(<span class="identifier">i</span>)
+    }
+    <span class="identifier">out</span>
   }
 
 }&nbsp;</div>

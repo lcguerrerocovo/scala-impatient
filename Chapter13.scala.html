@@ -289,11 +289,7 @@ hr {
   {0}, &#39;i&#39; with the set {1, 4, 7, 10}, and so on. Use a mutable map of characters to mutable
   sets. How can you ensure that the set is sorted?</li>
 </ul></p></div>
-                <div class="code ">
-  /**
-   * values function does not check for integer overflow
-   */
-  <span class="keyword">def</span> <span class="identifier">indexes</span>(<span class="identifier">word</span>: <span class="identifier">String</span>): <span class="identifier">mutable</span>.<span class="identifier">Map</span>[<span class="identifier">Char</span>,<span class="identifier">LinkedHashSet</span>[<span class="identifier">Int</span>]] = {
+                <div class="code ">  <span class="keyword">def</span> <span class="identifier">indexes</span>(<span class="identifier">word</span>: <span class="identifier">String</span>): <span class="identifier">mutable</span>.<span class="identifier">Map</span>[<span class="identifier">Char</span>,<span class="identifier">LinkedHashSet</span>[<span class="identifier">Int</span>]] = {
     <span class="keyword">val</span> <span class="identifier">wordMap</span> = <span class="identifier">mutable</span>.<span class="identifier">Map</span>.<span class="identifier">empty</span>[<span class="identifier">Char</span>, <span class="identifier">LinkedHashSet</span>[<span class="identifier">Int</span>]]
     <span class="keyword">for</span> (<span class="identifier">i</span> &lt;- <span class="identifier">word</span>.<span class="identifier">indices</span>; <span class="identifier">k</span> = <span class="identifier">word</span>(<span class="identifier">i</span>)) {
       <span class="identifier">wordMap</span>(<span class="identifier">k</span>) = <span class="identifier">wordMap</span>.<span class="identifier">getOrElse</span>(<span class="identifier">k</span>, <span class="identifier">LinkedHashSet</span>.<span class="identifier">empty</span>) <span class="identifier">+</span> <span class="identifier">i</span>
@@ -304,7 +300,7 @@ hr {
               </section>
             
               <section class="">
-                <div class="comment "><p>**2.Repeat the preceding exercise, using an immutable map of characters to lists.</p></p></div>
+                <div class="comment "><p><strong>2.Repeat the preceding exercise, using an immutable map of characters to lists.</strong></p></p></div>
                 <div class="code ">  <span class="keyword">def</span> <span class="identifier">indexes2</span>(<span class="identifier">word</span>: <span class="identifier">String</span>): <span class="identifier">Map</span>[<span class="identifier">Char</span>,<span class="identifier">List</span>[<span class="identifier">Int</span>]] = {
     <span class="keyword">val</span> <span class="identifier">zippedWord</span> = <span class="identifier">word</span>.<span class="identifier">zipWithIndex</span>
     <span class="identifier">zippedWord</span>.<span class="identifier">foldLeft</span>(<span class="identifier">Map</span>.<span class="identifier">empty</span>[<span class="identifier">Char</span>,<span class="identifier">List</span>[<span class="identifier">Int</span>]])( (<span class="identifier">x</span>,<span class="identifier">y</span>) =>
@@ -318,9 +314,9 @@ hr {
                 <div class="comment "><p><strong>3.Write a function that removes every second element from a ListBuffer. Try it two ways.
 Call remove(i) for all even i starting at the end of the list. Copy every second element
 to a new list. Compare the performance.</strong></p></p></div>
-                <div class="code ">  /*
-      ListBuffer is backed by a linkedlist, calling remove method means traversing the list O(n)
-      so complexity of removeOdd will be O(n^2)
+                <div class="code ">  /**
+   * ListBuffer is backed by a linkedlist, calling remove method means traversing the list O(n)
+   * so complexity of removeOdd will be O(n^2)
    */
   <span class="keyword">def</span> <span class="identifier">removeOdd</span>(<span class="identifier">buf</span>: <span class="identifier">ListBuffer</span>[<span class="identifier">Any</span>]): <span class="identifier">ListBuffer</span>[<span class="identifier">Any</span>] = {
     <span class="keyword">for</span>(<span class="identifier">i</span> &lt;- <span class="identifier">buf</span>.<span class="identifier">length</span><span class="identifier">-</span><span class="number">1</span> <span class="identifier">to</span> <span class="number">0</span> <span class="identifier">by</span> <span class="identifier">-</span><span class="number">1</span>) {
@@ -329,10 +325,10 @@ to a new list. Compare the performance.</strong></p></p></div>
     <span class="identifier">buf</span>
   }
 
-  /*
-    removeOdd only need to traverse the list one (O(n) and append desired elements to a new list,
-    appending an element to a linked list (ListBuffer) happens in constant time O(1)
-  */
+  /**
+   * removeOdd2 only need to traverse the list one (O(n) and append desired elements to a new list,
+   * appending an element to a linked list (ListBuffer) happens in constant time O(1)
+   */
   <span class="keyword">def</span> <span class="identifier">removeOdd2</span>(<span class="identifier">buf</span>: <span class="identifier">ListBuffer</span>[<span class="identifier">Any</span>]): <span class="identifier">ListBuffer</span>[<span class="identifier">Any</span>] = {
     <span class="keyword">val</span> <span class="identifier">out</span> = <span class="identifier">ListBuffer</span>.<span class="identifier">empty</span>[<span class="identifier">Any</span>]
     <span class="keyword">for</span>(<span class="identifier">i</span> &lt;- <span class="number">0</span> <span class="identifier">to</span> <span class="identifier">buf</span>.<span class="identifier">length</span><span class="identifier">-</span><span class="number">1</span>) {

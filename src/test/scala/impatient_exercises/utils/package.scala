@@ -14,4 +14,12 @@ package object utils {
       new File(file.getAbsolutePath).delete()
     }
   }
+
+  def time[R](block: => R)(name: String = ""): Long = {
+    val t0 = System.nanoTime()
+    val result = block
+    val t1 = System.nanoTime()
+    println(s"Elapsed time ${ if(!name.isEmpty) s"{${name}}" }=" + (t1 - t0) + "ns")
+    (t1 - t0)
+  }
 }

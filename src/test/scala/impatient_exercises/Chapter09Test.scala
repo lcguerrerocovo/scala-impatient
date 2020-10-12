@@ -158,7 +158,7 @@ class Chapter09Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
 
   behavior of "srcImgTags"
 
-  ignore should "print all src image tags" in {
+  it should "print all src image tags" in {
     val out = new ByteArrayOutputStream
     Console.withOut(out) {
       Chapter09.srcImgTags("https://lcguerrerocovo.github.io/scala-impatient/")

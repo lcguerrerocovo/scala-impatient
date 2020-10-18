@@ -75,9 +75,9 @@ object Chapter13 {
   //     - (List[Int]() /: lst)((x,y) => y :: x) reverses the list
 
   // **7.In Section 13.10, “Zipping,” on page 187, the expression
-  //        (prices zip quantities) map { p => p._1 * p._2 }
+  //        `(prices zip quantities) map { p => p._1 * p._2 }`
   //     is a bit inelegant. We can’t do
-  //        (prices zip quantities) map {_*_}
+  //        `(prices zip quantities) map {_*_}`
   //     because _*_ is a function with two arguments, and we need a function with one argument
   //     that is a tuple. The tupled method of the Function object changes a function with two
   //     arguments to one that takes a tuple. Apply tupled to the multiplication function so you
@@ -87,13 +87,76 @@ object Chapter13 {
     (prices zip quantities) map { f.tupled(_) }
   }
 
-  // ** 8.Write a function that turns an array of Double values into a two-dimensional array. Pass
+  // **8.Write a function that turns an array of Double values into a two-dimensional array. Pass
   //      the number of columns as a parameter. For example, with Array(1, 2, 3, 4, 5, 6) and three
   //      columns, return Array(Array(1, 2, 3), Array(4, 5, 6)). Use the grouped method.
   def array2D(arr: Array[Double]): Array[Array[Double]] = {
     val buf = ArrayBuffer[Array[Double]]()
     for(e <- arr.grouped(arr.length / 2)) buf += e
     buf.toArray
+  }
+
+  // **9.The Scala compiler transforms a for/yield expression
+  //      `for(i <- 1 to 10; j <- 1 to i) yield i*j
+  //    to invocations of flatMap and map, like this:
+  //      `(1 to 10).flatMap(i => (1 to i).map(j => i * j))**
+  //
+  //    - Explain the use of flatMap.
+  //      Hint: What is `(1 to i).map(j => i * j)` when i is 1, 2, 3?
+  //    - What happens when there are three generators in the for/yield expression?
+  /**
+   *    - The use of flatMap flattens the Vector[Vector[Int]] type to Vector[Int] since
+   *      the Vector type is a monad
+   *    - The compiler translates the for comprehension to two successive calls of flatMap
+   *      and a final call to map like so:
+   *      `for(i <- 1 to 10; j <- 1 to i; h <- 1 to j) yield i*j*h` translates to
+   *      `(1 to 10).flatMap(i => (1 to i).flatMap(j => (1 to j).map(h => i*j*h)))`
+   */
+  for(i <- 1 to 10; j <- 1 to i; h <- 1 to j) yield i*j*h
+  /**
+   * translates to
+   */
+  (1 to 10).flatMap(i => (1 to i).flatMap(j => (1 to j).map(h => i*j*h)))
+
+  // **10.The method java.util.TimeZone.getAvailableIDs yields time zones such as Africa/
+  //      Cairo and Asia/Chungking. Which continent has the most time zones? Hint: groupBy.**
+  def mostTimeZones = {
+    java.util.TimeZone.getAvailableIDs
+      .map(_.split("/"))
+      .groupBy(_(0))
+      .map(kv => (kv._1, kv._2.size))
+      .toList
+      .sortWith(_._2 > _._2)
+      .head
+      ._1
+  }
+
+  // **11.Harry Hacker reads a file into a string and wants to use a parallel collection to
+  //      update the letter frequencies concurrently on portions of the string. He uses the
+  //      following code:**
+  //
+  //      `val frequencies = new scala.collection.mutable.HashMap[Char, Int]
+  //      for (c <- str.par) frequencies(c) = frequencies.getOrElse(c, 0) + 1`
+  //
+  //      **Why is this a terrible idea? How can he really parallelize the computation?**
+  //      (Hint: Use aggregate.)
+  /**
+   *      The mutable hashmap is not thread safe, reading a value in getOrElse does not block other
+   *      threads from reading that value at the same time, thus leading to incorrect counting of
+   *      frequencies
+   */
+  def letterFrequency(str: String): Map[Char, Int] = {
+    str.filterNot(x => x.isWhitespace).par.aggregate(mutable.HashMap[Char,Int]()) (
+      { (x,y) =>
+        x(y) = x.getOrElse(y,0) + 1
+        x
+      }, { (m1, m2) =>
+        val nMap = mutable.HashMap[Char,Int]()
+        val m3 = (m1.keySet ++ m2.keySet)
+        m3.foreach(k => nMap(k) = (m1.getOrElse(k,0) + m2.getOrElse(k,0)))
+        nMap
+      }
+    ).toMap
   }
 
 }

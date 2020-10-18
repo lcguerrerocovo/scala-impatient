@@ -71,5 +71,21 @@ class Chapter13Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
     array2D(Array(1, 2, 3, 4, 5, 6)) shouldEqual Array(Array(1, 2, 3), Array(4, 5, 6))
   }
 
+  behavior of "mostTimezones"
+
+  it should "return continent with most timezones from java.util.TimeZone.getAvailableIDs" in {
+    mostTimeZones shouldEqual "America"
+  }
+
+  behavior of "letterFrequencies"
+
+  it should "count letter frequencies in a string in parallel in a thread safe way" in {
+    val str =
+      """The mutable hashmap is not thread safe, reading a value in getOrElse does not block other
+        |threads from reading that value at the same time, thus leading to incorrect counting of
+        |frequencies""".stripMargin
+    letterFrequency(str).toList.sortWith(_._2 > _._2).take(2) shouldEqual List(('e', 21),('t',16))
+  }
+
 
 }

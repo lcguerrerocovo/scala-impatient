@@ -362,12 +362,12 @@ and Map(&quot;Tom&quot; -&gt; 3, &quot;Dick&quot; -&gt; 4, &quot;Harry&quot; -&g
             
               <section class="">
                 <div class="comment "><p><strong>6.Given a list of integers lst, what is <code>(lst :\ List[Int]())(_ :: _)</code>? <code>(List[Int]() /:
-lst)(_ :+ _)</code>? How can you modify one of them to reverse the list?</strong></p>
-<ul>
-  <li>both operations give back the same list lst</li>
-  <li><code>(List[Int]() /: lst)((x,y) =&gt; y :: x)</code> reverses the list</li>
-</ul></p></div>
-                <div class="code empty">&nbsp;</div>
+lst)(_ :+ _)</code>? How can you modify one of them to reverse the list?</strong></p></p></div>
+                <div class="code ">  /**
+   *    - both operations give back the same list lst
+   *    - (List[Int]() /: lst)((x,y) => y :: x) reverses the list
+   */
+&nbsp;</div>
               </section>
             
               <section class="">
@@ -443,7 +443,7 @@ following code:</strong></p>
 <p><code>val frequencies = new scala.collection.mutable.HashMap[Char, Int]
 for (c &lt;- str.par) frequencies(c) = frequencies.getOrElse(c, 0) + 1</code></p>
 <p><strong>Why is this a terrible idea? How can he really parallelize the computation?</strong>
-(Hint: Use aggregate.)</p></p></div>
+- (Hint: Use aggregate.)</p></p></div>
                 <div class="code ">  /**
    *      The mutable hashmap is not thread safe, reading a value in getOrElse does not block other
    *      threads from reading that value at the same time, thus leading to incorrect counting of

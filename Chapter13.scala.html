@@ -361,11 +361,11 @@ and Map(&quot;Tom&quot; -&gt; 3, &quot;Dick&quot; -&gt; 4, &quot;Harry&quot; -&g
               </section>
             
               <section class="">
-                <div class="comment "><p><strong>6.Given a list of integers lst, what is (lst :\ List<a href="">Int</a>)(_ :: <em>)? (List<a href="">Int</a> /:
-lst)(</em> :+ <em>)? How can you modify one of them to reverse the list?**</em></strong></p>
+                <div class="comment "><p><strong>6.Given a list of integers lst, what is <code>(lst :\ List[Int]())(_ :: _)</code>? <code>(List[Int]() /:
+lst)(_ :+ _)</code>? How can you modify one of them to reverse the list?</strong></p>
 <ul>
   <li>both operations give back the same list lst</li>
-  <li>(List<a href="">Int</a> /: lst)((x,y) =&gt; y :: x) reverses the list</li>
+  <li><code>(List[Int]() /: lst)((x,y) =&gt; y :: x)</code> reverses the list</li>
 </ul></p></div>
                 <div class="code empty">&nbsp;</div>
               </section>
@@ -388,8 +388,8 @@ can map it over the list of pairs.</em>*</em></strong></p></p></div>
             
               <section class="">
                 <div class="comment "><p>**8.Write a function that turns an array of Double values into a two-dimensional array. Pass
-the number of columns as a parameter. For example, with Array(1, 2, 3, 4, 5, 6) and three
-columns, return Array(Array(1, 2, 3), Array(4, 5, 6)). Use the grouped method.</p></p></div>
+the number of columns as a parameter. For example, with <code>Array(1, 2, 3, 4, 5, 6)</code> and three
+columns, return <code>Array(Array(1, 2, 3), Array(4, 5, 6))</code>. Use the grouped method.</p></p></div>
                 <div class="code ">  <span class="keyword">def</span> <span class="identifier">array2D</span>(<span class="identifier">arr</span>: <span class="identifier">Array</span>[<span class="identifier">Double</span>]): <span class="identifier">Array</span>[<span class="identifier">Array</span>[<span class="identifier">Double</span>]] = {
     <span class="keyword">val</span> <span class="identifier">buf</span> = <span class="identifier">ArrayBuffer</span>[<span class="identifier">Array</span>[<span class="identifier">Double</span>]]()
     <span class="keyword">for</span>(<span class="identifier">e</span> &lt;- <span class="identifier">arr</span>.<span class="identifier">grouped</span>(<span class="identifier">arr</span>.<span class="identifier">length</span> <span class="identifier">/</span> <span class="number">2</span>)) <span class="identifier">buf</span> <span class="identifier">+=</span> <span class="identifier">e</span>
@@ -401,7 +401,7 @@ columns, return Array(Array(1, 2, 3), Array(4, 5, 6)). Use the grouped method.</
               <section class="">
                 <div class="comment "><p><strong>9.The Scala compiler transforms a for/yield expression
 <code>for(i &lt;- 1 to 10; j &lt;- 1 to i) yield i*j
-to invocations of flatMap and map, like this:</code>(1 to 10).flatMap(i =&gt; (1 to i).map(j =&gt; i * j))</strong></p>
+to invocations of flatMap and map, like this:</code>(1 to 10).flatMap(i =&gt; (1 to i).map(j =&gt; i * j))`</strong></p>
 <ul>
   <li>Explain the use of flatMap.
   Hint: What is <code>(1 to i).map(j =&gt; i * j)</code> when i is 1, 2, 3?</li>
@@ -410,13 +410,10 @@ to invocations of flatMap and map, like this:</code>(1 to 10).flatMap(i =&gt; (1
                 <div class="code ">  /**
    *    - The use of flatMap flattens the Vector[Vector[Int]] type to Vector[Int] since
    *      the Vector type is a monad
+   *
    *    - The compiler translates the for comprehension to two successive calls of flatMap
    *      and a final call to map like so:
    *      `for(i <- 1 to 10; j <- 1 to i; h <- 1 to j) yield i*j*h` translates to
-   *      `(1 to 10).flatMap(i => (1 to i).flatMap(j => (1 to j).map(h => i*j*h)))`
-   *
-   *    - `for(i <- 1 to 10; j <- 1 to i; h <- 1 to j) yield i*j*h`
-   *      translates to:
    *      `(1 to 10).flatMap(i => (1 to i).flatMap(j => (1 to j).map(h => i*j*h)))`
    */
 

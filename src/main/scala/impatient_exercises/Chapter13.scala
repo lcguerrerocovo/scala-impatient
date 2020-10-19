@@ -4,6 +4,7 @@ package impatient_exercises
 
 import scala.collection.mutable.{ArrayBuffer, LinkedHashSet, ListBuffer}
 import scala.collection.mutable
+import scala.collection.parallel._
 
 object Chapter13 {
 
@@ -111,12 +112,12 @@ object Chapter13 {
    *      and a final call to map like so:
    *      `for(i <- 1 to 10; j <- 1 to i; h <- 1 to j) yield i*j*h` translates to
    *      `(1 to 10).flatMap(i => (1 to i).flatMap(j => (1 to j).map(h => i*j*h)))`
+   *
+   *    - `for(i <- 1 to 10; j <- 1 to i; h <- 1 to j) yield i*j*h`
+   *      translates to:
+   *      `(1 to 10).flatMap(i => (1 to i).flatMap(j => (1 to j).map(h => i*j*h)))`
    */
-  for(i <- 1 to 10; j <- 1 to i; h <- 1 to j) yield i*j*h
-  /**
-   * translates to
-   */
-  (1 to 10).flatMap(i => (1 to i).flatMap(j => (1 to j).map(h => i*j*h)))
+
 
   // **10.The method java.util.TimeZone.getAvailableIDs yields time zones such as Africa/
   //      Cairo and Asia/Chungking. Which continent has the most time zones? Hint: groupBy.**
@@ -146,17 +147,25 @@ object Chapter13 {
    *      frequencies
    */
   def letterFrequency(str: String): Map[Char, Int] = {
-    str.filterNot(x => x.isWhitespace).par.aggregate(mutable.HashMap[Char,Int]()) (
-      { (x,y) =>
-        x(y) = x.getOrElse(y,0) + 1
-        x
-      }, { (m1, m2) =>
-        val nMap = mutable.HashMap[Char,Int]()
-        val m3 = (m1.keySet ++ m2.keySet)
-        m3.foreach(k => nMap(k) = (m1.getOrElse(k,0) + m2.getOrElse(k,0)))
-        nMap
-      }
-    ).toMap
+    val forkJoinPool = new java.util.concurrent.ForkJoinPool(2)
+    val parColl = str.filterNot(x => x.isWhitespace).par
+    parColl.tasksupport = new ForkJoinTaskSupport(forkJoinPool)
+    try {
+      parColl.aggregate(mutable.HashMap[Char, Int]())(
+        { (x, y) =>
+          x(y) = x.getOrElse(y, 0) + 1
+          x
+        }, { (m1, m2) =>
+          val nMap = mutable.HashMap[Char, Int]()
+          val m3 = (m1.keySet ++ m2.keySet)
+          m3.foreach(k => nMap(k) = (m1.getOrElse(k, 0) + m2.getOrElse(k, 0)))
+          nMap
+        }
+      ).toMap
+    }
+    finally {
+      forkJoinPool.shutdown()
+    }
   }
 
 }

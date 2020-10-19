@@ -23,7 +23,7 @@ class Chapter17Test extends AsyncFlatSpec with Matchers {
       """.stripMargin
     val in = new StringReader(inputStr)
     Console.withIn(in) {
-      val futureRes = Chapter17.repeat[String](scala.io.StdIn.readLine(), _ == "secret")
+      val futureRes = Chapter17.repeat[String](scala.io.StdIn.readLine, _ == "secret")
       futureRes map { res =>
           assert(res == "secret")
         }

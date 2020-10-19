@@ -387,9 +387,9 @@ can map it over the list of pairs.</em>*</em></strong></p></p></div>
               </section>
             
               <section class="">
-                <div class="comment "><p>**8.Write a function that turns an array of Double values into a two-dimensional array. Pass
-the number of columns as a parameter. For example, with <code>Array(1, 2, 3, 4, 5, 6)</code> and three
-columns, return <code>Array(Array(1, 2, 3), Array(4, 5, 6))</code>. Use the grouped method.</p></p></div>
+                <div class="comment "><p><strong>8.Write a function that turns an array of Double values into a two-dimensional array. Pass
+the number of columns as a parameter. For example, with <code>Array(1, 2, 3, 4, 5, 6)</code> and
+three columns, return <code>Array(Array(1, 2, 3), Array(4, 5, 6))</code>. Use the grouped method.</strong></p></p></div>
                 <div class="code ">  <span class="keyword">def</span> <span class="identifier">array2D</span>(<span class="identifier">arr</span>: <span class="identifier">Array</span>[<span class="identifier">Double</span>]): <span class="identifier">Array</span>[<span class="identifier">Array</span>[<span class="identifier">Double</span>]] = {
     <span class="keyword">val</span> <span class="identifier">buf</span> = <span class="identifier">ArrayBuffer</span>[<span class="identifier">Array</span>[<span class="identifier">Double</span>]]()
     <span class="keyword">for</span>(<span class="identifier">e</span> &lt;- <span class="identifier">arr</span>.<span class="identifier">grouped</span>(<span class="identifier">arr</span>.<span class="identifier">length</span> <span class="identifier">/</span> <span class="number">2</span>)) <span class="identifier">buf</span> <span class="identifier">+=</span> <span class="identifier">e</span>

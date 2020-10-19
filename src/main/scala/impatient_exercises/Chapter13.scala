@@ -69,11 +69,12 @@ object Chapter13 {
     coll.reduceLeft(_.toString + sep + _.toString)
   }
 
-  // **6.Given a list of integers lst, what is (lst :\ List[Int]())(_ :: _)? (List[Int]() /:
-  //     lst)(_ :+ _)? How can you modify one of them to reverse the list?**
-  //
-  //     - both operations give back the same list lst
-  //     - (List[Int]() /: lst)((x,y) => y :: x) reverses the list
+  // **6.Given a list of integers lst, what is `(lst :\ List[Int]())(_ :: _)`? `(List[Int]() /:
+  //     lst)(_ :+ _)`? How can you modify one of them to reverse the list?**
+  /**
+   *    - both operations give back the same list lst
+   *    - (List[Int]() /: lst)((x,y) => y :: x) reverses the list
+   */
 
   // **7.In Section 13.10, “Zipping,” on page 187, the expression
   //        `(prices zip quantities) map { p => p._1 * p._2 }`
@@ -89,8 +90,8 @@ object Chapter13 {
   }
 
   // **8.Write a function that turns an array of Double values into a two-dimensional array. Pass
-  //      the number of columns as a parameter. For example, with Array(1, 2, 3, 4, 5, 6) and three
-  //      columns, return Array(Array(1, 2, 3), Array(4, 5, 6)). Use the grouped method.
+  //      the number of columns as a parameter. For example, with `Array(1, 2, 3, 4, 5, 6)` and
+  //      three columns, return `Array(Array(1, 2, 3), Array(4, 5, 6))`. Use the grouped method.**
   def array2D(arr: Array[Double]): Array[Array[Double]] = {
     val buf = ArrayBuffer[Array[Double]]()
     for(e <- arr.grouped(arr.length / 2)) buf += e
@@ -100,7 +101,7 @@ object Chapter13 {
   // **9.The Scala compiler transforms a for/yield expression
   //      `for(i <- 1 to 10; j <- 1 to i) yield i*j
   //    to invocations of flatMap and map, like this:
-  //      `(1 to 10).flatMap(i => (1 to i).map(j => i * j))**
+  //      `(1 to 10).flatMap(i => (1 to i).map(j => i * j))`**
   //
   //    - Explain the use of flatMap.
   //      Hint: What is `(1 to i).map(j => i * j)` when i is 1, 2, 3?
@@ -108,13 +109,10 @@ object Chapter13 {
   /**
    *    - The use of flatMap flattens the Vector[Vector[Int]] type to Vector[Int] since
    *      the Vector type is a monad
+   *
    *    - The compiler translates the for comprehension to two successive calls of flatMap
    *      and a final call to map like so:
    *      `for(i <- 1 to 10; j <- 1 to i; h <- 1 to j) yield i*j*h` translates to
-   *      `(1 to 10).flatMap(i => (1 to i).flatMap(j => (1 to j).map(h => i*j*h)))`
-   *
-   *    - `for(i <- 1 to 10; j <- 1 to i; h <- 1 to j) yield i*j*h`
-   *      translates to:
    *      `(1 to 10).flatMap(i => (1 to i).flatMap(j => (1 to j).map(h => i*j*h)))`
    */
 
@@ -140,7 +138,7 @@ object Chapter13 {
   //      for (c <- str.par) frequencies(c) = frequencies.getOrElse(c, 0) + 1`
   //
   //      **Why is this a terrible idea? How can he really parallelize the computation?**
-  //      (Hint: Use aggregate.)
+  //      - (Hint: Use aggregate.)
   /**
    *      The mutable hashmap is not thread safe, reading a value in getOrElse does not block other
    *      threads from reading that value at the same time, thus leading to incorrect counting of

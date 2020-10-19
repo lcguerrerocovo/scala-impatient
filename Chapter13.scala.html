@@ -277,6 +277,7 @@ hr {
 
 <span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">collection</span>.<span class="identifier">mutable</span>.{<span class="identifier">ArrayBuffer</span>, <span class="identifier">LinkedHashSet</span>, <span class="identifier">ListBuffer</span>}
 <span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">collection</span>.<span class="identifier">mutable</span>
+<span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">collection</span>.<span class="identifier">parallel</span>._
 
 <span class="keyword">object</span> <span class="identifier">Chapter13</span> {
 &nbsp;</div>
@@ -371,13 +372,13 @@ lst)(</em> :+ <em>)? How can you modify one of them to reverse the list?**</em><
             
               <section class="">
                 <div class="comment "><p><strong>7.In Section 13.10, “Zipping,” on page 187, the expression
-(prices zip quantities) map { p =&gt; p.<em>1 * p.</em>2 }
+<code>(prices zip quantities) map { p =&gt; p._1 * p._2 }</code>
 is a bit inelegant. We can’t do
-(prices zip quantities) map {<em><em><em>}
+<code>(prices zip quantities) map {_*_}</code>
 because <em><em>_ is a function with two arguments, and we need a function with one argument
 that is a tuple. The tupled method of the Function object changes a function with two
 arguments to one that takes a tuple. Apply tupled to the multiplication function so you
-can map it over the list of pairs.</em>*</em></em></em></em></strong></p></p></div>
+can map it over the list of pairs.</em>*</em></strong></p></p></div>
                 <div class="code ">  <span class="keyword">def</span> <span class="identifier">zipMap</span>(<span class="identifier">prices</span>: <span class="identifier">List</span>[<span class="identifier">Double</span>], <span class="identifier">quantities</span>: <span class="identifier">List</span>[<span class="identifier">Int</span>], <span class="identifier">f</span>: (<span class="identifier">Double</span>,<span class="identifier">Int</span>) => <span class="identifier">Double</span>)
   : <span class="identifier">List</span>[<span class="identifier">Double</span>] = {
     (<span class="identifier">prices</span> <span class="identifier">zip</span> <span class="identifier">quantities</span>) <span class="identifier">map</span> { <span class="identifier">f</span>.<span class="identifier">tupled</span>(_) }
@@ -386,13 +387,91 @@ can map it over the list of pairs.</em>*</em></em></em></em></strong></p></p></d
               </section>
             
               <section class="">
-                <div class="comment "><p>** 8.Write a function that turns an array of Double values into a two-dimensional array. Pass
+                <div class="comment "><p>**8.Write a function that turns an array of Double values into a two-dimensional array. Pass
 the number of columns as a parameter. For example, with Array(1, 2, 3, 4, 5, 6) and three
 columns, return Array(Array(1, 2, 3), Array(4, 5, 6)). Use the grouped method.</p></p></div>
                 <div class="code ">  <span class="keyword">def</span> <span class="identifier">array2D</span>(<span class="identifier">arr</span>: <span class="identifier">Array</span>[<span class="identifier">Double</span>]): <span class="identifier">Array</span>[<span class="identifier">Array</span>[<span class="identifier">Double</span>]] = {
     <span class="keyword">val</span> <span class="identifier">buf</span> = <span class="identifier">ArrayBuffer</span>[<span class="identifier">Array</span>[<span class="identifier">Double</span>]]()
     <span class="keyword">for</span>(<span class="identifier">e</span> &lt;- <span class="identifier">arr</span>.<span class="identifier">grouped</span>(<span class="identifier">arr</span>.<span class="identifier">length</span> <span class="identifier">/</span> <span class="number">2</span>)) <span class="identifier">buf</span> <span class="identifier">+=</span> <span class="identifier">e</span>
     <span class="identifier">buf</span>.<span class="identifier">toArray</span>
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>9.The Scala compiler transforms a for/yield expression
+<code>for(i &lt;- 1 to 10; j &lt;- 1 to i) yield i*j
+to invocations of flatMap and map, like this:</code>(1 to 10).flatMap(i =&gt; (1 to i).map(j =&gt; i * j))</strong></p>
+<ul>
+  <li>Explain the use of flatMap.
+  Hint: What is <code>(1 to i).map(j =&gt; i * j)</code> when i is 1, 2, 3?</li>
+  <li>What happens when there are three generators in the for/yield expression?</li>
+</ul></p></div>
+                <div class="code ">  /**
+   *    - The use of flatMap flattens the Vector[Vector[Int]] type to Vector[Int] since
+   *      the Vector type is a monad
+   *    - The compiler translates the for comprehension to two successive calls of flatMap
+   *      and a final call to map like so:
+   *      `for(i <- 1 to 10; j <- 1 to i; h <- 1 to j) yield i*j*h` translates to
+   *      `(1 to 10).flatMap(i => (1 to i).flatMap(j => (1 to j).map(h => i*j*h)))`
+   *
+   *    - `for(i <- 1 to 10; j <- 1 to i; h <- 1 to j) yield i*j*h`
+   *      translates to:
+   *      `(1 to 10).flatMap(i => (1 to i).flatMap(j => (1 to j).map(h => i*j*h)))`
+   */
+
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>10.The method java.util.TimeZone.getAvailableIDs yields time zones such as Africa/
+Cairo and Asia/Chungking. Which continent has the most time zones? Hint: groupBy.</strong></p></p></div>
+                <div class="code ">  <span class="keyword">def</span> <span class="identifier">mostTimeZones</span> = {
+    <span class="identifier">java</span>.<span class="identifier">util</span>.<span class="identifier">TimeZone</span>.<span class="identifier">getAvailableIDs</span>
+      .<span class="identifier">map</span>(_.<span class="identifier">split</span>(<span class="string">"/"</span>))
+      .<span class="identifier">groupBy</span>(_(<span class="number">0</span>))
+      .<span class="identifier">map</span>(<span class="identifier">kv</span> => (<span class="identifier">kv</span>.<span class="identifier">_1</span>, <span class="identifier">kv</span>.<span class="identifier">_2</span>.<span class="identifier">size</span>))
+      .<span class="identifier">toList</span>
+      .<span class="identifier">sortWith</span>(_.<span class="identifier">_2</span> <span class="identifier">></span> _.<span class="identifier">_2</span>)
+      .<span class="identifier">head</span>
+      .<span class="identifier">_1</span>
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>11.Harry Hacker reads a file into a string and wants to use a parallel collection to
+update the letter frequencies concurrently on portions of the string. He uses the
+following code:</strong></p>
+<p><code>val frequencies = new scala.collection.mutable.HashMap[Char, Int]
+for (c &lt;- str.par) frequencies(c) = frequencies.getOrElse(c, 0) + 1</code></p>
+<p><strong>Why is this a terrible idea? How can he really parallelize the computation?</strong>
+(Hint: Use aggregate.)</p></p></div>
+                <div class="code ">  /**
+   *      The mutable hashmap is not thread safe, reading a value in getOrElse does not block other
+   *      threads from reading that value at the same time, thus leading to incorrect counting of
+   *      frequencies
+   */
+  <span class="keyword">def</span> <span class="identifier">letterFrequency</span>(<span class="identifier">str</span>: <span class="identifier">String</span>): <span class="identifier">Map</span>[<span class="identifier">Char</span>, <span class="identifier">Int</span>] = {
+    <span class="keyword">val</span> <span class="identifier">forkJoinPool</span> = <span class="keyword">new</span> <span class="identifier">java</span>.<span class="identifier">util</span>.<span class="identifier">concurrent</span>.<span class="identifier">ForkJoinPool</span>(<span class="number">2</span>)
+    <span class="keyword">val</span> <span class="identifier">parColl</span> = <span class="identifier">str</span>.<span class="identifier">filterNot</span>(<span class="identifier">x</span> => <span class="identifier">x</span>.<span class="identifier">isWhitespace</span>).<span class="identifier">par</span>
+    <span class="identifier">parColl</span>.<span class="identifier">tasksupport</span> = <span class="keyword">new</span> <span class="identifier">ForkJoinTaskSupport</span>(<span class="identifier">forkJoinPool</span>)
+    <span class="keyword">try</span> {
+      <span class="identifier">parColl</span>.<span class="identifier">aggregate</span>(<span class="identifier">mutable</span>.<span class="identifier">HashMap</span>[<span class="identifier">Char</span>, <span class="identifier">Int</span>]())(
+        { (<span class="identifier">x</span>, <span class="identifier">y</span>) =>
+          <span class="identifier">x</span>(<span class="identifier">y</span>) = <span class="identifier">x</span>.<span class="identifier">getOrElse</span>(<span class="identifier">y</span>, <span class="number">0</span>) <span class="identifier">+</span> <span class="number">1</span>
+          <span class="identifier">x</span>
+        }, { (<span class="identifier">m1</span>, <span class="identifier">m2</span>) =>
+          <span class="keyword">val</span> <span class="identifier">nMap</span> = <span class="identifier">mutable</span>.<span class="identifier">HashMap</span>[<span class="identifier">Char</span>, <span class="identifier">Int</span>]()
+          <span class="keyword">val</span> <span class="identifier">m3</span> = (<span class="identifier">m1</span>.<span class="identifier">keySet</span> <span class="identifier">++</span> <span class="identifier">m2</span>.<span class="identifier">keySet</span>)
+          <span class="identifier">m3</span>.<span class="identifier">foreach</span>(<span class="identifier">k</span> => <span class="identifier">nMap</span>(<span class="identifier">k</span>) = (<span class="identifier">m1</span>.<span class="identifier">getOrElse</span>(<span class="identifier">k</span>, <span class="number">0</span>) <span class="identifier">+</span> <span class="identifier">m2</span>.<span class="identifier">getOrElse</span>(<span class="identifier">k</span>, <span class="number">0</span>)))
+          <span class="identifier">nMap</span>
+        }
+      ).<span class="identifier">toMap</span>
+    }
+    <span class="keyword">finally</span> {
+      <span class="identifier">forkJoinPool</span>.<span class="identifier">shutdown</span>()
+    }
   }
 
 }&nbsp;</div>

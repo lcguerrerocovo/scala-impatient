@@ -294,18 +294,41 @@ returns the pair with the components swapped.</strong></p></p></div>
               <section class="">
                 <div class="comment "><p><strong>3.Using pattern matching, write a function swap that swaps the first two elements of an
 array provided its length is at least two.</strong></p></p></div>
-                <div class="code ">  <span class="keyword">class</span> <span class="identifier">ArrayWithSwap</span>[<span class="identifier">T</span>:<span class="identifier">ClassTag</span>](<span class="identifier">arr</span>: <span class="identifier">Array</span>[<span class="identifier">T</span>]) {
+                <div class="code ">  <span class="keyword">implicit</span> <span class="keyword">def</span> <span class="identifier">swapArray</span>[<span class="identifier">T</span>:<span class="identifier">ClassTag</span>](<span class="identifier">arr</span>: <span class="identifier">Array</span>[<span class="identifier">T</span>]): <span class="identifier">ArrayWithSwap</span>[<span class="identifier">T</span>] = <span class="keyword">new</span> <span class="identifier">ArrayWithSwap</span>[<span class="identifier">T</span>](<span class="identifier">arr</span>)
+
+  <span class="keyword">class</span> <span class="identifier">ArrayWithSwap</span>[<span class="identifier">T</span>:<span class="identifier">ClassTag</span>](<span class="identifier">arr</span>: <span class="identifier">Array</span>[<span class="identifier">T</span>]) {
     <span class="keyword">def</span> <span class="identifier">swapFirstTwo</span>: <span class="identifier">Array</span>[<span class="identifier">T</span>] = <span class="identifier">arr</span> <span class="keyword">match</span> {
       <span class="keyword">case</span> <span class="identifier">Array</span>(<span class="identifier">a</span>,<span class="identifier">b</span>, <span class="identifier">rest</span> @ _<span class="identifier">*</span>) <span class="keyword">if</span> <span class="identifier">arr</span>.<span class="identifier">length</span> <span class="identifier">>=</span> <span class="number">2</span> => {
-        <span class="keyword">val</span> <span class="identifier">buff</span> = <span class="keyword">new</span> <span class="identifier">ArrayBuffer</span>[<span class="identifier">T</span>]()
-        ((<span class="identifier">buff</span> <span class="identifier">+=</span> <span class="identifier">b</span> <span class="identifier">+=</span> <span class="identifier">a</span>) <span class="identifier">++</span> <span class="identifier">rest</span>.<span class="identifier">toArray</span>).<span class="identifier">toArray</span>
+        <span class="identifier">Array</span>(<span class="identifier">b</span>,<span class="identifier">a</span>) <span class="identifier">++</span> <span class="identifier">rest</span>.<span class="identifier">toArray</span>[<span class="identifier">T</span>]
       }
       <span class="keyword">case</span> _ => <span class="identifier">arr</span>
     }
   }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p>**4.Add a case class Multiple that is a subclass of the Item class.
+- For example:
+<code>Multiple(10, Article(&quot;Blackwell Toaster&quot;, 29.95))</code>
+describes ten toasters.
+Of course, you should be able to handle any items, such as bundles or multiples, in the
+second argument. Extend the price function to handle this new case.</p></p></div>
+                <div class="code ">  <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="identifier">Item</span>
+  <span class="keyword">case class</span> <span class="identifier">Article</span>(<span class="identifier">description</span>: <span class="identifier">String</span>, <span class="identifier">price</span>: <span class="identifier">Double</span>) <span class="keyword">extends</span> <span class="identifier">Item</span>
+  <span class="keyword">case class</span> <span class="identifier">Bundle</span>(<span class="identifier">description</span>: <span class="identifier">String</span>, <span class="identifier">discount</span>: <span class="identifier">Double</span>, <span class="identifier">items</span>: <span class="identifier">Item</span><span class="identifier">*</span>) <span class="keyword">extends</span> <span class="identifier">Item</span>
+  <span class="keyword">case class</span> <span class="identifier">Multiple</span>(<span class="identifier">quantity</span>: <span class="identifier">Int</span>, <span class="identifier">item</span>: <span class="identifier">Item</span>) <span class="keyword">extends</span> <span class="identifier">Item</span>
 
-  <span class="keyword">implicit</span> <span class="keyword">def</span> <span class="identifier">swapArray</span>[<span class="identifier">T</span>:<span class="identifier">ClassTag</span>](<span class="identifier">arr</span>: <span class="identifier">Array</span>[<span class="identifier">T</span>]): <span class="identifier">ArrayWithSwap</span>[<span class="identifier">T</span>] = <span class="keyword">new</span> <span class="identifier">ArrayWithSwap</span>[<span class="identifier">T</span>](<span class="identifier">arr</span>)
-
+  <span class="keyword">def</span> <span class="identifier">price</span>(<span class="identifier">it</span>: <span class="identifier">Item</span>): <span class="identifier">Double</span> = <span class="identifier">it</span> <span class="keyword">match</span> {
+    <span class="keyword">case</span> <span class="identifier">Article</span>(_, <span class="identifier">p</span>) => <span class="identifier">p</span>
+    <span class="keyword">case</span> <span class="identifier">Bundle</span>(_, <span class="identifier">disc</span>, <span class="identifier">its</span> @ _<span class="identifier">*</span>) =>
+      <span class="identifier">its</span>.<span class="identifier">map</span> {
+        <span class="keyword">case</span> <span class="identifier">b</span>: <span class="identifier">Bundle</span> => <span class="identifier">price</span>(<span class="identifier">b</span>)
+        <span class="keyword">case</span> <span class="identifier">Article</span>(_,<span class="identifier">price</span>) => <span class="identifier">price</span>
+        <span class="keyword">case</span> <span class="identifier">Multiple</span>(<span class="identifier">quantity</span>, <span class="identifier">item</span>) => <span class="identifier">quantity</span> <span class="identifier">*</span> <span class="identifier">price</span>(<span class="identifier">item</span>)
+      }.<span class="identifier">sum</span> <span class="identifier">-</span> <span class="identifier">disc</span>
+    <span class="keyword">case</span> <span class="identifier">Multiple</span>(<span class="identifier">quantity</span>, <span class="identifier">item</span>) => <span class="identifier">quantity</span> <span class="identifier">*</span> <span class="identifier">price</span>(<span class="identifier">item</span>)
+  }
 }&nbsp;</div>
               </section>
             

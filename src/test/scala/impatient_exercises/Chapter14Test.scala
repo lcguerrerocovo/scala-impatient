@@ -51,10 +51,30 @@ class Chapter14Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
     price(b1) shouldEqual 2894.5
   }
 
-  behavior of "leafSum"
+  behavior of "leafSum(tree: List[Any]): Int"
 
   it should "add all leaves in list representation of a binary tree" in {
     leafSum(List(List(3,8), 2, List(5))) shouldEqual 18
+    leafSum(List(List(3,8,2), 2, List(5))) shouldEqual 20
+  }
+
+  behavior of "leafSum(tree: BinaryTree): Int"
+
+  it should "add all leaves in list representation of a binary tree" in {
+    leafSum(Node(Node(Leaf(2),Leaf(8)),Node(Leaf(5),Leaf(5)))) shouldEqual 20
+  }
+
+  behavior of "leafSum2(tree: BinaryTree): Int"
+
+  it should "add all leaves in list representation of a binary tree" in {
+    leafSum2(Node(Node(Leaf(3), Leaf(8)), Leaf(2), Node(Leaf(5)))) shouldEqual 18
+  }
+
+  behavior of "leaves"
+
+  it should "should apply operator in each node to leaves computing a result" in {
+    leaves(NodeOp(+,
+      NodeOp(*,Leaf(3), Leaf(8)), Leaf(2), NodeOp(-,Leaf(5)))) shouldEqual 21
   }
 
 

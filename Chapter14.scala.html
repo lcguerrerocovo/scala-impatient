@@ -308,11 +308,13 @@ array provided its length is at least two.</strong></p></p></div>
               </section>
             
               <section class="">
-                <div class="comment "><p><strong>4.Add a case class Multiple that is a subclass of the Item class.
-- For example:
-<code>Multiple(10, Article(&quot;Blackwell Toaster&quot;, 29.95))</code>
-describes ten toasters.
-Of course, you should be able to handle any items, such as bundles or multiples, in the
+                <div class="comment "><p><strong>4.Add a case class Multiple that is a subclass of the Item class.</strong></p>
+<ul>
+  <li>For example:
+  <code>Multiple(10, Article(&quot;Blackwell Toaster&quot;, 29.95))</code>
+  describes ten toasters.</li>
+</ul>
+<p><strong>Of course, you should be able to handle any items, such as bundles or multiples, in the
 second argument. Extend the price function to handle this new case.</strong></p></p></div>
                 <div class="code ">  <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="identifier">Item</span>
   <span class="keyword">case class</span> <span class="identifier">Article</span>(<span class="identifier">description</span>: <span class="identifier">String</span>, <span class="identifier">price</span>: <span class="identifier">Double</span>) <span class="keyword">extends</span> <span class="identifier">Item</span>
@@ -334,20 +336,101 @@ second argument. Extend the price function to handle this new case.</strong></p>
             
               <section class="">
                 <div class="comment "><p><strong>5.One can use lists to model trees that store values only in the leaves. For example,
-the list ((3 8) 2 (5)) describes the tree
-•
-/|\
-• 2 •
-/\   |
-3  8  5
-However, some of the list elements are numbers and others are lists. In Scala, you cannot
+the list ((3 8) 2 (5)) describes the tree -&gt;</strong></p></p></div>
+                <div class="code empty">&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>However, some of the list elements are numbers and others are lists. In Scala, you cannot
 have heterogeneous lists, so you have to use a List[Any]. Write a leafSum function to
 compute the sum of all elements in the leaves, using pattern matching to differentiate
 between numbers and lists.</strong></p></p></div>
-                <div class="code ">  <span class="keyword">def</span> <span class="identifier">leafSum</span>(<span class="identifier">tree</span>: <span class="identifier">List</span>[<span class="identifier">Any</span>]): <span class="identifier">Int</span> = <span class="identifier">tree</span> <span class="keyword">match</span> {
+                <div class="code ">  /**
+   *      •
+   *     /|\
+   *    • 2 •
+   *   /\   |
+   *  3  8  5
+   */
+  <span class="keyword">def</span> <span class="identifier">leafSum</span>(<span class="identifier">tree</span>: <span class="identifier">List</span>[<span class="identifier">Any</span>]): <span class="identifier">Int</span> = <span class="identifier">tree</span> <span class="keyword">match</span> {
     <span class="keyword">case</span> <span class="identifier">Nil</span> => <span class="number">0</span>
     <span class="keyword">case</span> (<span class="identifier">head</span>: <span class="identifier">Int</span>) <span class="identifier">::</span> <span class="identifier">tail</span> => <span class="identifier">head</span> <span class="identifier">+</span> <span class="identifier">leafSum</span>(<span class="identifier">tail</span>)
     <span class="keyword">case</span> (<span class="identifier">head</span>: <span class="identifier">List</span>[<span class="identifier">Any</span>]) <span class="identifier">::</span> <span class="identifier">tail</span> => <span class="identifier">leafSum</span>(<span class="identifier">head</span>) <span class="identifier">+</span> <span class="identifier">leafSum</span>(<span class="identifier">tail</span>)
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>6.A better way of modeling such trees is with case classes. Let’s start with binary trees.
+Write a function to compute the sum of all elements in the leaves.</strong></p></p></div>
+                <div class="code ">  sealed <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="identifier">Tree</span>
+  <span class="keyword">case class</span> <span class="identifier">Leaf</span>(<span class="identifier">value</span>: <span class="identifier">Int</span>) <span class="keyword">extends</span> <span class="identifier">Tree</span>
+  <span class="keyword">case class</span> <span class="identifier">Node</span>(<span class="identifier">child</span>: <span class="identifier">Tree</span><span class="identifier">*</span>) <span class="keyword">extends</span> <span class="identifier">Tree</span>
+  <span class="keyword">case class</span> <span class="identifier">NodeOp</span>(<span class="identifier">op</span>: <span class="identifier">Operator</span>, <span class="identifier">child</span>: <span class="identifier">Tree</span><span class="identifier">*</span>) <span class="keyword">extends</span> <span class="identifier">Tree</span>
+
+
+  <span class="keyword">def</span> <span class="identifier">leafSum</span>(<span class="identifier">tree</span>: <span class="identifier">Tree</span>): <span class="identifier">Int</span> = <span class="identifier">tree</span> <span class="keyword">match</span> {
+    <span class="keyword">case</span> <span class="identifier">Leaf</span>(<span class="identifier">value</span>) => <span class="identifier">value</span>
+    <span class="keyword">case</span> <span class="identifier">Node</span>(<span class="identifier">left</span>, <span class="identifier">right</span>) => <span class="identifier">leafSum</span>(<span class="identifier">left</span>) <span class="identifier">+</span> <span class="identifier">leafSum</span>(<span class="identifier">right</span>)
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>7.Extend the tree in the preceding exercise so that each node can have an arbitrary
+number of children, and reimplement the leafSum function. The tree in Exercise 5 should
+be expressible as:</strong>
+- <code>Node(Node(Leaf(3), Leaf(8)), Leaf(2), Node(Leaf(5)))</code></p></p></div>
+                <div class="code ">  <span class="keyword">def</span> <span class="identifier">leafSum2</span>(<span class="identifier">tree</span>: <span class="identifier">Tree</span>): <span class="identifier">Int</span> = <span class="identifier">tree</span> <span class="keyword">match</span> {
+    <span class="keyword">case</span> <span class="identifier">Leaf</span>(<span class="identifier">value</span>) => <span class="identifier">value</span>
+    <span class="keyword">case</span> <span class="identifier">Node</span>(<span class="identifier">nodes</span> @ _<span class="identifier">*</span>) => <span class="identifier">nodes</span>.<span class="identifier">map</span>(<span class="identifier">leafSum2</span>(_)).<span class="identifier">sum</span>
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>8.Extend the tree in the preceding exercise so that each non leaf node stores an operator
+in addition to the child nodes. Then write a function eval that computes the value. For
+example, the tree -&gt;</strong>
+- Pay attention to the unary minus.</p></p></div>
+                <div class="code ">  /**
+   *      +
+   *     /|\
+   *    * 2 -
+   *   /\   |
+   *  3 8  5
+   *
+   * has value (3 * 8) + 2 + (–5) = 21.
+   */&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p>val unary_- = (a: Int, b: Int) =&gt; b - a
+val - = (a: Int, b: Int) =&gt; a - b
+val * = (a: Int, b: Int) =&gt; a * b
+val + = (a: Int, b: Int) =&gt; a + b
+val / = (a: Int, b: Int) =&gt; a / b</p></p></div>
+                <div class="code ">
+  sealed <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="identifier">Operator</span>
+  case object <span class="identifier">-</span> <span class="keyword">extends</span> <span class="identifier">Operator</span>
+  case object <span class="identifier">+</span> <span class="keyword">extends</span> <span class="identifier">Operator</span>
+  case object <span class="identifier">/</span> <span class="keyword">extends</span> <span class="identifier">Operator</span>
+  case object <span class="identifier">*</span> <span class="keyword">extends</span> <span class="identifier">Operator</span>
+
+
+  <span class="keyword">def</span> <span class="identifier">leaves</span>(<span class="identifier">tree</span>: <span class="identifier">Tree</span>): <span class="identifier">Int</span> = <span class="identifier">tree</span> <span class="keyword">match</span> {
+    <span class="keyword">case</span> <span class="identifier">Leaf</span>(<span class="identifier">value</span>) => <span class="identifier">value</span>
+    <span class="keyword">case</span> <span class="identifier">NodeOp</span>(<span class="identifier">op</span>, <span class="identifier">nodes</span> @ _<span class="identifier">*</span>) <span class="keyword">if</span> <span class="identifier">nodes</span>.<span class="identifier">size</span> <span class="identifier">==</span> <span class="number">1</span> => <span class="identifier">op</span> <span class="keyword">match</span> {
+      <span class="keyword">case</span> <span class="identifier">-</span> => <span class="identifier">-</span><span class="identifier">leaves</span>(<span class="identifier">nodes</span>.<span class="identifier">head</span>)
+      <span class="keyword">case</span> _ => <span class="identifier">leaves</span>(<span class="identifier">nodes</span>.<span class="identifier">head</span>)
+    }
+    <span class="keyword">case</span> <span class="identifier">NodeOp</span>(<span class="identifier">op</span>, <span class="identifier">nodes</span> @ _<span class="identifier">*</span>) => <span class="identifier">op</span> <span class="keyword">match</span> {
+      <span class="keyword">case</span> <span class="identifier">-</span> => <span class="identifier">nodes</span>.<span class="identifier">map</span>(<span class="identifier">leaves</span>(_)).<span class="identifier">reduce</span>(_ <span class="identifier">-</span> _)
+      <span class="keyword">case</span> <span class="identifier">+</span> => <span class="identifier">nodes</span>.<span class="identifier">map</span>(<span class="identifier">leaves</span>(_)).<span class="identifier">reduce</span>(_ <span class="identifier">+</span> _)
+      <span class="keyword">case</span> <span class="identifier">/</span> => <span class="identifier">nodes</span>.<span class="identifier">map</span>(<span class="identifier">leaves</span>(_)).<span class="identifier">reduce</span>(_ <span class="identifier">/</span> _)
+      <span class="keyword">case</span> <span class="identifier">*</span> => <span class="identifier">nodes</span>.<span class="identifier">map</span>(<span class="identifier">leaves</span>(_)).<span class="identifier">reduce</span>(_ <span class="identifier">*</span> _)
+    }
+    <span class="keyword">case</span> <span class="identifier">Node</span>(<span class="identifier">nodes</span> @ _<span class="identifier">*</span>) => <span class="identifier">nodes</span>.<span class="identifier">map</span>(<span class="identifier">leafSum2</span>(_)).<span class="identifier">sum</span>
   }
 }&nbsp;</div>
               </section>

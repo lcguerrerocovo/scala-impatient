@@ -275,9 +275,6 @@ hr {
                 <div class="code ">
 <span class="keyword">package</span> <span class="identifier">impatient_exercises</span>
 
-<span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">collection</span>.<span class="identifier">mutable</span>
-<span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">collection</span>.<span class="identifier">mutable</span>.{<span class="identifier">ArrayBuffer</span>, <span class="identifier">LinkedHashSet</span>, <span class="identifier">ListBuffer</span>}
-<span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">collection</span>.<span class="identifier">parallel</span>._
 <span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">reflect</span>.<span class="identifier">ClassTag</span>
 
 <span class="keyword">object</span> <span class="identifier">Chapter14</span> {
@@ -310,9 +307,9 @@ array provided its length is at least two.</strong></p></p></div>
               <section class="">
                 <div class="comment "><p><strong>4.Add a case class Multiple that is a subclass of the Item class.</strong></p>
 <ul>
-  <li>For example:
-  <code>Multiple(10, Article(&quot;Blackwell Toaster&quot;, 29.95))</code>
-  describes ten toasters.</li>
+  <li>For example:</li>
+  <li><code>Multiple(10, Article(&quot;Blackwell Toaster&quot;, 29.95))</code></li>
+  <li>describes ten toasters.</li>
 </ul>
 <p><strong>Of course, you should be able to handle any items, such as bundles or multiples, in the
 second argument. Extend the price function to handle this new case.</strong></p></p></div>
@@ -379,8 +376,10 @@ Write a function to compute the sum of all elements in the leaves.</strong></p><
               <section class="">
                 <div class="comment "><p><strong>7.Extend the tree in the preceding exercise so that each node can have an arbitrary
 number of children, and reimplement the leafSum function. The tree in Exercise 5 should
-be expressible as:</strong>
-- <code>Node(Node(Leaf(3), Leaf(8)), Leaf(2), Node(Leaf(5)))</code></p></p></div>
+be expressible as:</strong></p>
+<ul>
+  <li><code>Node(Node(Leaf(3), Leaf(8)), Leaf(2), Node(Leaf(5)))</code></li>
+</ul></p></div>
                 <div class="code ">  <span class="keyword">def</span> <span class="identifier">leafSum2</span>(<span class="identifier">tree</span>: <span class="identifier">Tree</span>): <span class="identifier">Int</span> = <span class="identifier">tree</span> <span class="keyword">match</span> {
     <span class="keyword">case</span> <span class="identifier">Leaf</span>(<span class="identifier">value</span>) => <span class="identifier">value</span>
     <span class="keyword">case</span> <span class="identifier">Node</span>(<span class="identifier">nodes</span> @ _<span class="identifier">*</span>) => <span class="identifier">nodes</span>.<span class="identifier">map</span>(<span class="identifier">leafSum2</span>(_)).<span class="identifier">sum</span>
@@ -391,8 +390,10 @@ be expressible as:</strong>
               <section class="">
                 <div class="comment "><p><strong>8.Extend the tree in the preceding exercise so that each non leaf node stores an operator
 in addition to the child nodes. Then write a function eval that computes the value. For
-example, the tree -&gt;</strong>
-- Pay attention to the unary minus.</p></p></div>
+example, the tree -&gt;</strong></p>
+<ul>
+  <li>Pay attention to the unary minus.</li>
+</ul></p></div>
                 <div class="code ">  /**
    *      +
    *     /|\
@@ -435,11 +436,9 @@ List[Option[Int]]. Don’t use a match statement.</strong></p></p></div>
               <section class="">
                 <div class="comment "><p><strong>10.Write a function that composes two functions of type Double =&gt; Option[Double], yielding
 another function of the same type. The composition should yield None if either function
-does.</strong></p>
-<ul>
-  <li>For example -&gt;
-  Then h(2) is Some(1), and h(1) and h(0) are None.</li>
-</ul></p></div>
+does.</strong>
+- For example -&gt;
+- Then h(2) is Some(1), and h(1) and h(0) are None.</p></p></div>
                 <div class="code ">  /**
    *      def f(x: Double) = if (x != 1) Some(1 / (x - 1)) else None
    *      def g(x: Double) = if (x >= 0) Some(sqrt(x)) else None

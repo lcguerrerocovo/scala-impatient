@@ -105,19 +105,11 @@ object Chapter14 {
    *
    * has value (3 * 8) + 2 + (–5) = 21.
    */
-    //
-  //val unary_- = (a: Int, b: Int) => b - a
-  //val - = (a: Int, b: Int) => a - b
-  //val * = (a: Int, b: Int) => a * b
-  //val + = (a: Int, b: Int) => a + b
-  //val / = (a: Int, b: Int) => a / b
-
   sealed abstract class Operator
   case object - extends Operator
   case object + extends Operator
   case object / extends Operator
   case object * extends Operator
-
 
   def leaves(tree: Tree): Int = tree match {
     case Leaf(value) => value
@@ -132,5 +124,28 @@ object Chapter14 {
       case * => nodes.map(leaves(_)).reduce(_ * _)
     }
     case Node(nodes @ _*) => nodes.map(leafSum2(_)).sum
+  }
+
+  // **9.Write a function that computes the sum of the non-None values in a
+  //     List[Option[Int]]. Don’t use a match statement.**
+  def sum(lst: List[Option[Int]]): Int = lst.flatten.sum
+
+  // **10.Write a function that composes two functions of type Double => Option[Double], yielding
+  //      another function of the same type. The composition should yield None if either function
+  //      does.**
+  //
+  //      - For example ->
+  //        Then h(2) is Some(1), and h(1) and h(0) are None.
+  /**
+   *      def f(x: Double) = if (x != 1) Some(1 / (x - 1)) else None
+   *      def g(x: Double) = if (x >= 0) Some(sqrt(x)) else None
+   *      val h = compose(g, f) // h(x) should be g(f(x))
+   */
+  def compose(g: Double => Option[Double], f: Double => Option[Double])(x: Double)
+  : Option[Double] = {
+    f(x) match {
+      case Some(y) => g(y)
+      case _ => None
+    }
   }
 }

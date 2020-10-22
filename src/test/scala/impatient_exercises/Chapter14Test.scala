@@ -77,6 +77,29 @@ class Chapter14Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
       NodeOp(*,Leaf(3), Leaf(8)), Leaf(2), NodeOp(-,Leaf(5)))) shouldEqual 21
   }
 
+  behavior of "sum"
+
+  it should "sum all non-None in a list" in {
+    sum(List(Some(4), None, Some(13), None, Some(1))) shouldEqual  18
+  }
+
+  behavior of "compose"
+  /**
+   *      def f(x: Double) = if (x != 1) Some(1 / (x - 1)) else None
+   *      def g(x: Double) = if (x >= 0) Some(sqrt(x)) else None
+   *      val h = compose(g, f) // h(x) should be g(f(x))
+   */
+  it should "compose two functions and return None if either of them returns None" in {
+    def f(x: Double): Option[Double] = if (x != 1) Some(1 / (x - 1)) else None
+    def g(x: Double): Option[Double] = if (x >= 0) Some(math.sqrt(x)) else None
+    val h = compose(g,f) _
+    h(1) shouldEqual None
+    h(0) shouldEqual None
+    h(2) shouldEqual Some(1)
+    h(5) shouldEqual Some(0.5d)
+  }
+
+
 
 
 }

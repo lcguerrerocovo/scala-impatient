@@ -84,11 +84,7 @@ class Chapter14Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
   }
 
   behavior of "compose"
-  /**
-   *      def f(x: Double) = if (x != 1) Some(1 / (x - 1)) else None
-   *      def g(x: Double) = if (x >= 0) Some(sqrt(x)) else None
-   *      val h = compose(g, f) // h(x) should be g(f(x))
-   */
+
   it should "compose two functions and return None if either of them returns None" in {
     def f(x: Double): Option[Double] = if (x != 1) Some(1 / (x - 1)) else None
     def g(x: Double): Option[Double] = if (x >= 0) Some(math.sqrt(x)) else None

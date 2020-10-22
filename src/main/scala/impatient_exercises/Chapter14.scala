@@ -2,9 +2,6 @@
 
 package impatient_exercises
 
-import scala.collection.mutable
-import scala.collection.mutable.{ArrayBuffer, LinkedHashSet, ListBuffer}
-import scala.collection.parallel._
 import scala.reflect.ClassTag
 
 object Chapter14 {
@@ -29,8 +26,8 @@ object Chapter14 {
   // **4.Add a case class Multiple that is a subclass of the Item class.**
   //
   //     - For example:
-  //        `Multiple(10, Article("Blackwell Toaster", 29.95))`
-  //       describes ten toasters.
+  //     - `Multiple(10, Article("Blackwell Toaster", 29.95))`
+  //     - describes ten toasters.
   //
   //     **Of course, you should be able to handle any items, such as bundles or multiples, in the
   //     second argument. Extend the price function to handle this new case.**
@@ -86,6 +83,7 @@ object Chapter14 {
   // **7.Extend the tree in the preceding exercise so that each node can have an arbitrary
   //     number of children, and reimplement the leafSum function. The tree in Exercise 5 should
   //     be expressible as:**
+  //
   //     - `Node(Node(Leaf(3), Leaf(8)), Leaf(2), Node(Leaf(5)))`
   def leafSum2(tree: Tree): Int = tree match {
     case Leaf(value) => value
@@ -95,6 +93,7 @@ object Chapter14 {
   // **8.Extend the tree in the preceding exercise so that each non leaf node stores an operator
   //     in addition to the child nodes. Then write a function eval that computes the value. For
   //     example, the tree ->**
+  //
   //     - Pay attention to the unary minus.
   /**
    *      +
@@ -133,9 +132,8 @@ object Chapter14 {
   // **10.Write a function that composes two functions of type Double => Option[Double], yielding
   //      another function of the same type. The composition should yield None if either function
   //      does.**
-  //
   //      - For example ->
-  //        Then h(2) is Some(1), and h(1) and h(0) are None.
+  //      - Then h(2) is Some(1), and h(1) and h(0) are None.
   /**
    *      def f(x: Double) = if (x != 1) Some(1 / (x - 1)) else None
    *      def g(x: Double) = if (x >= 0) Some(sqrt(x)) else None

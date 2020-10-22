@@ -401,22 +401,12 @@ example, the tree -&gt;</strong>
    *  3 8  5
    *
    * has value (3 * 8) + 2 + (–5) = 21.
-   */&nbsp;</div>
-              </section>
-            
-              <section class="">
-                <div class="comment "><p>val unary_- = (a: Int, b: Int) =&gt; b - a
-val - = (a: Int, b: Int) =&gt; a - b
-val * = (a: Int, b: Int) =&gt; a * b
-val + = (a: Int, b: Int) =&gt; a + b
-val / = (a: Int, b: Int) =&gt; a / b</p></p></div>
-                <div class="code ">
+   */
   sealed <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="identifier">Operator</span>
   case object <span class="identifier">-</span> <span class="keyword">extends</span> <span class="identifier">Operator</span>
   case object <span class="identifier">+</span> <span class="keyword">extends</span> <span class="identifier">Operator</span>
   case object <span class="identifier">/</span> <span class="keyword">extends</span> <span class="identifier">Operator</span>
   case object <span class="identifier">*</span> <span class="keyword">extends</span> <span class="identifier">Operator</span>
-
 
   <span class="keyword">def</span> <span class="identifier">leaves</span>(<span class="identifier">tree</span>: <span class="identifier">Tree</span>): <span class="identifier">Int</span> = <span class="identifier">tree</span> <span class="keyword">match</span> {
     <span class="keyword">case</span> <span class="identifier">Leaf</span>(<span class="identifier">value</span>) => <span class="identifier">value</span>
@@ -431,6 +421,36 @@ val / = (a: Int, b: Int) =&gt; a / b</p></p></div>
       <span class="keyword">case</span> <span class="identifier">*</span> => <span class="identifier">nodes</span>.<span class="identifier">map</span>(<span class="identifier">leaves</span>(_)).<span class="identifier">reduce</span>(_ <span class="identifier">*</span> _)
     }
     <span class="keyword">case</span> <span class="identifier">Node</span>(<span class="identifier">nodes</span> @ _<span class="identifier">*</span>) => <span class="identifier">nodes</span>.<span class="identifier">map</span>(<span class="identifier">leafSum2</span>(_)).<span class="identifier">sum</span>
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>9.Write a function that computes the sum of the non-None values in a
+List[Option[Int]]. Don’t use a match statement.</strong></p></p></div>
+                <div class="code ">  <span class="keyword">def</span> <span class="identifier">sum</span>(<span class="identifier">lst</span>: <span class="identifier">List</span>[<span class="identifier">Option</span>[<span class="identifier">Int</span>]]): <span class="identifier">Int</span> = <span class="identifier">lst</span>.<span class="identifier">flatten</span>.<span class="identifier">sum</span>
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>10.Write a function that composes two functions of type Double =&gt; Option[Double], yielding
+another function of the same type. The composition should yield None if either function
+does.</strong></p>
+<ul>
+  <li>For example -&gt;
+  Then h(2) is Some(1), and h(1) and h(0) are None.</li>
+</ul></p></div>
+                <div class="code ">  /**
+   *      def f(x: Double) = if (x != 1) Some(1 / (x - 1)) else None
+   *      def g(x: Double) = if (x >= 0) Some(sqrt(x)) else None
+   *      val h = compose(g, f) // h(x) should be g(f(x))
+   */
+  <span class="keyword">def</span> <span class="identifier">compose</span>(<span class="identifier">g</span>: <span class="identifier">Double</span> => <span class="identifier">Option</span>[<span class="identifier">Double</span>], <span class="identifier">f</span>: <span class="identifier">Double</span> => <span class="identifier">Option</span>[<span class="identifier">Double</span>])(<span class="identifier">x</span>: <span class="identifier">Double</span>)
+  : <span class="identifier">Option</span>[<span class="identifier">Double</span>] = {
+    <span class="identifier">f</span>(<span class="identifier">x</span>) <span class="keyword">match</span> {
+      <span class="keyword">case</span> <span class="identifier">Some</span>(<span class="identifier">y</span>) => <span class="identifier">g</span>(<span class="identifier">y</span>)
+      <span class="keyword">case</span> _ => <span class="identifier">None</span>
+    }
   }
 }&nbsp;</div>
               </section>

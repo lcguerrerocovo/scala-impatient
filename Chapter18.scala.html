@@ -285,7 +285,29 @@ components swapped.</strong></p></p></div>
                 <div class="code ">  <span class="keyword">case class</span> <span class="identifier">Pair</span>[<span class="identifier">T</span>, <span class="identifier">S</span>](<span class="identifier">first</span>: <span class="identifier">T</span>, <span class="identifier">second</span>: <span class="identifier">S</span>) {
     <span class="keyword">def</span> <span class="identifier">swap</span>: <span class="identifier">Pair</span>[<span class="identifier">S</span>, <span class="identifier">T</span>] = <span class="keyword">new</span> <span class="identifier">Pair</span>[<span class="identifier">S</span>, <span class="identifier">T</span>](<span class="identifier">second</span>, <span class="identifier">first</span>)
   }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>2.Define a mutable class Pair[T] with a method swap that swaps the components of the pair.</strong></p></p></div>
+                <div class="code ">  <span class="keyword">class</span> <span class="identifier">Pair2</span>[<span class="identifier">T</span>](<span class="keyword">var</span> <span class="identifier">first</span>: <span class="identifier">T</span>, <span class="keyword">var</span> <span class="identifier">second</span>: <span class="identifier">T</span>) {
+    <span class="keyword">def</span> <span class="identifier">swap</span>: <span class="identifier">Pair2</span>[<span class="identifier">T</span>] = {
+      <span class="keyword">val</span> <span class="identifier">tmp</span> = <span class="identifier">first</span>
+      <span class="identifier">first</span> = <span class="identifier">second</span>
+      <span class="identifier">second</span> = <span class="identifier">tmp</span>
+      this
+    }
 
+    <span class="keyword">final</span> override <span class="keyword">def</span> <span class="identifier">equals</span>(<span class="identifier">other</span>: <span class="identifier">Any</span>): <span class="identifier">Boolean</span> = {
+      <span class="keyword">val</span> <span class="identifier">that</span> = <span class="identifier">other</span>.<span class="identifier">asInstanceOf</span>[<span class="identifier">Pair2</span>[<span class="identifier">T</span>]]
+      <span class="keyword">if</span> (<span class="identifier">that</span> <span class="identifier">==</span> null) false
+      <span class="keyword">else</span> <span class="identifier">first</span> <span class="identifier">==</span> <span class="identifier">that</span>.<span class="identifier">first</span> <span class="identifier">&&</span> <span class="identifier">second</span> <span class="identifier">==</span> <span class="identifier">that</span>.<span class="identifier">second</span>
+    }
+  }
+
+  <span class="keyword">object</span> <span class="identifier">Pair2</span> {
+    <span class="keyword">def</span> <span class="identifier">apply</span>[<span class="identifier">T</span>](<span class="identifier">first</span>: <span class="identifier">T</span>, <span class="identifier">second</span>: <span class="identifier">T</span>) = <span class="keyword">new</span> <span class="identifier">Pair2</span>(<span class="identifier">first</span>, <span class="identifier">second</span>)
+  }
 }&nbsp;</div>
               </section>
             

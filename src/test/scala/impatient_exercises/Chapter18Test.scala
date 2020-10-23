@@ -12,5 +12,11 @@ class Chapter18Test extends AsyncFlatSpec with Matchers {
     Pair(1,2d).swap shouldEqual Pair(2d,1)
   }
 
+  behavior of "Pair2"
+
+  it should "swap the two elements in the pair producting a new pair" in {
+    Pair2(1,2d).swap shouldEqual Pair2(2d,1)
+  }
+
 
 }

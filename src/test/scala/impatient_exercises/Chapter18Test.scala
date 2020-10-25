@@ -8,15 +8,34 @@ class Chapter18Test extends AsyncFlatSpec with Matchers {
 
   behavior of "Pair"
 
-  it should "swap the two elements in the pair producting a new pair" in {
+  it should "swap the two elements in the pair producing a new pair (immutable)" in {
     Pair(1,2d).swap shouldEqual Pair(2d,1)
   }
 
   behavior of "Pair2"
 
-  it should "swap the two elements in the pair producting a new pair" in {
-    Pair2(1,2d).swap shouldEqual Pair2(2d,1)
+  it should "swap the two elements in the pair producing a new pair (mutable)" in {
+    val firstPair = Pair2(1,2d)
+    val secondPair = Pair2(2d,1)
+    firstPair.swap shouldEqual secondPair
+    assert(firstPair.swap === firstPair)
   }
+
+  behavior of "swap"
+
+  it should "swap the two elements in the pair producing a new pair" in {
+    swap(Pair(1,2d)) shouldEqual Pair(2d,1)
+  }
+
+  behavior of "middle"
+
+  it should "return the middle element of any Iterable"in {
+    middle(List[Int]()) shouldEqual ()
+    middle(List(1)) shouldEqual 1
+    middle(List(1,2,3,4,5)) shouldEqual 3
+    middle("World") shouldEqual 'r'
+  }
+
 
 
 }

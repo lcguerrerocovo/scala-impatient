@@ -50,9 +50,21 @@ object Chapter18 {
   //      Comparable[Int] which is the type that is being wrapped. RichInt just provides
   //      additional functionality to the primitive scala Int type
 
-  // **6. Write a generic method middle that returns the middle element from any
-  //      Iterable[T]. For example, middle("World") is 'r'.
+  // **6.Write a generic method middle that returns the middle element from any
+  //     Iterable[T]. For example, middle("World") is 'r'.
   def middle[T](iter: Iterable[T]): T = {
     iter.take(iter.size/2 + 1).last
   }
+
+  // **7.Look through the methods of the Iterable[+A] trait. Which methods use the
+  //     type parameter A? Why is it in a covariant position in these methods?
+  //
+  //     - example: def copyToArray[B >: A](xs: Array[B], start: Int, len: Int) from
+  //     IterableLike[A+]
+  //     - in this method there is a lower bound set where A needs to be a subtype of B.
+  //       Supposing there was a third type Z, if B -> A -> Z, then Iterable[B] >:
+  //       Iterable[Z], thus A needs to be set as covariant so that Z can only be subtypes
+  //       of A implementing the required interfaces to uphold B >: A (B >: Z would also hold
+  //       true). if Z was NOT a subtype then Iterable[B] >: Iterable[Z] would not hold because
+  //       B is not necessarily a supertype of Z
 }

@@ -44,20 +44,21 @@ object Chapter18 {
   //       subtype of Person can then be passed to the `replaceFirst` method without determining
   //       a lower bound
 
-  //  **5.Why does RichInt implement Comparable[Int] and not Comparable[RichInt]?
+  //  **5.Why does RichInt implement Comparable[Int] and not Comparable[RichInt]?**
   //
   //    - RichInt is a wrapper class for Int, thus the interface we want to extend from is
   //      Comparable[Int] which is the type that is being wrapped. RichInt just provides
   //      additional functionality to the primitive scala Int type
 
   // **6.Write a generic method middle that returns the middle element from any
-  //     Iterable[T]. For example, middle("World") is 'r'.
-  def middle[T](iter: Iterable[T]): T = {
-    iter.take(iter.size/2 + 1).last
+  //     Iterable[T]. For example, middle("World") is 'r'.**
+  def middle[T](iter: Iterable[T]): Option[T] = {
+    if (iter.isEmpty) None
+    else Some(iter.take(iter.size/2 + 1).last)
   }
 
   // **7.Look through the methods of the Iterable[+A] trait. Which methods use the
-  //     type parameter A? Why is it in a covariant position in these methods?
+  //     type parameter A? Why is it in a covariant position in these methods?**
   //
   //     - example: def copyToArray[B >: A](xs: Array[B], start: Int, len: Int) from
   //     IterableLike[A+]
@@ -67,4 +68,23 @@ object Chapter18 {
   //       of A implementing the required interfaces to uphold B >: A (B >: Z would also hold
   //       true). if Z was NOT a subtype then Iterable[B] >: Iterable[Z] would not hold because
   //       B is not necessarily a supertype of Z
+
+  // **8.In Section 18.10, “Co- and Contravariant Positions,” on page 272, the replaceFirst
+  //     method has a type bound. Why can’t you define an equivalent method on a mutable Pair[T]?**
+  //
+  /*****
+   * immutable pair
+   */
+  class PairExample[+T](val first: T, val second: T) {
+    def replaceFirst[R >: T](newFirst: R) = new PairExample[R](newFirst, second) // OK
+  }
+  //     - replacing the method with the following gives an error:
+  //     - `def replaceFirst[R >: T](newFirst: R) { first = newFirst } // Error`
+  //     - `class Pair[+T](var first: T, var second: T) // Error`
+  //
+  //     - why does this happen for an mutable Pair[T]? A mutable Pair[T] would define a setter
+  //     `first_=(value: T)` which would mean that T is a contravariant position as well as
+  //       covariant in the type parameter since function parameters are contravariants
+  //       and return types covariant. For this to work the type parameter would have to be
+  //       invariant
 }

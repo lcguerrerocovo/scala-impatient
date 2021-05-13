@@ -2,6 +2,8 @@
 
 package impatient_exercises
 
+import scala.collection.Iterable
+
 object Chapter18 {
 
   // **1.Define an immutable class Pair[T, S] with a method swap that returns a new pair with the

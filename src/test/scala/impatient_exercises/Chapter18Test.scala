@@ -30,10 +30,10 @@ class Chapter18Test extends AsyncFlatSpec with Matchers {
   behavior of "middle"
 
   it should "return the middle element of any Iterable"in {
-    middle(List[Int]()).getOrElse(()) shouldEqual ()
-    middle(List(1)).get shouldEqual 1
-    middle(List(1,2,3,4,5)).get shouldEqual 3
-    middle("World").get shouldEqual 'r'
+    middle(List[Int]()) shouldEqual None
+    middle(List(1)) shouldEqual Some(1)
+    middle(List(1,2,3,4,5)) shouldEqual Some(3)
+    middle("World") shouldEqual Some('r')
   }
 
 

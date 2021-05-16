@@ -266,7 +266,7 @@ hr {
 </style>
           
           <section id="header">
-            <div class="comment"><h1>Chapter 18: Type Parameters</h1></div>
+            <div class="comment"><h1>Chapter 4: Maps & Tuples</h1></div>
             <div class="code"></div>
           </section>
           
@@ -275,132 +275,123 @@ hr {
                 <div class="code ">
 <span class="keyword">package</span> <span class="identifier">impatient_exercises</span>
 
-<span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">collection</span>.<span class="identifier">Iterable</span>
+<span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">collection</span>.{<span class="identifier">immutable</span>, <span class="identifier">mutable</span>}
+<span class="keyword">import</span> <span class="identifier">java</span>.<span class="identifier">util</span>.<span class="identifier">Calendar</span>._
+<span class="keyword">import</span> <span class="identifier">scala</span>.<span class="identifier">collection</span>.<span class="identifier">JavaConverters</span>._
 
-<span class="keyword">object</span> <span class="identifier">Chapter18</span> {
+<span class="keyword">object</span> <span class="identifier">Chapter04</span> {
 &nbsp;</div>
               </section>
             
               <section class="">
-                <div class="comment "><p><strong>1.Define an immutable class Pair[T, S] with a method swap that returns a new pair with the
-components swapped.</strong></p></p></div>
-                <div class="code ">  <span class="keyword">case class</span> <span class="identifier">Pair</span>[<span class="identifier">T</span>, <span class="identifier">S</span>](<span class="identifier">first</span>: <span class="identifier">T</span>, <span class="identifier">second</span>: <span class="identifier">S</span>) {
-    <span class="keyword">def</span> <span class="identifier">swap</span>: <span class="identifier">Pair</span>[<span class="identifier">S</span>, <span class="identifier">T</span>] = <span class="keyword">new</span> <span class="identifier">Pair</span>[<span class="identifier">S</span>, <span class="identifier">T</span>](<span class="identifier">second</span>, <span class="identifier">first</span>)
+                <div class="comment "><p><strong>1.Set up a map of prices for a number of gizmos that you covet. Then produce a second map
+with the same keys and the prices at a 10 percent discount.</strong></p></p></div>
+                <div class="code ">  <span class="keyword">def</span> <span class="identifier">priceChange</span>(<span class="identifier">items</span>: <span class="identifier">Map</span>[<span class="identifier">String</span>,<span class="identifier">Double</span>], <span class="identifier">change</span>: <span class="identifier">Double</span> => <span class="identifier">Double</span>): <span class="identifier">Map</span>[<span class="identifier">String</span>, <span class="identifier">Double</span>] = {
+    <span class="keyword">for</span>((<span class="identifier">k</span>, <span class="identifier">v</span>) &lt;- <span class="identifier">items</span>) <span class="keyword">yield</span>( <span class="identifier">k</span> <span class="identifier">-></span> <span class="identifier">change</span>(<span class="identifier">v</span>))
   }
 &nbsp;</div>
               </section>
             
               <section class="">
-                <div class="comment "><p><strong>2.Define a mutable class Pair[T] with a method swap that swaps the components of the pair.</strong></p></p></div>
-                <div class="code ">  <span class="keyword">class</span> <span class="identifier">Pair2</span>[<span class="identifier">T</span>](<span class="keyword">var</span> <span class="identifier">first</span>: <span class="identifier">T</span>, <span class="keyword">var</span> <span class="identifier">second</span>: <span class="identifier">T</span>) {
-    <span class="keyword">def</span> <span class="identifier">swap</span>: <span class="identifier">Pair2</span>[<span class="identifier">T</span>] = {
-      <span class="keyword">val</span> <span class="identifier">tmp</span> = <span class="identifier">first</span>
-      <span class="identifier">first</span> = <span class="identifier">second</span>
-      <span class="identifier">second</span> = <span class="identifier">tmp</span>
-      this
-    }
-
-    <span class="keyword">final</span> override <span class="keyword">def</span> <span class="identifier">equals</span>(<span class="identifier">other</span>: <span class="identifier">Any</span>): <span class="identifier">Boolean</span> = {
-      <span class="keyword">val</span> <span class="identifier">that</span> = <span class="identifier">other</span>.<span class="identifier">asInstanceOf</span>[<span class="identifier">Pair2</span>[<span class="identifier">T</span>]]
-      <span class="keyword">if</span> (<span class="identifier">that</span> <span class="identifier">==</span> null) false
-      <span class="keyword">else</span> <span class="identifier">first</span> <span class="identifier">==</span> <span class="identifier">that</span>.<span class="identifier">first</span> <span class="identifier">&&</span> <span class="identifier">second</span> <span class="identifier">==</span> <span class="identifier">that</span>.<span class="identifier">second</span>
-    }
-  }
-
-  <span class="keyword">object</span> <span class="identifier">Pair2</span> {
-    <span class="keyword">def</span> <span class="identifier">apply</span>[<span class="identifier">T</span>](<span class="identifier">first</span>: <span class="identifier">T</span>, <span class="identifier">second</span>: <span class="identifier">T</span>) = <span class="keyword">new</span> <span class="identifier">Pair2</span>(<span class="identifier">first</span>, <span class="identifier">second</span>)
-  }
-&nbsp;</div>
-              </section>
-            
-              <section class="">
-                <div class="comment "><p><strong>3.Given a class Pair[T, S], write a generic method swap that takes a pair as its
-argument and returns a new pair with the components swapped.</strong></p></p></div>
-                <div class="code ">  <span class="keyword">def</span> <span class="identifier">swap</span>[<span class="identifier">T</span>,<span class="identifier">S</span>](<span class="identifier">pair</span>: <span class="identifier">Pair</span>[<span class="identifier">T</span>, <span class="identifier">S</span>]): <span class="identifier">Pair</span>[<span class="identifier">S</span>, <span class="identifier">T</span>] = {
-    <span class="keyword">new</span> <span class="identifier">Pair</span>[<span class="identifier">S</span>, <span class="identifier">T</span>](<span class="identifier">pair</span>.<span class="identifier">second</span>, <span class="identifier">pair</span>.<span class="identifier">first</span>)
-  }
-&nbsp;</div>
-              </section>
-            
-              <section class="">
-                <div class="comment "><p><strong>4.Why don’t we need a lower bound for the replaceFirst method in Section 18.3, “Bounds for
-Type Variables,” on page 266 if we want to replace the first component of a Pair[Person]
-with a Student?</strong></p>
+                <div class="comment "><p><strong>2.Write a program that reads words from a file. Use a mutable map to count how often each
+word appears. To read the words, simply use a <code>java.util.Scanner</code>:</strong></p>
 <ul>
-  <li>A Student is also of type Person since Student is a subtype of Person, any other
-  subtype of Person can then be passed to the <code>replaceFirst</code> method without determining
-  a lower bound</li>
-</ul></p></div>
+  <li><code>val in = new java.util.Scanner(new java.io.File(&quot;myfile.txt&quot;))</code></li>
+  <li><code>while (in.hasNext()) process in.next()</code></li>
+</ul>
+<p><strong>Or look at Chapter 9 for a Scalaesque way. At the end, print out all words and their
+counts.</strong></p></p></div>
+                <div class="code ">  <span class="keyword">def</span> <span class="identifier">javaMap</span>: <span class="identifier">mutable</span>.<span class="identifier">Map</span>[<span class="identifier">String</span>, <span class="identifier">Int</span>] =
+    <span class="keyword">new</span> <span class="identifier">java</span>.<span class="identifier">util</span>.<span class="identifier">TreeMap</span>[<span class="identifier">String</span>, <span class="identifier">Int</span>].<span class="identifier">asScala</span>.<span class="identifier">withDefaultValue</span>(<span class="number">0</span>)
+  <span class="keyword">def</span> <span class="identifier">scalaMap</span>: <span class="identifier">mutable</span>.<span class="identifier">Map</span>[<span class="identifier">String</span>, <span class="identifier">Int</span>] =
+    <span class="identifier">mutable</span>.<span class="identifier">HashMap</span>[<span class="identifier">String</span>,<span class="identifier">Int</span>]().<span class="identifier">withDefaultValue</span>(<span class="number">0</span>)
+
+  <span class="keyword">def</span> <span class="identifier">readFileCountWordsMutable</span>(<span class="identifier">filename</span>: <span class="identifier">String</span>)(<span class="identifier">map</span>: <span class="identifier">mutable</span>.<span class="identifier">Map</span>[<span class="identifier">String</span>,<span class="identifier">Int</span>])
+  : <span class="identifier">mutable</span>.<span class="identifier">Map</span>[<span class="identifier">String</span>, <span class="identifier">Int</span>] = {
+    <span class="identifier">scala</span>.<span class="identifier">io</span>.<span class="identifier">Source</span>.<span class="identifier">fromResource</span>(<span class="identifier">filename</span>)
+      .<span class="identifier">getLines</span>
+      .<span class="identifier">flatMap</span>(_.<span class="identifier">split</span>(<span class="string">" "</span>))
+      .<span class="identifier">foreach</span>(<span class="identifier">x</span> =>
+        <span class="identifier">map</span>(<span class="identifier">x</span>) = <span class="identifier">map</span>(<span class="identifier">x</span>) <span class="identifier">+</span> <span class="number">1</span>
+      )
+    <span class="identifier">map</span>
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>3. Repeat the preceding exercise with an immutable map.</strong></p></p></div>
+                <div class="code ">  <span class="keyword">def</span> <span class="identifier">unsortedMap</span> = (<span class="identifier">lst</span>: <span class="identifier">Seq</span>[(<span class="identifier">String</span>,<span class="identifier">Int</span>)]) => <span class="identifier">immutable</span>.<span class="identifier">Map</span>(<span class="identifier">lst</span>:_<span class="identifier">*</span>)
+  <span class="keyword">def</span> <span class="identifier">sortedMap</span> = (<span class="identifier">lst</span>: <span class="identifier">Seq</span>[(<span class="identifier">String</span>,<span class="identifier">Int</span>)]) => <span class="identifier">immutable</span>.<span class="identifier">SortedMap</span>(<span class="identifier">lst</span>:_<span class="identifier">*</span>)
+
+  <span class="keyword">def</span> <span class="identifier">readFileCountWordsImmutable</span>(<span class="identifier">filename</span>: <span class="identifier">String</span>)(<span class="identifier">f</span>: <span class="identifier">Seq</span>[(<span class="identifier">String</span>,<span class="identifier">Int</span>)] => <span class="identifier">Map</span>[<span class="identifier">String</span>, <span class="identifier">Int</span>])
+  : <span class="identifier">Map</span>[<span class="identifier">String</span>, <span class="identifier">Int</span>] = {
+    <span class="keyword">val</span> <span class="identifier">words</span> = <span class="identifier">scala</span>.<span class="identifier">io</span>.<span class="identifier">Source</span>.<span class="identifier">fromResource</span>(<span class="identifier">filename</span>)
+      .<span class="identifier">getLines</span>
+      .<span class="identifier">flatMap</span>(_.<span class="identifier">split</span>(<span class="string">" "</span>)).<span class="identifier">toList</span>
+
+    <span class="keyword">var</span> <span class="identifier">wordCounts</span> = <span class="identifier">f</span>(<span class="identifier">words</span>.<span class="identifier">distinct</span>.<span class="identifier">map</span>(<span class="identifier">k</span> => <span class="identifier">k</span> <span class="identifier">-></span> <span class="number">0</span>))
+    <span class="identifier">words</span>.<span class="identifier">foreach</span>(<span class="identifier">x</span> =>
+      <span class="identifier">wordCounts</span> = <span class="identifier">wordCounts</span> <span class="identifier">+</span> (<span class="identifier">x</span> <span class="identifier">-></span> (<span class="identifier">wordCounts</span>(<span class="identifier">x</span>) <span class="identifier">+</span> <span class="number">1</span>))
+    )
+    <span class="identifier">wordCounts</span>
+  }
+&nbsp;</div>
+              </section>
+            
+              <section class="">
+                <div class="comment "><p><strong>4.Repeat the preceding exercise with a sorted map, so that the words are printed in sorted
+order.</strong>
+fill in solution here</p></p></div>
                 <div class="code empty">&nbsp;</div>
               </section>
             
               <section class="">
-                <div class="comment "><p><strong>5.Why does RichInt implement Comparable[Int] and not Comparable[RichInt]?</strong></p>
-<ul>
-  <li>RichInt is a wrapper class for Int, thus the interface we want to extend from is
-  Comparable[Int] which is the type that is being wrapped. RichInt just provides
-  additional functionality to the primitive scala Int type</li>
-</ul></p></div>
+                <div class="comment "><p><strong>5. Repeat the preceding exercise with a java.util.TreeMap that you adapt to the Scala API.</strong>
+fill in solution here</p></p></div>
                 <div class="code empty">&nbsp;</div>
               </section>
             
               <section class="">
-                <div class="comment "><p><strong>6.Write a generic method middle that returns the middle element from any
-Iterable[T]. For example, middle(&quot;World&quot;) is &#39;r&#39;.</strong></p></p></div>
-                <div class="code ">  <span class="keyword">def</span> <span class="identifier">middle</span>[<span class="identifier">T</span>](<span class="identifier">iter</span>: <span class="identifier">Iterable</span>[<span class="identifier">T</span>]): <span class="identifier">Option</span>[<span class="identifier">T</span>] = {
-    <span class="keyword">if</span> (<span class="identifier">iter</span>.<span class="identifier">isEmpty</span>) <span class="identifier">None</span>
-    <span class="keyword">else</span> <span class="identifier">Some</span>(<span class="identifier">iter</span>.<span class="identifier">take</span>(<span class="identifier">iter</span>.<span class="identifier">size</span><span class="identifier">/</span><span class="number">2</span> <span class="identifier">+</span> <span class="number">1</span>).<span class="identifier">last</span>)
+                <div class="comment "><p><strong>6.Define a linked hash map that maps &quot;Monday&quot; to java.util.Calendar.MONDAY, and similarly
+for the other weekdays. Demonstrate that the elements are visited in insertion order.</strong></p></p></div>
+                <div class="code ">  <span class="keyword">val</span> <span class="identifier">linkedCalendarMap</span> = <span class="identifier">mutable</span>.<span class="identifier">LinkedHashMap</span>(
+      <span class="string">"Monday"</span> <span class="identifier">-></span> <span class="identifier">MONDAY</span>,
+      <span class="string">"Tuesday"</span> <span class="identifier">-></span> <span class="identifier">TUESDAY</span>,
+      <span class="string">"Wednesday"</span> <span class="identifier">-></span> <span class="identifier">WEDNESDAY</span>,
+      <span class="string">"Thursday"</span> <span class="identifier">-></span> <span class="identifier">THURSDAY</span>,
+      <span class="string">"Friday"</span> <span class="identifier">-></span> <span class="identifier">FRIDAY</span>,
+      <span class="string">"Saturday"</span> <span class="identifier">-></span> <span class="identifier">SATURDAY</span>,
+      <span class="string">"Sunday"</span> <span class="identifier">-></span> <span class="identifier">SUNDAY</span>
+  )
+
+  <span class="keyword">def</span> <span class="identifier">printProperties</span>: <span class="identifier">List</span>[<span class="identifier">String</span>] = {
+    <span class="keyword">val</span> <span class="identifier">props</span>: <span class="identifier">mutable</span>.<span class="identifier">Map</span>[<span class="identifier">String</span>, <span class="identifier">String</span>] = <span class="identifier">System</span>.<span class="identifier">getProperties</span>.<span class="identifier">asScala</span>
+    <span class="keyword">val</span> <span class="identifier">maxKey</span> = <span class="identifier">props</span>.<span class="identifier">keys</span>.<span class="identifier">foldLeft</span>(<span class="number">0</span>)((<span class="identifier">x</span>,<span class="identifier">y</span>) => <span class="identifier">x</span> <span class="identifier">max</span> <span class="identifier">y</span>.<span class="identifier">length</span>)
+
+    <span class="identifier">props</span>.<span class="identifier">map</span> { <span class="keyword">case</span> (<span class="identifier">k</span>,<span class="identifier">v</span>) =>
+      <span class="string">f</span>"<span class="string">$</span>{<span class="identifier">k</span>.<span class="identifier">padTo</span>(<span class="identifier">maxKey</span><span class="identifier">+</span><span class="number">1</span>,<span class="number">' '</span>)}<span class="string">| $</span><span class="identifier">v</span><span class="string">"</span>
+    }.<span class="identifier">toList</span>
   }
-&nbsp;</div>
-              </section>
-            
-              <section class="">
-                <div class="comment "><p><strong>7.Look through the methods of the Iterable[+A] trait. Which methods use the
-type parameter A? Why is it in a covariant position in these methods?</strong></p>
-<ul>
-  <li>example: def copyToArray[B &gt;: A](xs: Array[B], start: Int, len: Int) from
-  IterableLike[A+]</li>
-  <li>in this method there is a lower bound set where A needs to be a subtype of B.
-  Supposing there was a third type Z, if B -&gt; A -&gt; Z, then Iterable[B] &gt;:
-  Iterable[Z], thus A needs to be set as covariant so that Z can only be subtypes
-  of A implementing the required interfaces to uphold B &gt;: A (B &gt;: Z would also hold
-  true). if Z was NOT a subtype then Iterable[B] &gt;: Iterable[Z] would not hold because
-  B is not necessarily a supertype of Z</li>
-</ul></p></div>
-                <div class="code empty">&nbsp;</div>
-              </section>
-            
-              <section class="">
-                <div class="comment "><p><strong>8.In Section 18.10, “Co- and Contravariant Positions,” on page 272, the replaceFirst
-method has a type bound. Why can’t you define an equivalent method on a mutable Pair[T]?</strong></p></p></div>
-                <div class="code ">  /*****
-   * immutable pair
-   */
-  <span class="keyword">class</span> <span class="identifier">PairExample</span>[<span class="identifier">+</span><span class="identifier">T</span>](<span class="keyword">val</span> <span class="identifier">first</span>: <span class="identifier">T</span>, <span class="keyword">val</span> <span class="identifier">second</span>: <span class="identifier">T</span>) {
-    <span class="keyword">def</span> <span class="identifier">replaceFirst</span>[<span class="identifier">R</span> >: <span class="identifier">T</span>](<span class="identifier">newFirst</span>: <span class="identifier">R</span>) = <span class="keyword">new</span> <span class="identifier">PairExample</span>[<span class="identifier">R</span>](<span class="identifier">newFirst</span>, <span class="identifier">second</span>) // OK
-  }&nbsp;</div>
-              </section>
-            
-              <section class="">
-                <div class="comment "><ul>
-  <li>
-    <p>replacing the method with the following gives an error:</p>
-  </li>
-  <li>
-    <p><code>def replaceFirst[R &gt;: T](newFirst: R) { first = newFirst } // Error</code></p>
-  </li>
-  <li>
-    <p><code>class Pair[+T](var first: T, var second: T) // Error</code></p>
-  </li>
-  <li>
-    <p>why does this happen for an mutable Pair[T]? A mutable Pair[T] would define a setter
-    <code>first_=(value: T)</code> which would mean that T is a contravariant position as well as
-    covariant in the type parameter since function parameters are contravariants
-    and return types covariant. For this to work the type parameter would have to be
-    invariant</p>
-  </li>
-</ul></p></div>
-                <div class="code ">}&nbsp;</div>
+
+  <span class="keyword">def</span> <span class="identifier">minMax</span>(<span class="identifier">arr</span>: <span class="identifier">Array</span>[<span class="identifier">Int</span>]): (<span class="identifier">Int</span>,<span class="identifier">Int</span>) = {
+      <span class="identifier">arr</span>.<span class="identifier">foldLeft</span>((<span class="identifier">Int</span>.<span class="identifier">MaxValue</span>, <span class="identifier">Int</span>.<span class="identifier">MinValue</span>))(
+        (<span class="identifier">x</span>: (<span class="identifier">Int</span>, <span class="identifier">Int</span>), <span class="identifier">y</span>: <span class="identifier">Int</span>) => (<span class="identifier">x</span>.<span class="identifier">_1</span> <span class="identifier">min</span> <span class="identifier">y</span>, <span class="identifier">x</span>.<span class="identifier">_2</span> <span class="identifier">max</span> <span class="identifier">y</span>)
+      )
+  }
+
+  <span class="keyword">def</span> <span class="identifier">lteqgt</span>(<span class="identifier">arr</span>: <span class="identifier">Array</span>[<span class="identifier">Int</span>], <span class="identifier">v</span>: <span class="identifier">Int</span>): (<span class="identifier">Int</span>, <span class="identifier">Int</span>, <span class="identifier">Int</span>) = {
+    <span class="identifier">arr</span>.<span class="identifier">foldLeft</span>((<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>))(
+      (<span class="identifier">x</span>: (<span class="identifier">Int</span>, <span class="identifier">Int</span>, <span class="identifier">Int</span>), <span class="identifier">y</span>: <span class="identifier">Int</span>) => <span class="identifier">x</span> <span class="keyword">match</span> {
+        <span class="keyword">case</span> (<span class="identifier">lessThan</span>: <span class="identifier">Int</span>, <span class="identifier">equalTo</span>: <span class="identifier">Int</span>, <span class="identifier">greaterThan</span>: <span class="identifier">Int</span>) =>
+          <span class="keyword">if</span>(<span class="identifier">y</span> <span class="identifier">&lt;</span> <span class="identifier">v</span>) (<span class="identifier">lessThan</span><span class="identifier">+</span><span class="number">1</span>, <span class="identifier">equalTo</span>, <span class="identifier">greaterThan</span>)
+          <span class="keyword">else</span> <span class="keyword">if</span>(<span class="identifier">y</span> <span class="identifier">==</span> <span class="identifier">v</span>) (<span class="identifier">lessThan</span>, <span class="identifier">equalTo</span><span class="identifier">+</span><span class="number">1</span>, <span class="identifier">greaterThan</span>)
+          <span class="keyword">else</span> (<span class="identifier">lessThan</span>, <span class="identifier">equalTo</span>, <span class="identifier">greaterThan</span><span class="identifier">+</span><span class="number">1</span>)
+      }
+    )
+  }
+
+}&nbsp;</div>
               </section>
             
           <section id="footer">

@@ -5,6 +5,17 @@ import org.scalatest.matchers.should.Matchers
 
 class Chapter04Test extends AnyFlatSpec with Matchers {
 
+  behavior of "price change"
+
+  it should "change value of keys in map by applied function" in {
+    val itemPrices = Map("cookie" -> 0.50, "milk" -> 2.5, "coca cola" -> 0.66)
+    def change(x: Double): Double = x*1.1
+    val result = Chapter04.priceChange(itemPrices, change)
+    for((k, v) <- result) {
+      v shouldEqual change(itemPrices(k))
+    }
+  }
+
   behavior of "wordCount mutable and immutable maps"
 
   it should "be equal" in {

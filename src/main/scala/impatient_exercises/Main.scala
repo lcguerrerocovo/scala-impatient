@@ -54,10 +54,7 @@ object Main extends App {
 
 
   println("Chapter 4 Maps - exercises")
-  println("1. Set up a map of prices for a number of gizmos that you covet. Then produce a second map with the same keys and the prices at a 10 percent discount.")
-  println(Chapter04.priceChange(Map("nintendo switch" -> 254.35, "ps4" -> 333.33, "iphone" ->
-    567.45), .50))
-  print(
+  /*print(
     """
       |2. Write a program that reads words from a file. Use a mutable map to count how often each word appears. To read the words, simply use a java.util.Scanner:
       |val in = new java.util.Scanner(java.io.File("myfile.txt")) while (in.hasNext()) process in.next()
@@ -69,7 +66,7 @@ object Main extends App {
     "sorted order.")
   println(Chapter04.readFileCountWordsImmutable("words.txt")(Chapter04.sortedMap))
   println("5. Repeat the preceding exercise with a java.util.TreeMap that you adapt to the Scala API.")
-  println(Chapter04.readFileCountWordsMutable("words.txt")(Chapter04.javaMap))
+  println(Chapter04.readFileCountWordsMutable("words.txt")(Chapter04.javaMap))*/
   println("6. Define a linked hash map that maps \"Monday\" to java.util.Calendar.MONDAY, and similarly for the other weekdays. Demonstrate that the elements are visited in insertion order.")
   println("-- checked in Chapter4Test")
   println(

@@ -1,3 +1,5 @@
+// Example: Chapter 4: Maps & Tuples
+
 package impatient_exercises
 
 import scala.collection.{immutable, mutable}
@@ -6,10 +8,21 @@ import scala.collection.JavaConverters._
 
 object Chapter04 {
 
- def priceChange(items: Map[String,Double], change: Double): Map[String,Double] = {
-   for((k, v) <- items) yield( k -> v*change)
- }
+  // **1.Set up a map of prices for a number of gizmos that you covet. Then produce a second map
+  //     with the same keys and the prices at a 10 percent discount.**
+  def priceChange(items: Map[String,Double], change: Double => Double): Map[String, Double] = {
+    for((k, v) <- items) yield( k -> change(v))
+  }
 
+  // **2.Write a program that reads words from a file. Use a mutable map to count how often each
+  //     word appears. To read the words, simply use a `java.util.Scanner`:**
+  //
+  //     - `val in = new java.util.Scanner(new java.io.File("myfile.txt"))`
+  //     - `while (in.hasNext()) process in.next()`
+  //
+  // **Or look at Chapter 9 for a Scalaesque way. At the end, print out all words and their
+  //   counts.**
+  //
   def javaMap: mutable.Map[String, Int] =
     new java.util.TreeMap[String, Int].asScala.withDefaultValue(0)
   def scalaMap: mutable.Map[String, Int] =
@@ -26,6 +39,7 @@ object Chapter04 {
     map
   }
 
+  // **3. Repeat the preceding exercise with an immutable map.**
   def unsortedMap = (lst: Seq[(String,Int)]) => immutable.Map(lst:_*)
   def sortedMap = (lst: Seq[(String,Int)]) => immutable.SortedMap(lst:_*)
 
@@ -42,6 +56,15 @@ object Chapter04 {
     wordCounts
   }
 
+  // **4.Repeat the preceding exercise with a sorted map, so that the words are printed in sorted
+  //     order.**
+  //  fill in solution here
+
+  // **5. Repeat the preceding exercise with a java.util.TreeMap that you adapt to the Scala API.**
+  //  fill in solution here
+
+  // **6.Define a linked hash map that maps "Monday" to java.util.Calendar.MONDAY, and similarly
+  //     for the other weekdays. Demonstrate that the elements are visited in insertion order.**
   val linkedCalendarMap = mutable.LinkedHashMap(
       "Monday" -> MONDAY,
       "Tuesday" -> TUESDAY,

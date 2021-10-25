@@ -116,13 +116,12 @@ class Chapter08Test extends AnyFlatSpec with Matchers with ScalaCheckDrivenPrope
 
   behavior of "Rectangle"
 
-  // TODO fix centerpoint logic
-  ignore should "compute centerpoint" in {
+  it should "compute centerpoint" in {
     val left = new Line(new Chapter08.Point(1,4), new Chapter08.Point(3,2))
     val right = new Line(new Chapter08.Point(4,6), new Chapter08.Point(6,4))
-
     val rectangle = new Rectangle(left, right)
-    rectangle.centerpoint shouldEqual new Chapter08.Point(2.5,2)
+
+    rectangle.centerpoint shouldEqual new Chapter08.Point(3.5,4)
   }
 
   behavior of "Circle"

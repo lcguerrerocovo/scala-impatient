@@ -137,7 +137,7 @@ object Chapter08 {
       val yMax = points.map(_.y).reduce(_ max _)
       val yMin = points.map(_.y).reduce(_ min _)
 
-      new Point((xMax - xMin)/2, (yMax - yMin)/2)
+      new Point((xMax - xMin)/2 + xMin, (yMax - yMin)/2 + yMin)
     }
   }
 

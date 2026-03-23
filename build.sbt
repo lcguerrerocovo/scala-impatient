@@ -3,7 +3,7 @@ import sbt.enablePlugins
 
 ThisBuild / scalaVersion     := "2.12.10"
 ThisBuild / version          := "0.1.0-SNAPSHOT"
-ThisBuild / organization     := "com.example"
+ThisBuild / organization     := "com.github.lcguerrerocovo"
 ThisBuild / organizationName := "impatient_exercises"
 
 

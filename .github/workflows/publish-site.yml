@@ -1,36 +1,34 @@
-name: publish-site-gh-pages
+name: CI & Deploy Site
+
 on:
   push:
-    branches:
-      - master
+    branches: [master]
+
 jobs:
-  publish-site:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout
-        uses: actions/checkout@v2.3.1
-        with:
-          persist-credentials: false
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: compile
-        uses: lokkju/github-action-sbt@v0.2.2
+      - name: Set up JDK
+        uses: actions/setup-java@v4
         with:
-          commands: compile
+          distribution: temurin
+          java-version: 8
 
-      - name: test
-        uses: lokkju/github-action-sbt@v0.2.2
-        with:
-          commands: test
+      - name: Compile
+        run: sbt compile
 
-      - name: generate html site
-        uses: lokkju/github-action-sbt@v0.2.2
-        with:
-          commands: enableSocco; compile;
+      - name: Test
+        run: sbt test
 
-      - name: publish to github pages
-        uses: JamesIves/github-pages-deploy-action@3.6.2
+      - name: Generate Socco documentation
+        run: sbt "enableSocco; compile"
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages # The branch the action should deploy to.
-          FOLDER: site # The folder the action should deploy.
-          CLEAN: true # Automatically remove deleted files from the deploy branch
+          branch: gh-pages
+          folder: site
+          clean: true

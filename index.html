@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scala for the Impatient — Solutions</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #333;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a { color: #c0392b; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Top bar */
+    .topbar {
+      background: #2c3e50;
+      color: #fff;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .topbar-title { font-size: 16px; font-weight: 600; }
+    .topbar-right { display: flex; align-items: center; gap: 16px; font-size: 13px; color: #bdc3c7; }
+    .topbar-right a { color: #bdc3c7; }
+    .topbar-right a:hover { color: #fff; }
+    .github-icon { width: 20px; height: 20px; fill: #bdc3c7; transition: fill 0.15s; }
+    .topbar-right a:hover .github-icon { fill: #fff; }
+
+    /* Layout */
+    .layout { display: flex; flex: 1; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 220px;
+      min-width: 220px;
+      background: #f5f5f5;
+      border-right: 1px solid #e0e0e0;
+      padding: 24px 0;
+      overflow-y: auto;
+    }
+    .sidebar-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0 20px;
+      margin-bottom: 12px;
+    }
+    .sidebar-list { list-style: none; }
+    .sidebar-list li a {
+      display: block;
+      padding: 6px 20px;
+      font-size: 13px;
+      color: #555;
+      transition: background 0.15s;
+    }
+    .sidebar-list li a:hover {
+      background: #eaeaea;
+      text-decoration: none;
+    }
+    .sidebar-list li a.source-only {
+      color: #999;
+      font-style: italic;
+    }
+
+    /* Main content */
+    .main {
+      flex: 1;
+      max-width: 720px;
+      padding: 40px 32px;
+    }
+
+    .main h1 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 32px;
+      color: #2c3e50;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      color: #777;
+      font-size: 15px;
+      margin-bottom: 20px;
+    }
+
+    /* Badges */
+    .badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .badges img { height: 20px; }
+
+    .intro { margin-bottom: 32px; color: #555; font-size: 15px; line-height: 1.7; }
+
+    .main h2 {
+      font-size: 20px;
+      color: #2c3e50;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #eee;
+    }
+
+    /* Chapter grid */
+    .chapter-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .chapter-card {
+      border: 1px solid #e8e8e8;
+      border-radius: 6px;
+      padding: 16px;
+      transition: box-shadow 0.15s;
+    }
+    .chapter-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .chapter-card .ch-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: #2c3e50;
+      margin-bottom: 4px;
+    }
+    .chapter-card .ch-meta {
+      font-size: 12px;
+      color: #999;
+      margin-bottom: 8px;
+    }
+    .chapter-card .ch-link {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    /* Footer */
+    .built-with {
+      background: #f9f9f9;
+      border-top: 1px solid #eee;
+      padding: 16px 32px;
+      font-size: 13px;
+      color: #999;
+      text-align: center;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main { max-width: 100%; padding: 24px 16px; }
+      .chapter-grid { grid-template-columns: 1fr; }
+      .main h1 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <span class="topbar-title">Scala for the Impatient — Solutions</span>
+    <div class="topbar-right">
+      <span>2nd Edition</span>
+      <a href="https://github.com/lcguerrerocovo/scala-impatient" aria-label="GitHub repository">
+        <svg class="github-icon" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <div class="layout">
+    <nav class="sidebar">
+      <div class="sidebar-label">Chapters</div>
+      <ul class="sidebar-list">
+        <li><a href="https://github.com/lcguerrerocovo/scala-impatient/blob/master/src/main/scala/impatient_exercises/Chapter01.scala" class="source-only">1. The Basics (source only)</a></li>
+        <li><a href="Chapter02.scala.html">2. Control Structures and Functions</a></li>
+        <li><a href="https://github.com/lcguerrerocovo/scala-impatient/blob/master/src/main/scala/impatient_exercises/Chapter03.scala" class="source-only">3. Working with Arrays (source only)</a></li>
+        <li><a href="Chapter04.scala.html">4. Maps and Tuples</a></li>
+        <li><a href="Chapter05.scala.html">5. Classes</a></li>
+        <li><a href="Chapter06.scala.html">6. Objects</a></li>
+        <li><a href="Chapter07.scala.html">7. Packages and Imports</a></li>
+        <li><a href="Chapter08.scala.html">8. Inheritance</a></li>
+        <li><a href="Chapter09.scala.html">9. Files and Regular Expressions</a></li>
+        <li><a href="Chapter10.scala.html">10. Traits</a></li>
+        <li><a href="Chapter11.scala.html">11. Operators</a></li>
+        <li><a href="Chapter12.scala.html">12. Higher-Order Functions</a></li>
+        <li><a href="Chapter13.scala.html">13. Collections</a></li>
+        <li><a href="Chapter14.scala.html">14. Pattern Matching and Case Classes</a></li>
+        <li><a href="Chapter17.scala.html">17. Futures</a></li>
+        <li><a href="Chapter18.scala.html">18. Type Parameters</a></li>
+      </ul>
+    </nav>
+
+    <main class="main">
+      <h1>Scala for the Impatient</h1>
+      <p class="subtitle">Exercise solutions &amp; annotations for the 2nd edition by Cay Horstmann</p>
+
+      <div class="badges">
+        <a href="https://github.com/lcguerrerocovo/scala-impatient/actions"><img src="https://github.com/lcguerrerocovo/scala-impatient/actions/workflows/publish-site.yml/badge.svg" alt="CI"></a>
+        <img src="https://img.shields.io/badge/Scala-2.12-red?logo=scala" alt="Scala 2.12">
+        <img src="https://img.shields.io/badge/chapters-16-blue" alt="16 chapters">
+      </div>
+
+      <p class="intro">
+        Worked solutions and annotated code for exercises from
+        <a href="https://horstmann.com/scala/"><em>Scala for the Impatient</em></a> (2nd edition)
+        by Cay S. Horstmann. Each chapter is presented as a literate-programming page generated by
+        <a href="https://github.com/criteo/socco">Socco</a>, with inline commentary alongside the code.
+      </p>
+
+      <h2>Chapter Overview</h2>
+
+      <div class="chapter-grid">
+        <div class="chapter-card">
+          <div class="ch-title">1. The Basics</div>
+          <div class="ch-meta">6 exercises</div>
+          <a class="ch-link" href="https://github.com/lcguerrerocovo/scala-impatient/blob/master/src/main/scala/impatient_exercises/Chapter01.scala">View &rarr;</a>
+        </div>
+        <div class="chapter-card">
+          <div class="ch-title">2. Control Structures and Functions</div>
+          <div class="ch-meta">7 exercises &middot; tests &#10003;</div>
+          <a class="ch-link" href="Chapter02.scala.html">View &rarr;</a>
+        </div>
+        <div class="chapter-card">
+          <div class="ch-title">3. Working with Arrays</div>
+          <div class="ch-meta">9 exercises</div>
+          <a class="ch-link" href="https://github.com/lcguerrerocovo/scala-impatient/blob/master/src/main/scala/impatient_exercises/Chapter03.scala">View &rarr;</a>
+        </div>
+        <div class="chapter-card">
+          <div class="ch-title">4. Maps and Tuples</div>
+          <div class="ch-meta">6 exercises &middot; tests &#10003;</div>
+          <a class="ch-link" href="Chapter04.scala.html">View &rarr;</a>
+        </div>
+        <div class="chapter-card">
+          <div class="ch-title">5. Classes</div>
+          <div class="ch-meta">8 exercises &middot; tests &#10003;</div>
+          <a class="ch-link" href="Chapter05.scala.html">View &rarr;</a>
+        </div>
+        <div class="chapter-card">
+          <div class="ch-title">6. Objects</div>
+          <div class="ch-meta">8 exercises &middot; tests &#10003;</div>
+          <a class="ch-link" href="Chapter06.scala.html">View &rarr;</a>
+        </div>
+        <div class="chapter-card">
+          <div class="ch-title">7. Packages and Imports</div>
+          <div class="ch-meta">5 exercises &middot; tests &#10003;</div>
+          <a class="ch-link" href="Chapter07.scala.html">View &rarr;</a>
+        </div>
+        <div class="chapter-card">
+          <div class="ch-title">8. Inheritance</div>
+          <div class="ch-meta">10 exercises &middot; tests &#10003;</div>
+          <a class="ch-link" href="Chapter08.scala.html">View &rarr;</a>
+        </div>
+        <div class="chapter-card">
+          <div class="ch-title">9. Files and Regular Expressions</div>
+          <div class="ch-meta">10 exercises &middot; tests &#10003;</div>
+          <a class="ch-link" href="Chapter09.scala.html">View &rarr;</a>
+        </div>
+        <div class="chapter-card">
+          <div class="ch-title">10. Traits</div>
+          <div class="ch-meta">11 exercises &middot; tests &#10003;</div>
+          <a class="ch-link" href="Chapter10.scala.html">View &rarr;</a>
+        </div>
+        <div class="chapter-card">
+          <div class="ch-title">11. Operators</div>
+          <div class="ch-meta">4 exercises &middot; tests &#10003;</div>
+          <a class="ch-link" href="Chapter11.scala.html">View &rarr;</a>
+        </div>
+        <div class="chapter-card">
+          <div class="ch-title">12. Higher-Order Functions</div>
+          <div class="ch-meta">10 exercises &middot; tests &#10003;</div>
+          <a class="ch-link" href="Chapter12.scala.html">View &rarr;</a>
+        </div>
+        <div class="chapter-card">
+          <div class="ch-title">13. Collections</div>
+          <div class="ch-meta">11 exercises &middot; tests &#10003;</div>
+          <a class="ch-link" href="Chapter13.scala.html">View &rarr;</a>
+        </div>
+        <div class="chapter-card">
+          <div class="ch-title">14. Pattern Matching and Case Classes</div>
+          <div class="ch-meta">9 exercises &middot; tests &#10003;</div>
+          <a class="ch-link" href="Chapter14.scala.html">View &rarr;</a>
+        </div>
+        <div class="chapter-card">
+          <div class="ch-title">17. Futures</div>
+          <div class="ch-meta">9 exercises &middot; tests &#10003;</div>
+          <a class="ch-link" href="Chapter17.scala.html">View &rarr;</a>
+        </div>
+        <div class="chapter-card">
+          <div class="ch-title">18. Type Parameters</div>
+          <div class="ch-meta">7 exercises &middot; tests &#10003;</div>
+          <a class="ch-link" href="Chapter18.scala.html">View &rarr;</a>
+        </div>
+      </div>
+
+      <div class="built-with">
+        Built with Scala 2.12 &middot; SBT &middot; ScalaTest &middot; ScalaCheck &middot; Socco
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

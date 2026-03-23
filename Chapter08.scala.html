@@ -425,7 +425,7 @@ centerPoint method in each subclass.</strong></p></p></div>
       <span class="keyword">val</span> <span class="identifier">yMax</span> = <span class="identifier">points</span>.<span class="identifier">map</span>(_.<span class="identifier">y</span>).<span class="identifier">reduce</span>(_ <span class="identifier">max</span> _)
       <span class="keyword">val</span> <span class="identifier">yMin</span> = <span class="identifier">points</span>.<span class="identifier">map</span>(_.<span class="identifier">y</span>).<span class="identifier">reduce</span>(_ <span class="identifier">min</span> _)
 
-      <span class="keyword">new</span> <span class="identifier">Point</span>((<span class="identifier">xMax</span> <span class="identifier">-</span> <span class="identifier">xMin</span>)<span class="identifier">/</span><span class="number">2</span>, (<span class="identifier">yMax</span> <span class="identifier">-</span> <span class="identifier">yMin</span>)<span class="identifier">/</span><span class="number">2</span>)
+      <span class="keyword">new</span> <span class="identifier">Point</span>((<span class="identifier">xMax</span> <span class="identifier">-</span> <span class="identifier">xMin</span>)<span class="identifier">/</span><span class="number">2</span> <span class="identifier">+</span> <span class="identifier">xMin</span>, (<span class="identifier">yMax</span> <span class="identifier">-</span> <span class="identifier">yMin</span>)<span class="identifier">/</span><span class="number">2</span> <span class="identifier">+</span> <span class="identifier">yMin</span>)
     }
   }
 

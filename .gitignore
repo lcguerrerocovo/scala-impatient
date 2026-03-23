@@ -2,4 +2,9 @@ target/
 .idea/
 .metals/
 .vscode/
-site/*
+.superpowers/
+docs/superpowers/
+
+# Socco generates chapter HTML files into site/ during CI.
+# site/index.html is committed; chapter files are generated.
+site/*.scala.html
